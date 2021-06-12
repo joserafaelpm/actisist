@@ -6,40 +6,65 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
-   <head>
-    <meta charset="UTF-8">
+
+<head>
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Software | Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0">
+    <title>SISRECA | UFPS</title>
+    <link href="css/ufps.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-    <header>
-        <a href="index.jsp"><img class="brandlogo" src="img/logo_ufps.png"/></a>
-        <nav>
-            <li><a href="index.jsp">Inicio</a></li>
-            <li><a href="login.jsp">Iniciar Sesion</a></li>
-            <li><img src="img/logo_ingsistemas.png"/></li>
-        </nav>
+    
+  <div class="ufps-navbar" id="menu">
+    <div class="ufps-container-fluid">
+        <div class="ufps-navbar-brand">
+            <div class="ufps-btn-menu" onclick="toggleMenu('menu')">
+                <div class="ufps-btn-menu-bar"></div>
+                <div class="ufps-btn-menu-bar"> </div>
+                <div class="ufps-btn-menu-bar"> </div>
+           </div>
+        </div>
+        <div class="ufps-navbar-right">
+            <a href="index.jsp" class="ufps-navbar-btn">Inicio</a>
+            <a href="login.jsp" class="ufps-navbar-btn">Inicio Sesion</a>
+        </div>
+        <div class="ufps-navbar-left">
+            <div class="ufps-navbar-corporate">
+                <img src="img/logo_ufps_inverted.png" alt="Logo UFPS">
+            </div>
+        </div>
 
-    </header>
-    <main> 
-        <section class="login-usuarios">  
-            <form action="nueva_clave.jsp" class="formulario-login">
-                <div class="title-form mb-25">
-                    <h1>Recupero Contraseña</h1>
-                </div> 
-                <p class="mb-25">Se enviara un mensaje al correo registrado para restablecimiento de contraseña</p>
-                <label>Correo</label>
-                <input type="text" class="mb-25" />
-                <button type="submit" >Enviar</button>
-            </form>
-        </section>
+    </div>
+</div>
+    <div class="ufps-container ">
+        <h2 class="ufps-text-center"><b>Recupero de Contraseña</b></h2>
+        
+        <div class="ufps-card margin-footer-card-50 ufps-width-div-50 ufps-margin-auto ">
+            <div class="ufps-card-caption ufps-padding-10">
+                <form action="nueva_clave.jsp" method="GET">
+                    <label class="ufps-title-input">Se enviara un mensaje al correo registrado para restablecimiento de contraseña</label>
+                    <br>
+                    <br><label class="ufps-title-input">Correo</label>
+                    <input type="email" name="correo" class="ufps-input-line" required>
+                    <input type="submit"  class="ufps-btn ufps-width-100 ufps-margin-top-10" value="Enviar"></input>
+                </form>
+            </div>
+        </div>
+        
+    </div>
 
-    </main>
-    <footer>
-        &copy; 2021 | Analisis y Diseño de Sistemas de Información
-    </footer>
+
+
+<div class="ufps-footer">
+            <h3>Universidad Francisco de Paula Santander</h3>
+            <p>Programa Ingeniería de Sistemas</p>
+            <p>&copy; 2021 | Analisis y Diseño de Sistemas de Información</p>
+        </div>  
+
+    <script src="js/ufps.min.js"></script>
 </body>
 </html>

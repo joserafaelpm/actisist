@@ -4,6 +4,9 @@
     Author     : dunke
 --%>
 
+<%@page import="ufps.edu.co.dto.Rol"%>
+<%@page import="ufps.edu.co.util.Conexion"%>
+<%@page import="ufps.edu.co.dao.TipoConferencistaJpaController"%>
 <%@page import="ufps.edu.co.dto.Tipo"%>
 <%@page import="ufps.edu.co.dto.TipoConferencista"%>
 <%@page import="java.util.List"%>
@@ -16,63 +19,132 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
         <script src="js/JQuery.js"></script>
+        <link href="css/ufps.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+        <link rel="stylesheet" href="css/main.css">
     </head>
     <body>
-        <%
-            SolicitudRegistro sr = ((SolicitudRegistro)request.getSession().getAttribute("sol"));
-            if(sr==null){
-                response.sendRedirect("index.jsp");
-            }
-        %>
-        
-        <form action="ControlUsuario?q=reg<%=sr.getTypeUs().getRol()%>" method="POST" enctype="multipart/form-data">
-            <label for="name">Nombre</label>
-            <input type="text" id="nam" name="nam"><br>
-            <label for="ape">Apellido</label>
-            <input type="text" id="ape" name="ape"><br>
-            <label for="doc">Documento</label>
-            <input type="text" id="doc" name="doc"><br>
-            <%if(sr.getTypeUs().getId()==2){%>
-            <label for="cod">Codigo</label>
-            <input type="text" id="cod" name="cod"><br>
-            <%}%>
-            <select id="types" name="types">
-            <%
-                List<Tipo> types = ((List<Tipo>)request.getSession().getAttribute("types"));
-                for(Tipo tp: types){
-            %>
-                <option value="<%=tp.getId()%>"><%=tp.getTipo()%></option>
-            <%
-                }
-            %>
-            </select><br>
-            <%if(sr.getTypeUs().getId() == 2){%>
-                <label for="pw">Contraseña</label>
-                <input type="password" id="pw" name="pw"><br>
-                <label for="image">Imagen de perfil</label>
-                <input type="file" name="image" id="image">
-            <%}else{%>
-                <label>Afiliación</label>
-                <select id="ins_exi" name="ins_exi">
-                </select>
-                <label>País de origen</label>
-                <select id="pai" name="pai">
-                </select>
-            <%}%>
-            <input type="submit">
-        </form>
-            
-            <script>
-                $(document).ready(function (){
-                    load('ControlInstitucion?q=list', '#ins_exi');
-                    load('ControlPaises?q=list', '#pai');
-                });
-                
-                function load(control, compnt){
-                $.post(control, {}, function(response){
+        <div class="ufps-navbar ufps-navbar-delete_margin" id="menu">
+            <div class="ufps-container-fluid">
+                <div class="ufps-navbar-brand">
+                    <div class="ufps-btn-menu" onclick="toggleMenu('menu')">
+                        <div class="ufps-btn-menu-bar"></div>
+                        <div class="ufps-btn-menu-bar"> </div>
+                        <div class="ufps-btn-menu-bar"> </div>
+                    </div>
+                </div>
+                <div class="ufps-navbar-right">
+                    <a href="misActividades.jsp" class="ufps-navbar-btn">Inicio</a>
+                    <a href="index.jsp" class="ufps-navbar-btn">Mis Actividades</a>
+                    <a onclick="openDropdown('dropdown4')"  class="ufps-navbar-btn ufps-dropdown-btn">Hecttor Parra <img class="ufps-perfil-redonde" src="img/user.jpg"/></a>
+                </div>
+                <div class="ufps-dropdown" id="dropdown4">
+                    <div class="ufps-dropdown-content">
+                        <a href="#">Opción 1</a>
+                        <a href="#">Opción 2</a>
+                        <a href="#">Opción 3</a>
+                    </div>
+                </div>
+                <div class="ufps-navbar-left">
+                    <div class="ufps-navbar-corporate">
+                        <img  src="img/logo_ufps_inverted.png" alt="Logo UFPS">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ufps-container-fluid ufps-margin-top-10">
+            <div class="ufps-row" >
+                <div class="ufps-col-mobile-12 ufps-col-netbook-3" >
+                    <ul class="ufps-list-ul">
+                        <li><a href="registrarActividad.jsp"><i class="fa fa-list"></i> Registrar Actividad</a></li>
+                        <li><a href="registroDocConf.jsp"><i class="fa fa-user"></i> Registrar Docente</a></li>
+                        <li><a href="registroConvenio.jsp"><i class="fa fa-handshake"></i> Registrar Convenio</a></li>
+                        <li><a href=""><i class="fa fa-signal"></i> Generar Graficas</a></li>
+                    </ul>
+                </div >
+                <div class="ufps-col-mobile-12 ufps-margin-top-10 ufps-col-netbook-9" >
+                    <div class="ufps-section-form">
+                        <div class="ufps-title-section">
+                            Registrar Docente
+                        </div>
+                        <div class="ufps-body-section ufps-padding-5">
+
+                            <%
+                                //SolicitudRegistro sr = ((SolicitudRegistro)request.getSession().getAttribute("sol"));
+                                SolicitudRegistro sr = new SolicitudRegistro();
+                                sr.setTypeUs(new Rol(1, "admin"));
+                                request.getSession().setAttribute("types", new TipoConferencistaJpaController(Conexion.getConexion().getBd()).findTipoConferencistaEntities());
+                                if (sr == null) {
+                                    //  response.sendRedirect("index.jsp");
+                                }
+                            %>
+
+
+                            <form action="ControlUsuario?q=reg<%=sr.getTypeUs().getRol()%>" method="POST" enctype="multipart/form-data">
+                                <div class="label"><label class="ufps-title-input" for="name">Nombre</label></div>
+                                <input type="text" id="nam" name="nam" class="ufps-input-line" required>
+                                <div class="label"><label class="ufps-title-input" for="ape">Apellidos</label></div>
+                                <input type="text"  id="ape" name="ape" class="ufps-input-line" required>
+                                <div class="label"><label class="ufps-title-input" for="doc">Documento</label></div>
+                                <input type="text"   id="doc" name="doc" class="ufps-input-line" required>
+                                <%if (sr.getTypeUs().getId() == 2) {%>
+                                <div class="label"><label class="ufps-title-input" for="cod">Codigo</label></div>
+                                <input type="text"  id="cod" name="cod" class="ufps-input-line" required>
+                                <%}%>
+
+                                <div class="label"><label class="ufps-title-input">Tipo</label></div>
+                                <select class="ufps-input-line" id="types" name="types">
+                                    <%
+                                        List<Tipo> types = ((List<Tipo>) request.getSession().getAttribute("types"));
+                                        for (Tipo tp : types) {
+                                    %>
+                                    <option value="<%=tp.getId()%>"><%=tp.getTipo()%></option>
+                                    <%
+                                        }
+                                    %>
+                                </select>
+                                <%if (sr.getTypeUs().getId() == 2) {%>
+                                <label class="ufps-title-input" for="pw">Contraseña</label>
+                                <input type="password" class="ufps-input-line" id="pw" name="pw" ><br>
+                                <label class="ufps-title-input" for="image">Imagen de perfil</label>
+                                <input type="file" class="ufps-input-line" name="image" id="image">
+                                <%} else {%>
+                                <label class="ufps-title-input">Afiliación</label>
+                                <select class="ufps-input-line" id="ins_exi" name="ins_exi">
+                                </select>
+                                <label class="ufps-title-input">País de origen</label>
+                                <select class="ufps-input-line" id="pai" name="pai">
+                                </select>
+                                <%}%>
+                            </form>
+                            <div class="label"><label class="ufps-title-input">Estado</label></div>
+                            <input type="checkbox"  name="nombre" id="nombreData" class="ufps-input-line" required>
+                            <input type="submit"  class="ufps-btn ufps-width-100 ufps-margin-top-10" value="Registrar">
+                            </form>
+                        </div>
+                    </div>
+                </div >
+            </div >
+        </div>
+                            
+        <script>
+            $(document).ready(function () {
+                load('ControlInstitucion?q=list', '#ins_exi');
+                load('ControlPaises?q=list', '#pai');
+            });
+
+            function load(control, compnt) {
+                $.post(control, {}, function (response) {
                     $(compnt).html(response);
                 });
             }
-            </script>    
+        </script>
+        <div class="ufps-footer">
+            <h3>Universidad Francisco de Paula Santander</h3>
+            <p>Programa Ingeniería de Sistemas</p>
+            <p>&copy; 2021 | Analisis y Diseño de Sistemas de Información</p>
+        </div> 
     </body>
 </html>
