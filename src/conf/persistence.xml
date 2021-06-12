@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="actisistPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>ufps.edu.co.entity.ConvenioActividad</class>
+    <class>ufps.edu.co.entity.Contrato</class>
+    <class>ufps.edu.co.entity.Proyecto</class>
+    <class>ufps.edu.co.entity.TipoConferencista</class>
+    <class>ufps.edu.co.entity.Institucion</class>
+    <class>ufps.edu.co.entity.Conferencista</class>
+    <class>ufps.edu.co.entity.PaisInstitucion</class>
+    <class>ufps.edu.co.entity.Titulo</class>
+    <class>ufps.edu.co.entity.Rol</class>
+    <class>ufps.edu.co.entity.Docente</class>
+    <class>ufps.edu.co.entity.Horario</class>
+    <class>ufps.edu.co.entity.ConferencistaActividad</class>
+    <class>ufps.edu.co.entity.TipoDocente</class>
+    <class>ufps.edu.co.entity.Convenio</class>
+    <class>ufps.edu.co.entity.Usuario</class>
+    <class>ufps.edu.co.entity.TipoConvenio</class>
+    <class>ufps.edu.co.entity.ActividadInstitucion</class>
+    <class>ufps.edu.co.entity.UsuarioActividad</class>
+    <class>ufps.edu.co.entity.Actividad</class>
+    <class>ufps.edu.co.entity.ActividadAcademica</class>
+    <class>ufps.edu.co.entity.TipoMovilidad</class>
+    <class>ufps.edu.co.entity.TipoActividad</class>
+    <class>ufps.edu.co.entity.Pais</class>
+    <class>ufps.edu.co.dto.PaisInstitucion</class>
+    <class>ufps.edu.co.dto.TipoConvenio</class>
+    <class>ufps.edu.co.dto.ActividadAcademica</class>
+    <class>ufps.edu.co.dto.TipoDocente</class>
+    <class>ufps.edu.co.dto.Contrato</class>
+    <class>ufps.edu.co.dto.InvolucradosActividad</class>
+    <class>ufps.edu.co.dto.Institucion</class>
+    <class>ufps.edu.co.dto.ProyectoEntregable</class>
+    <class>ufps.edu.co.dto.Conferencista</class>
+    <class>ufps.edu.co.dto.Horario</class>
+    <class>ufps.edu.co.dto.Titulo</class>
+    <class>ufps.edu.co.dto.Actividad</class>
+    <class>ufps.edu.co.dto.TipoActividad</class>
+    <class>ufps.edu.co.dto.Rol</class>
+    <class>ufps.edu.co.dto.ConvenioActividad</class>
+    <class>ufps.edu.co.dto.TipoMovilidad</class>
+    <class>ufps.edu.co.dto.Docente</class>
+    <class>ufps.edu.co.dto.Pais</class>
+    <class>ufps.edu.co.dto.ActividadInstitucion</class>
+    <class>ufps.edu.co.dto.ConferencistaActividad</class>
+    <class>ufps.edu.co.dto.ActividadAnexos</class>
+    <class>ufps.edu.co.dto.Usuario</class>
+    <class>ufps.edu.co.dto.Convenio</class>
+    <class>ufps.edu.co.dto.TipoConferencista</class>
+    <class>ufps.edu.co.dto.Proyecto</class>
+    <class>ufps.edu.co.dto.SolicitudRegistro</class>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <properties>
+      <property name="hibernate.show_sql" value="true"/>
+      <property name="hibernate.format_sql" value="true"/>
+      <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://madarme.co:3306/estudiante_26?zeroDateTimeBehavior=convertToNull"/>
+      <property name="javax.persistence.jdbc.user" value="estudiante_26"/>
+      <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+      <property name="javax.persistence.jdbc.password" value="IAcnNCExlc"/>
+    </properties>
+  </persistence-unit>
+</persistence>
