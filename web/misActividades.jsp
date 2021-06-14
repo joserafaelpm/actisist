@@ -109,11 +109,11 @@
 
 
 
-<div class="ufps-footer">
-    <h3>Universidad Francisco de Paula Santander</h3>
-    <p>Programa Ingeniería de Sistemas</p>
-    <p>Desarrollado por: Rafael Peña</p>
-</div>   
+        <div class="ufps-footer">
+            <h3>Universidad Francisco de Paula Santander</h3>
+            <p>Programa Ingeniería de Sistemas</p>
+            <p>&copy; 2021 | Analisis y Diseño de Sistemas de Información</p>
+        </div>  
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 

@@ -5,7 +5,9 @@
     font-size: 1.2em;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
-
+body{
+    padding: 0 !important;
+}
 .ufps-actividades{
     margin-bottom:25px;
     margin-top:25px;
@@ -77,6 +79,7 @@ font-size: 1.4em;
 }
 .ufps-conferencistas-div{
     width:450px;
+    height: 350px;
 }
 /*Listas*/
 

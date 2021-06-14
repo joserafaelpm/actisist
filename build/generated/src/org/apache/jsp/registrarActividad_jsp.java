@@ -1,0 +1,275 @@
+package org.apache.jsp;
+
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.servlet.jsp.*;
+
+public final class registrarActividad_jsp extends org.apache.jasper.runtime.HttpJspBase
+    implements org.apache.jasper.runtime.JspSourceDependent {
+
+  private static final JspFactory _jspxFactory = JspFactory.getDefaultFactory();
+
+  private static java.util.List<String> _jspx_dependants;
+
+  private org.glassfish.jsp.api.ResourceInjector _jspx_resourceInjector;
+
+  public java.util.List<String> getDependants() {
+    return _jspx_dependants;
+  }
+
+  public void _jspService(HttpServletRequest request, HttpServletResponse response)
+        throws java.io.IOException, ServletException {
+
+    PageContext pageContext = null;
+    HttpSession session = null;
+    ServletContext application = null;
+    ServletConfig config = null;
+    JspWriter out = null;
+    Object page = this;
+    JspWriter _jspx_out = null;
+    PageContext _jspx_page_context = null;
+
+    try {
+      response.setContentType("text/html;charset=UTF-8");
+      pageContext = _jspxFactory.getPageContext(this, request, response,
+      			null, true, 8192, true);
+      _jspx_page_context = pageContext;
+      application = pageContext.getServletContext();
+      config = pageContext.getServletConfig();
+      session = pageContext.getSession();
+      out = pageContext.getOut();
+      _jspx_out = out;
+      _jspx_resourceInjector = (org.glassfish.jsp.api.ResourceInjector) application.getAttribute("com.sun.appserv.jsp.resource.injector");
+
+      out.write("\n");
+      out.write("\n");
+      out.write("\n");
+      out.write("<!DOCTYPE html>\n");
+      out.write("<!DOCTYPE html>\n");
+      out.write("<html lang=\"es\">\n");
+      out.write("\n");
+      out.write("<head>\n");
+      out.write("    <meta charset=\"utf-8\">\n");
+      out.write("    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n");
+      out.write("    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0\">\n");
+      out.write("    <title>SISRECA | UFPS</title>\n");
+      out.write("    <link href=\"css/ufps.min.css\" rel=\"stylesheet\">\n");
+      out.write("    <link rel=\"stylesheet\" href=\"https://pro.fontawesome.com/releases/v5.10.0/css/all.css\" integrity=\"sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p\" crossorigin=\"anonymous\"/>\n");
+      out.write("    <link rel=\"stylesheet\" href=\"https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css\">\n");
+      out.write("    <link rel=\"stylesheet\" href=\"css/jquery.transfer.css\">\n");
+      out.write("    <link rel=\"stylesheet\" href=\"icon_font/css/icon_font.css\">\n");
+      out.write("    <link rel=\"stylesheet\" href=\"css/main.css\">\n");
+      out.write("\n");
+      out.write("</head>\n");
+      out.write("<body>\n");
+      out.write("  <div class=\"ufps-navbar\" id=\"menu\">\n");
+      out.write("    <div class=\"ufps-container-fluid\">\n");
+      out.write("        <div class=\"ufps-navbar-brand\">\n");
+      out.write("            <div class=\"ufps-btn-menu\" onclick=\"toggleMenu('menu')\">\n");
+      out.write("                <div class=\"ufps-btn-menu-bar\"></div>\n");
+      out.write("                <div class=\"ufps-btn-menu-bar\"> </div>\n");
+      out.write("                <div class=\"ufps-btn-menu-bar\"> </div>\n");
+      out.write("           </div>\n");
+      out.write("        </div>\n");
+      out.write("        <div class=\"ufps-navbar-right\">\n");
+      out.write("            <a href=\"misActividades.jsp\" class=\"ufps-navbar-btn\">Inicio</a>\n");
+      out.write("            <a href=\"index.jsp\" class=\"ufps-navbar-btn\">Mis Actividades</a>\n");
+      out.write("            <a onclick=\"openDropdown('dropdown4')\"  class=\"ufps-navbar-btn ufps-dropdown-btn\">Hecttor Parra <img class=\"ufps-perfil-redonde\" src=\"img/user.jpg\"/></a>\n");
+      out.write("        </div>\n");
+      out.write("        <div class=\"ufps-dropdown\" id=\"dropdown4\">\n");
+      out.write("            <div class=\"ufps-dropdown-content\">\n");
+      out.write("                <a href=\"#\">Opción 1</a>\n");
+      out.write("                <a href=\"#\">Opción 2</a>\n");
+      out.write("                <a href=\"#\">Opción 3</a>\n");
+      out.write("            </div>\n");
+      out.write("        </div>\n");
+      out.write("        <div class=\"ufps-navbar-left\">\n");
+      out.write("            <div class=\"ufps-navbar-corporate\">\n");
+      out.write("                <img  src=\"img/logo_ufps_inverted.png\" alt=\"Logo UFPS\">\n");
+      out.write("            </div>\n");
+      out.write("        </div>\n");
+      out.write("\n");
+      out.write("    </div>\n");
+      out.write("</div>\n");
+      out.write("    <div class=\"ufps-container\">\n");
+      out.write("        \n");
+      out.write("        <div class=\"ufps-card\">\n");
+      out.write("            <form>\n");
+      out.write("            <div class=\"ufps-card-caption ufps-padding-5 \">\n");
+      out.write("                \n");
+      out.write("                <div class=\"ufps-row\">\n");
+      out.write("                    <div class=\"ufps-col-netbook-6 ufps-col-mobile-12 \">\n");
+      out.write("                        <div class=\"ufps-div-title ufps-title-color\">\n");
+      out.write("                          Informacion de la Imagen\n");
+      out.write("                        </div>\n");
+      out.write("                        \n");
+      out.write("                        <div class=\"ufps-row ufps-margin-top-10\" >\n");
+      out.write("                            <div class=\"ufps-col-mobile-12 ufps-col-netbook-6\" >\n");
+      out.write("                                <input type=\"file\" id=\"fileImagen\" class=\"ufps-input-line\">\n");
+      out.write("                            </div >\n");
+      out.write("                            <div class=\"ufps-col-mobile-12 ufps-col-netbook-6\" >\n");
+      out.write("                                <img id=\"previsualizaImagen\" src=\"img/logo_ufps.png\" class=\"ufps-img-responsive\" />\n");
+      out.write("                            </div >\n");
+      out.write("                        </div >\n");
+      out.write("                        <div class=\"ufps-pl-pr-15 ufps-margin-top-20\">\n");
+      out.write("                            Tematica:\n");
+      out.write("                            <textarea class=\"ufps-input\" rows=\"4\" cols=\"50\"></textarea>\n");
+      out.write("                            Descripción:\n");
+      out.write("                            <textarea class=\"ufps-input\" rows=\"4\" cols=\"50\"></textarea>\n");
+      out.write("                            Movilidad\n");
+      out.write("                            <select class=\"ufps-input-line\" id=\"movilidadSelect\" name=\"select\">\n");
+      out.write("                                <option value=\"entrante\">Entrante</option>\n");
+      out.write("                                <option value=\"saliente\">Saliente</option>\n");
+      out.write("                            </select>\n");
+      out.write("                            <div id=\"movilidad\" hidden class=\"ufps-pl-pr-15 ufps-margin-top-20\">\n");
+      out.write("                                <div class=\"ufps-card\">\n");
+      out.write("                                    <div class=\"ufps-card-caption\">\n");
+      out.write("                                        <p>Institucion de destino</p>\n");
+      out.write("                                        <div class=\"ufps-row\" >\n");
+      out.write("                                            <div class=\"ufps-col-mobile-12 ufps-col-netbook-6\" >\n");
+      out.write("                                            \n");
+      out.write("                                                <div class=\"ufps-row ufps-margin-top-20\" >\n");
+      out.write("                                                    <div class=\"ufps-col-mobile-12 ufps-col-netbook-4\" >Pais Destino</div >\n");
+      out.write("                                                    <div class=\"ufps-col-mobile-12 ufps-col-netbook-8\" >\n");
+      out.write("                                                        <select class=\"ufps-input-line\" name=\"select\">\n");
+      out.write("                                                            <option value=\"value1\">Colombia</option>\n");
+      out.write("                                                            <option value=\"value2\" selected>Japon</option>\n");
+      out.write("                                                            <option value=\"value3\">Value 3</option>\n");
+      out.write("                                                          </select>\n");
+      out.write("                                                    </div >\n");
+      out.write("                                                </div >\n");
+      out.write("\n");
+      out.write("                                            </div >\n");
+      out.write("                                            <div class=\"ufps-col-mobile-12 ufps-col-netbook-6\" >\n");
+      out.write("\n");
+      out.write("                                                <div class=\"ufps-row ufps-margin-top-20\" >\n");
+      out.write("                                                    <div class=\"ufps-col-mobile-12 ufps-col-netbook-4\" >Ciudad</div >\n");
+      out.write("                                                    <div class=\"ufps-col-mobile-12 ufps-col-netbook-8\" >\n");
+      out.write("                                                        <select class=\"ufps-input-line\" name=\"select\">\n");
+      out.write("                                                            <option value=\"value1\">Colombia</option>\n");
+      out.write("                                                            <option value=\"value2\" selected>Japon</option>\n");
+      out.write("                                                            <option value=\"value3\">Value 3</option>\n");
+      out.write("                                                          </select>\n");
+      out.write("                                                    </div >\n");
+      out.write("                                                </div >\n");
+      out.write("\n");
+      out.write("                                            </div >\n");
+      out.write("                                        </div >\n");
+      out.write("                                        <div class=\"ufps-margin-top-20\">\n");
+      out.write("                                            Tiempo Estadia:\n");
+      out.write("                                            <input type=\"number\" id=\"fileImagen\" class=\"ufps-input-line\">\n");
+      out.write("                                        </div>\n");
+      out.write("                                        \n");
+      out.write("                                    </div>\n");
+      out.write("                                </div>\n");
+      out.write("                            </div>\n");
+      out.write("                            \n");
+      out.write("                        </div>\n");
+      out.write("                        <div class=\"ufps-margin-top-30\">\n");
+      out.write("                            <label class=\"ufps-pl-pr-15 \">Convenios:</label>\n");
+      out.write("                        </div>\n");
+      out.write("                        \n");
+      out.write("                        <!--Informacion: \n");
+      out.write("                        https://www.jqueryscript.net/form/Groupable-Searchable-Dual-Listbox-Transfer.jsp\n");
+      out.write("                        -->\n");
+      out.write("                        <div class=\" ufps-conferencistas-div\">\n");
+      out.write("                            <div id=\"transfer2\" class=\"transfer-demo\"></div>\n");
+      out.write("                        </div> \n");
+      out.write("                    </div>\n");
+      out.write("                    <div class=\"ufps-col-netbook-6 ufps-col-mobile-12 ufps-margin-top-10\">\n");
+      out.write("                        <div class=\"ufps-row\" >\n");
+      out.write("                            <div class=\"ufps-col-mobile-12 ufps-col-netbook-3\" > Nombre del evento:</div >\n");
+      out.write("                            <div class=\"ufps-col-mobile-12 ufps-col-netbook-9\" > <input type=\"text\"  name=\"nombre\" class=\"ufps-input-line\" required></div>\n");
+      out.write("                        </div>\n");
+      out.write("                        <div class=\"ufps-row ufps-margin-top-20\" >\n");
+      out.write("                            <div class=\"ufps-col-mobile-12 ufps-col-netbook-6\" > \n");
+      out.write("                                <div class=\"ufps-row\" >\n");
+      out.write("                                    <div class=\"ufps-col-mobile-12 ufps-col-netbook-3\" > Fecha Inicio:</div >\n");
+      out.write("                                    <div class=\"ufps-col-mobile-12 ufps-col-netbook-9\" > <input type=\"date\"  name=\"nombre\" class=\"ufps-input-line\" required></div>\n");
+      out.write("                                </div>\n");
+      out.write("                            </div >\n");
+      out.write("                            <div class=\"ufps-col-mobile-12 ufps-col-netbook-6\" > \n");
+      out.write("                                <div class=\"ufps-row\" >\n");
+      out.write("                                    <div class=\"ufps-col-mobile-12 ufps-col-netbook-3\" > Fecha Fin:</div >\n");
+      out.write("                                    <div class=\"ufps-col-mobile-12 ufps-col-netbook-9\" > <input type=\"date\"  name=\"nombre\" class=\"ufps-input-line\" required></div>\n");
+      out.write("                                </div>\n");
+      out.write("                            </div>\n");
+      out.write("                        </div>\n");
+      out.write("                        <div class=\"ufps-row ufps-margin-top-20\" >\n");
+      out.write("                            <div class=\"ufps-col-mobile-12 ufps-col-netbook-2\" >Tipo:</div >\n");
+      out.write("                            <div class=\"ufps-col-mobile-12 ufps-col-netbook-10\" >\n");
+      out.write("                                <select class=\"ufps-input-line\" name=\"select\">\n");
+      out.write("                                    <option value=\"value1\">Value 1</option>\n");
+      out.write("                                    <option value=\"value2\" selected>Value 2</option>\n");
+      out.write("                                    <option value=\"value3\">Value 3</option>\n");
+      out.write("                                  </select>\n");
+      out.write("                            </div >\n");
+      out.write("                        </div ><div class=\"ufps-row ufps-margin-top-20\" >\n");
+      out.write("                            <div class=\"ufps-col-mobile-12 ufps-col-netbook-2\" >Tipo:</div >\n");
+      out.write("                            <div class=\"ufps-col-mobile-12 ufps-col-netbook-10\" >\n");
+      out.write("                                <select class=\"ufps-input-line\" name=\"select\">\n");
+      out.write("                                    <option value=\"value1\">Value 1</option>\n");
+      out.write("                                    <option value=\"value2\" selected>Value 2</option>\n");
+      out.write("                                    <option value=\"value3\">Value 3</option>\n");
+      out.write("                                  </select>\n");
+      out.write("                            </div >\n");
+      out.write("                        </div >\n");
+      out.write("                        <div class=\"ufps-row ufps-margin-top-20\" >\n");
+      out.write("                            <div class=\"ufps-col-mobile-12 ufps-col-netbook-2\" >Semestre:</div >\n");
+      out.write("                            <div class=\"ufps-col-mobile-12 ufps-col-netbook-10\" >\n");
+      out.write("                                <select class=\"ufps-input-line\" name=\"select\">\n");
+      out.write("                                    <option value=\"value1\">Value 1</option>\n");
+      out.write("                                    <option value=\"value2\" selected>Value 2</option>\n");
+      out.write("                                    <option value=\"value3\">Value 3</option>\n");
+      out.write("                                  </select>\n");
+      out.write("                            </div>\n");
+      out.write("                        </div>\n");
+      out.write("                        <div class=\"ufps-pl-pr-15 ufps-margin-top-20\">\n");
+      out.write("                            Lugar:\n");
+      out.write("                            <input type=\"text\" class=\"ufps-input\" rows=\"4\" cols=\"50\"></input>\n");
+      out.write("                            Conferencistas:\n");
+      out.write("                            <!--Informacion: \n");
+      out.write("                            https://www.jqueryscript.net/form/Groupable-Searchable-Dual-Listbox-Transfer.jsp\n");
+      out.write("                            -->\n");
+      out.write("                            <div class=\"ufps-conferencistas-div\">\n");
+      out.write("                                <div id=\"transfer1\" class=\"transfer-demo\"></div>\n");
+      out.write("                            </div>\n");
+      out.write("                        </div>\n");
+      out.write("                    </div>\n");
+      out.write("                </div>\n");
+      out.write("                <input type=\"submit\"  class=\"ufps-btn ufps-width-100 ufps-margin-top-20\" value=\"Registrar Actividad\"></input>\n");
+      out.write("            </form>\n");
+      out.write("            </div>\n");
+      out.write("        </div>\n");
+      out.write("\n");
+      out.write("    </div>\n");
+      out.write("\n");
+      out.write("\n");
+      out.write("\n");
+      out.write("<div class=\"ufps-footer\">\n");
+      out.write("            <h3>Universidad Francisco de Paula Santander</h3>\n");
+      out.write("            <p>Programa Ingeniería de Sistemas</p>\n");
+      out.write("            <p>&copy; 2021 | Analisis y Diseño de Sistemas de Información</p>\n");
+      out.write("        </div>\n");
+      out.write("<script src=\"https://code.jquery.com/jquery-3.6.0.min.js\" integrity=\"sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=\" crossorigin=\"anonymous\"></script>\n");
+      out.write("<script src=\"https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js\"></script>\n");
+      out.write("<script src=\"js/jquery.bootstrap-duallistbox.js\"></script>\n");
+      out.write("<script src=\"js/dataTables.min.js\"></script>\n");
+      out.write("<script src=\"js/jquery.transfer.js\"></script>\n");
+      out.write("    <script src=\"js/ufps.min.js\"></script>\n");
+      out.write("    <script src=\"js/main.js\"></script>\n");
+      out.write("</body>\n");
+      out.write("</html>\n");
+    } catch (Throwable t) {
+      if (!(t instanceof SkipPageException)){
+        out = _jspx_out;
+        if (out != null && out.getBufferSize() != 0)
+          out.clearBuffer();
+        if (_jspx_page_context != null) _jspx_page_context.handlePageException(t);
+        else throw new ServletException(t);
+      }
+    } finally {
+      _jspxFactory.releasePageContext(_jspx_page_context);
+    }
+  }
+}

@@ -25,7 +25,7 @@
         <link rel="stylesheet" href="css/main.css">
     </head>
     <body>
-        <div class="ufps-navbar ufps-navbar-delete_margin" id="menu">
+        <div class="ufps-navbar" id="menu">
             <div class="ufps-container-fluid">
                 <div class="ufps-navbar-brand">
                     <div class="ufps-btn-menu" onclick="toggleMenu('menu')">
@@ -35,36 +35,18 @@
                     </div>
                 </div>
                 <div class="ufps-navbar-right">
-                    <a href="misActividades.jsp" class="ufps-navbar-btn">Inicio</a>
-                    <a href="index.jsp" class="ufps-navbar-btn">Mis Actividades</a>
-                    <a onclick="openDropdown('dropdown4')"  class="ufps-navbar-btn ufps-dropdown-btn">Hecttor Parra <img class="ufps-perfil-redonde" src="img/user.jpg"/></a>
-                </div>
-                <div class="ufps-dropdown" id="dropdown4">
-                    <div class="ufps-dropdown-content">
-                        <a href="#">Opción 1</a>
-                        <a href="#">Opción 2</a>
-                        <a href="#">Opción 3</a>
-                    </div>
+                    <a href="index.html" class="ufps-navbar-btn">Inicio</a>
+                    <a href="login.html" class="ufps-navbar-btn">Inicio Sesion</a>
                 </div>
                 <div class="ufps-navbar-left">
                     <div class="ufps-navbar-corporate">
-                        <img  src="img/logo_ufps_inverted.png" alt="Logo UFPS">
+                        <img src="img/logo_ufps_inverted.png" alt="Logo UFPS">
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="ufps-container-fluid ufps-margin-top-10">
-            <div class="ufps-row" >
-                <div class="ufps-col-mobile-12 ufps-col-netbook-3" >
-                    <ul class="ufps-list-ul">
-                        <li><a href="registrarActividad.jsp"><i class="fa fa-list"></i> Registrar Actividad</a></li>
-                        <li><a href="registroDocConf.jsp"><i class="fa fa-user"></i> Registrar Docente</a></li>
-                        <li><a href="registroConvenio.jsp"><i class="fa fa-handshake"></i> Registrar Convenio</a></li>
-                        <li><a href=""><i class="fa fa-signal"></i> Generar Graficas</a></li>
-                    </ul>
-                </div >
-                <div class="ufps-col-mobile-12 ufps-margin-top-10 ufps-col-netbook-9" >
+        <div class="ufps-container-fluid">
                     <div class="ufps-section-form">
                         <div class="ufps-title-section">
                             Registrar Docente
@@ -74,7 +56,7 @@
                             <%
                                 //SolicitudRegistro sr = ((SolicitudRegistro)request.getSession().getAttribute("sol"));
                                 SolicitudRegistro sr = new SolicitudRegistro();
-                                sr.setTypeUs(new Rol(1, "admin"));
+                                sr.setTypeUs(new Rol(2, "admin"));
                                 request.getSession().setAttribute("types", new TipoConferencistaJpaController(Conexion.getConexion().getBd()).findTipoConferencistaEntities());
                                 if (sr == null) {
                                     //  response.sendRedirect("index.jsp");

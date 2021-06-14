@@ -34,7 +34,10 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
-
+.ayuda{
+    padding-top: 5px;
+    
+}
 
 body {
   margin: 0;

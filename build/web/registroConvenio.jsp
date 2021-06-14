@@ -57,7 +57,7 @@
             <div class="ufps-row" >
                 <div class="ufps-col-mobile-12 ufps-col-netbook-3" >
                     <ul class="ufps-list-ul">
-                        <li><a href="registrarActividad.jsp"><i class="fa fa-list"></i> Registrar Actividad</a></li>
+                        <li><a href="misActividades.jsp"><i class="fa fa-list"></i> Registrar Actividad</a></li>
                         <li><a href="registroDocConf.jsp"><i class="fa fa-user"></i> Registrar Docente</a></li>
                         <li><a href="registroConvenio.jsp"><i class="fa fa-handshake"></i> Registrar Convenio</a></li>
                         <li><a href=""><i class="fa fa-signal"></i> Generar Graficas</a></li>
@@ -123,12 +123,12 @@
                                             <div id="inputIns" class="ufps-margin-botton-10">
                                                 <input  class="ufps-input ufps-margin-top-10" type="text" id="ins_non" name="ins_non">
                                             </div>
-                                             
+
                                         </div>
-                                            <div id="non_exist" class="ufps-col-mobile-12 ufps-col-netbook-6">
-                                               
-                                                <div class="ufps-row">
-                                                    <div class="ufps-col-mobile-12 ufps-col-netbook-6" > 
+                                        <div id="non_exist" class="ufps-col-mobile-12 ufps-col-netbook-6">
+
+                                            <div class="ufps-row">
+                                                <div class="ufps-col-mobile-12 ufps-col-netbook-6" > 
                                                     <div class="label"><label class="ufps-title-input">Pais</label></div>
                                                     <select class="ufps-input-line"  id="pai" name="pai">
                                                     </select>
@@ -138,79 +138,93 @@
                                                     <select class="ufps-input-line"  id="pai" name="pai">
                                                     </select>
                                                 </div >
-                                                </div>
                                             </div>
-                                        </div >
+                                        </div>
+                                    </div >
 
 
                                     <div class="ufps-title-h1-red ">
                                         Tipo de convenio
                                     </div>
                                     <div class="ufps-margin-top-10">
-                                    <label>Tipo de convenio</label>
-                                    <select id="tp_con" name="tp_con" class="ufps-input-line">
-                                        <%for (TipoConvenio tp : tps) {%>
-                                        <option value="<%=tp.getId()%>"><%=tp.getTipo()%></option>
-                                        <%}%>
-                                    </select>
+                                        <label>Tipo de convenio</label>
+                                        <select id="tp_con" name="tp_con" class="ufps-input-line">
+                                            <%for (TipoConvenio tp : tps) {%>
+                                            <option value="<%=tp.getId()%>"><%=tp.getTipo()%></option>
+                                            <%}%>
+                                        </select>
+                                    </div>
+                                    <input type="submit"  class="ufps-btn ufps-width-100 ufps-margin-top-10" value="Registrar">
+                                    </form>
+
                                 </div>
-                                <input type="submit"  class="ufps-btn ufps-width-100 ufps-margin-top-10" value="Registrar">
-                            </form>
+                        </div>
+                    </div >
+                </div >
+                <div class="ufps-col-mobile-12 ufps-margin-top-10 ufps-col-netbook-9" >
+                    <div class="ufps-section-form">
+                        <div class="ufps-title-section">
+                            Tabla de convenios Registrados
+                        </div>
+                        <div class="ufps-body-section-80 ufps-padding-5">
+
+                            <!--TABLA  DE CONVENIOS REGISTRADOS-->
+                            <table border="1" class="ufps-table ufps-table-responsive ufps-table-inserted ufps-text-center">
+                                <tr>
+                                    <th>Numero</th>
+                                    <th>Fecha</th>
+                                    <th>Vigencia</th>
+                                    <th>Institución</th>
+                                    <th>Acción</th>
+                                </tr>
+                                <%for (Convenio c : cs) {%>
+                                <tr> 
+                                    <td><%=c.getNumero()%></td>
+                                    <td><%=sd.format(c.getFecha())%></td>
+                                    <td><%=sd.format(c.getVigencia())%></td>
+                                    <td><%=c.getEmpresa().getNombre()%></td>
+                                    <td><a href="ControlConvenio?q=edit&n_c=<%=c.getId()%>">Editar</a></td>
+                                </tr>
+                                <%}%>
+                            </table>
 
                         </div>
                     </div>
-                </div >
-            </div >
-        </div>
+                </div>
+            </div>
 
-        <!--TABLA  DE CONVENIOS REGISTRADOS-->
-        <table border="1">
-            <tr>
-                <th>Numero</th>
-                <th>Fecha</th>
-                <th>Vigencia</th>
-                <th>Institución</th>
-                <th>Acción</th>
-            </tr>
-            <%for (Convenio c : cs) {%>
-            <tr> 
-                <td><%=c.getNumero()%></td>
-                <td><%=sd.format(c.getFecha())%></td>
-                <td><%=sd.format(c.getVigencia())%></td>
-                <td><%=c.getEmpresa().getNombre()%></td>
-                <td><a href="ControlConvenio?q=edit&n_c=<%=c.getId()%>">Editar</a></td>
-            </tr>
-            <%}%>
-        </table>
 
-        <script>
-            $(document).ready(function () {
-                load('ControlInstitucion?q=list', '#ins_exi');
-                load('ControlPaises?q=list', '#pai');
-            });
 
-            function load(control, compnt) {
-                $.post(control, {}, function (response) {
-                    $(compnt).html(response);
+
+
+            <script>
+                $(document).ready(function () {
+                    load('ControlInstitucion?q=list', '#ins_exi');
+                    load('ControlPaises?q=list', '#pai');
                 });
-            }
 
-            function exist_ins() {
-                if ($('#ins_exis').is(':checked')) {
-                    $('#non_exist').hide();
-                    $('#exist').show();
-                    $('#inputIns').hide();
-                } else {
-                    $('#non_exist').show();
-                    $('#exist').hide();
-                    $('#inputIns').show();
+                function load(control, compnt) {
+                    $.post(control, {}, function (response) {
+                        $(compnt).html(response);
+                    });
                 }
-            }
-        </script>
-        <div class="ufps-footer">
-            <h3>Universidad Francisco de Paula Santander</h3>
-            <p>Programa Ingeniería de Sistemas</p>
-            <p>&copy; 2021 | Analisis y Diseño de Sistemas de Información</p>
-        </div>  
+
+                function exist_ins() {
+                    if ($('#ins_exis').is(':checked')) {
+                        $('#non_exist').hide();
+                        $('#exist').show();
+                        $('#inputIns').hide();
+                    } else {
+                        $('#non_exist').show();
+                        $('#exist').hide();
+                        $('#inputIns').show();
+                    }
+                }
+            </script>
+            <div class="ufps-footer">
+                <h3>Universidad Francisco de Paula Santander</h3>
+                <p>Programa Ingeniería de Sistemas</p>
+                <p>&copy; 2021 | Analisis y Diseño de Sistemas de Información</p>
+            </div>  
     </body>
 </html>
