@@ -6,7 +6,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Software | Dashboard</title>
+        <title>Software | Mi Perfil</title>
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
 
         <link href="css/ufps.min.css" rel="stylesheet">
@@ -33,7 +33,7 @@
                     <a href="misActividades.jsp" class="ufps-navbar-btn">Mis Actividades</a>
                     <div class="ufps-dropdown" id="dropdown4">
             <div class="ufps-dropdown-content">
-                <a href="miPerfil.jsp">Mi Perfil</a>
+                <a href="#">Mi Perfil</a>
                 <a href="ControlUsuario?q=log">Cerrar Sesion</a>
             </div>
         </div>
@@ -50,48 +50,48 @@
 
         <div class="ufps-container ">  
 <form action="ControlUsuario?q=log" method="POST"><button type="submit" class="ufps-margin-top-10">Cerrar sesión</button></form>
-
-
-            <div class="ufps-rafael-titulo-adming ">
-                <h1>DASHBOARD ADMINISTRATIVA</h1>
-            </div>
-            <%
-                if (user.getIdRol().getRol().equalsIgnoreCase("admin")) {
-            %>
-            <div class="ufps-row" >
-                <div class="ufps-col-mobile-12 ufps-col-netbook-4" >
-                    <a href="ControlUsuario?q=list">
-                        <div class="ufps-option-adm">
-                            <div class="icono"><i class="fa fa-user fa-4x"></i></div>
-                            <div class="titulo">Registrar docente y/o conferencista</div>
-                        </div>
-                    </a>
-
-                </div >
-                <div class="ufps-col-mobile-12 ufps-col-netbook-4" >
-
-                    <a href="verActividades.jsp">
-                        <div class="ufps-option-adm">
-                            <div class="icono"><i class="fa fa-list fa-4x"></i></div>
-                            <div class="titulo">Ver actividades registradas</div>
-                        </div>
-                    </a>
-                </div >
-                <div class="ufps-col-mobile-12 ufps-col-netbook-4" > 
-                    <a href="ControlConvenio?q=redi">
-                        <div class="ufps-option-adm">
-                            <div class="icono"><i class="fa fa-handshake fa-4x"></i></div>
-                            <div class="titulo">Registrar Convenio</div>
-                        </div>
-                    </a>
-                </div >
-            </div >
-            <%
-                }
-            %>
+        
+<div class="ufps-card ufps-margin-top-30">
+    <div class="ufps-title-color ufps-text-center ufps-font-s">Mi Perfil</div>
+    <div class="ufps-card-caption">
+        <div class="img-foto-perfil">
+            <img class="ufps-perfil-redonde2" src="img/user.jpg"/>
         </div>
+         
+ <div class="ufps-title-color ufps-text-center ufps-font-s">Información Personal</div>
+ <div class="ufps-card-caption">
+     <div class="ufps-row ufps-margin-top-30" >
+             <div class="ufps-col-mobile-12 ufps-col-netbook-6" >
+                        <label class="ufps-title-input">Nombres:</label>
+                    <input type="text" class="ufps-input-line" required>
+                      <label class="ufps-title-input">Documento:</label>
+                    <input type="text" class="ufps-input-line" required>
+                    <label class="ufps-title-input">Tipo</label>
+                    <input type="text" class="ufps-input-line" required>
+    
+             </div >
+     <div class="ufps-col-mobile-12 ufps-col-netbook-6" > 
+         <label class="ufps-title-input">Apellidos</label>
+                    <input type="text" class="ufps-input-line" required>
+      <label class="ufps-title-input">Codigo</label>
+                    <input type="text" class="ufps-input-line" required>
+                    <div class="ufps-documentos ufps-margin-top-10">
+                       <div class="ufps-title-color ufps-text-center ufps-font-s">Documentos acreditados</div>
+                       <div class="ufps-card-caption">
+                           <a href="">Curriculum </a> <a href="">Certificacion Doctorado </a>
+                         <input type="file" class="ufps-input-line" required>  
+                       </div>
+                    </div>
+     </div >
+ </div >
+ <input type="button" class="ufps-btn w-100 ufps-margin-top-30" value="Guardar">
+ </div>
+</div>
+</div>
+
+           
     </div>
-    <div class="ufps-footer ufps-footer-2">
+    <div class="ufps-footer ufps-footer-3">
         <h3>Universidad Francisco de Paula Santander</h3>
         <p>Programa Ingeniería de Sistemas</p>
         <p>&copy; 2021 | Analisis y Diseño de Sistemas de Información</p>
