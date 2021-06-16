@@ -22,7 +22,8 @@
                         <div class="ufps-btn-menu-bar"> </div>
                         <div class="ufps-btn-menu-bar"> </div>
                     </div>
-                </div><%
+                </div>
+                <%
                     Usuario user = ((Usuario) request.getSession().getAttribute("user"));
                     if (user == null) {
                         response.sendRedirect("login.jsp");
@@ -54,9 +55,17 @@
 <div class="ufps-card ufps-margin-top-30">
     <div class="ufps-title-color ufps-text-center ufps-font-s">Mi Perfil</div>
     <div class="ufps-card-caption">
-        <div class="img-foto-perfil">
-            <img class="ufps-perfil-redonde2" src="img/user.jpg"/>
-        </div>
+        <div class="ufps-row" >
+     <div class="ufps-col-mobile-12 ufps-col-netbook-4" > 
+         <input id="fileImagenPerfil" type="file" class="ufps-ref-margin-5 ufps-input-line">
+     </div >
+     <div class="ufps-col-mobile-12 ufps-col-netbook-8" > 
+     <div class="img-foto-perfil">
+            <img id="imgperfilfoto" class="ufps-perfil-redonde2" src="img/user.jpg"/>
+        </div></div >
+ </div >
+        
+        
          
  <div class="ufps-title-color ufps-text-center ufps-font-s">Información Personal</div>
  <div class="ufps-card-caption">
@@ -68,7 +77,11 @@
                     <input type="text" class="ufps-input-line" required>
                     <label class="ufps-title-input">Tipo</label>
                     <input type="text" class="ufps-input-line" required>
-    
+                    <div class="ufps-margin-top-20">
+                        <label class="ufps-title-input">Titulo: </label>
+                    <input type="text" class="ufps-input-line" id="titulo_name">
+                    <button onclick="llevarLista()" class="ufps-btn ufps-margin-top-10">Agregar Titulo</button>
+                    </div>
              </div >
      <div class="ufps-col-mobile-12 ufps-col-netbook-6" > 
          <label class="ufps-title-input">Apellidos</label>
@@ -77,9 +90,16 @@
                     <input type="text" class="ufps-input-line" required>
                     <div class="ufps-documentos ufps-margin-top-10">
                        <div class="ufps-title-color ufps-text-center ufps-font-s">Documentos acreditados</div>
-                       <div class="ufps-card-caption">
-                           <a href="">Curriculum </a> <a href="">Certificacion Doctorado </a>
-                         <input type="file" class="ufps-input-line" required>  
+                       <div class="ufps-padding-5">
+                               <table id="tablaprofe" class="ufps-table ufps-text-left">
+                                    <thead>
+                                        <th style="text-align: center;">Nombre</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td style="text-align: center;">Ingeniero Industrial <a href=""><i class="fa fa-times"></i></a></td></tr>
+                                                <tr><td style="text-align: center;">Magister Ingenieria</td></tr>
+                                    </tbody>
+                                </table>  
                        </div>
                     </div>
      </div >
@@ -96,6 +116,25 @@
         <p>Programa Ingeniería de Sistemas</p>
         <p>&copy; 2021 | Analisis y Diseño de Sistemas de Información</p>
     </div>
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
     <script src="js/ufps.min.js"></script>
+    <script>
+        function readURL2(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                // Asignamos el atributo src a la tag de imagen
+                $('#imgperfilfoto').removeAttr("src");
+                $('#imgperfilfoto').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    
+    $('#fileImagenPerfil').change(function () {
+        readURL2(this);
+    });
+    </script>
 </body>
 </html>

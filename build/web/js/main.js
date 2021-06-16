@@ -44,10 +44,14 @@ $(document).ready(function () {
             reader.readAsDataURL(input.files[0]);
         }
     }
+    
+    
 
     $('#fileImagen').change(function () {
         readURL(this);
     });
+    
+     
 
     /*Transferencia */
     var dataArray1 = [

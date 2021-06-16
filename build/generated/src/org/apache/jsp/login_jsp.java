@@ -101,6 +101,7 @@ public final class login_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("            <p>Programa Ingeniería de Sistemas</p>\n");
       out.write("            <p>&copy; 2021 | Analisis y Diseño de Sistemas de Información</p>\n");
       out.write("        </div>\n");
+      out.write("        <script src=\"js/ufps.min.js\"></script>\n");
       out.write("    </body>\n");
       out.write("</html>");
     } catch (Throwable t) {

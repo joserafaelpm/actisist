@@ -68,7 +68,7 @@ font-size: 1.4em;
 
 .ufps-footer-3{
     position: absolute !important;
-   bottom: -35em;
+   bottom: -45em;
   width: 100% !important;
   height:100px !important;
 }
@@ -104,8 +104,9 @@ font-size: 1.4em;
 
 .ufps-footer-3{
     position: absolute !important;
-   bottom: -45em !important;
+   bottom: -55em !important;
 }
+
  }
 @media screen and (max-width:500px){
     
@@ -116,7 +117,7 @@ font-size: 1.4em;
 
 .ufps-footer-3{
     position: absolute !important;
-   bottom: -45em !important;
+   bottom: -75em !important;
 }
 
 .ufps-navbar .ufps-dropdown{
@@ -198,11 +199,18 @@ font-size: 1.4em;
 }
 /*Listas*/
 
+.ufps-ref-margin-5{
+    width: 100%;
+    margin:90px;
+}
+
 .img-foto-perfil{
     margin:auto;
-    width: 30%;
+    width: 60%;
     height:280px;
 }
+
+
 
 .ufps-perfil-redonde2{
     width: 100%;
@@ -368,6 +376,11 @@ border:1px solid rgba(41, 40, 40, 0.37);
     .ufps-section-form>.ufps-body-section{
         width:90%;
     }
+    
+    .ufps-ref-margin-5{
+    width: 100%;
+    margin:20px;
+}
     
     .ufps-width-div-50{
         width: 100% !important;
