@@ -66,7 +66,7 @@
 
 
 
-<div class="ufps-footer">
+<div class="ufps-footer-2 ">
     <h3>Universidad Francisco de Paula Santander</h3>
     <p>Programa Ingeniería de Sistemas</p>
     <p>&copy; 2021 | Analisis y Diseño de Sistemas de Información</p>

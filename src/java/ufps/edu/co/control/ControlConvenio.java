@@ -6,11 +6,16 @@
 package ufps.edu.co.control;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import ufps.edu.co.dto.Convenio;
+import ufps.edu.co.dto.Institucion;
+import ufps.edu.co.dto.TipoConvenio;
 import ufps.edu.co.negocio.AdministrarConvenio;
 
 /**
@@ -30,7 +35,17 @@ public class ControlConvenio extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, Exception {
+        switch(request.getParameter("q")){
+            case "list": this.list(request, response);
+            break;
+            case "show": this.show(request, response);
+            break;
+            case "reg": this.registrar(request, response);
+            break;
+            case "edit": this.edit(request, response);
+            break;
+        }
     }
 
     /**
@@ -44,11 +59,10 @@ public class ControlConvenio extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        switch(request.getParameter("q")){
-            case "list": this.list(request, response);
-            break;
-            case "edit": this.edit(request, response);
-            break;
+        try{
+            processRequest(request, response);
+        }catch(Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -63,9 +77,10 @@ public class ControlConvenio extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        switch(request.getParameter("q")){
-            case "reg": this.registrar(request, response);
-            break;
+        try{
+            processRequest(request, response);
+        }catch(Exception e){
+            e.printStackTrace();
         }
     }
     
@@ -76,13 +91,29 @@ public class ControlConvenio extends HttpServlet {
         response.sendRedirect("registroConvenio.jsp");
     }
     
-    private void edit(HttpServletRequest request, HttpServletResponse response) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void show(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        request.getSession().setAttribute("convenio", new AdministrarConvenio().getConvenio(Integer.parseInt(request.getParameter("n_c"))));
+        response.sendRedirect("editarConvenio.jsp");
     }
 
     private void registrar(HttpServletRequest request, HttpServletResponse response) throws IOException {
         new AdministrarConvenio().registrarConvenio(request);
         response.sendRedirect("registroConvenio.jsp");
+    }
+    
+    private void edit(HttpServletRequest request, HttpServletResponse response) throws ParseException, Exception {
+        SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
+        Convenio c = (Convenio) request.getSession().getAttribute("convenio");
+        c.setDescripcion(request.getParameter("descr"));
+        c.setRazon(request.getParameter("razon"));
+        c.setFecha(sd.parse(request.getParameter("fe_in")));
+        c.setVigencia(sd.parse(request.getParameter("fe_out")));
+        c.setEmpresa(new Institucion(Integer.parseInt(request.getParameter("ins_exi"))));
+        c.setNumero(Integer.parseInt(request.getParameter("num")));
+        c.setTipoConvenio(new TipoConvenio(Integer.parseInt(request.getParameter("tp_con"))));
+        new AdministrarConvenio().edit(c);
+        request.getSession().removeAttribute("convenio");
+        this.list(request, response);
     }
     
     /**

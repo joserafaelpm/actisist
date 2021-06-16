@@ -19,6 +19,7 @@ public class Conexion {
 
     private Conexion() {
         this.bd = Persistence.createEntityManagerFactory("actisistPU");
+        this.bd.getCache().evictAll();
     }
 
     public static Conexion getConexion() {

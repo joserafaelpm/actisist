@@ -38,39 +38,6 @@ public class ControlUsuario extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-    }
-
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        switch (request.getParameter("q")) {
-            case "access_sol": ;
-                this.accesoSolicitud(request, response);
-                break;
-            case "list":
-                this.listar(request, response);
-        }
-    }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
         try {
             switch (request.getParameter("q")) {
                 case "reg":
@@ -85,10 +52,44 @@ public class ControlUsuario extends HttpServlet {
                 case "regDocente":
                 case "regConferencista":
                     this.registrarUsuario(request, response);
+                    break;
+                case "access_sol": ;
+                    this.accesoSolicitud(request, response);
+                    break;
+                case "list":
+                    this.listar(request, response);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
     }
 
     private void login(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

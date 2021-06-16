@@ -13,6 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import ufps.edu.co.dto.Convenio;
 import ufps.edu.co.dto.Institucion;
 import ufps.edu.co.negocio.AdministrarInstituciones;
 
@@ -68,10 +69,11 @@ public class ControlInstitucion extends HttpServlet {
 
     private void listar(HttpServletRequest request, HttpServletResponse response) throws IOException {
         PrintWriter pw = new PrintWriter(response.getWriter());
+        Convenio con = (Convenio)request.getSession().getAttribute("convenio");
         response.setContentType("text/html;charset=UTF-8");
         List<Institucion> ins = new AdministrarInstituciones().listInstituciones();
         for (Institucion i : ins) {
-            pw.println("<option value=" + i.getId() + ">" + i.getNombre() + "</option>");
+            pw.println("<option value=" + i.getId() + " "+(con!=null ? (con.getEmpresa().getId().equals(i.getId()) ? "selected" : ""): "")+">" + i.getNombre() + "</option>");
         }
         pw.flush();
     }

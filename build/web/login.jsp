@@ -27,8 +27,8 @@
                     </div>
                 </div>
                 <div class="ufps-navbar-right">
-                    <a href="index.html" class="ufps-navbar-btn">Inicio</a>
-                    <a href="login.html" class="ufps-navbar-btn">Inicio Sesion</a>
+                    <a href="index.jsp" class="ufps-navbar-btn">Inicio</a>
+                    <a href="login.jsp" class="ufps-navbar-btn">Inicio Sesion</a>
                 </div>
                 <div class="ufps-navbar-left">
                     <div class="ufps-navbar-corporate">
@@ -62,5 +62,6 @@
             <p>Programa Ingeniería de Sistemas</p>
             <p>&copy; 2021 | Analisis y Diseño de Sistemas de Información</p>
         </div>
+        <script src="js/ufps.min.js"></script>
     </body>
 </html>

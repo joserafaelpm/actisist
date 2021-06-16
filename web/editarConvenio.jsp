@@ -1,6 +1,6 @@
 <%-- 
-    Document   : registroConvenio
-    Created on : 8/06/2021, 03:16:22 PM
+    Document   : editarConvenio
+    Created on : 16/06/2021, 10:33:49 AM
     Author     : dunke
 --%>
 
@@ -66,8 +66,7 @@
 
                 <%
                     SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
-                    Date date = new Date();
-                    List<Convenio> cs = ((List<Convenio>) request.getSession().getAttribute("cs"));
+                    Convenio convenio = ((Convenio) request.getSession().getAttribute("convenio"));
                     List<TipoConvenio> tps = ((List<TipoConvenio>) request.getSession().getAttribute("tps"));
                     Usuario user = ((Usuario) request.getSession().getAttribute("user"));
                     if (user == null) {
@@ -78,36 +77,36 @@
                 <div class="ufps-col-mobile-12 ufps-margin-top-10 ufps-col-netbook-9" >
                     <div class="ufps-section-form">
                         <div class="ufps-title-section">
-                            Registrar Convenio
+                            Editar Convenio
                         </div>
                         <div class="ufps-body-section-80 ufps-padding-5">
 
 
-                            <form action="ControlConvenio?q=reg" method="POST">
+                            <form action="ControlConvenio?q=edit" method="POST">
                                 <div class="ufps-row" >
                                     <div class="ufps-col-mobile-12 ufps-col-netbook-3" >Numero de convenio:</div >
                                     <div class="ufps-col-mobile-12 ufps-col-netbook-9" >
-                                        <input type="number"  name="num" class="ufps-input-line" required>
+                                        <input type="number"  name="num" class="ufps-input-line" value="<%=convenio.getNumero() %>" required>
                                     </div>
                                 </div>
                                 <div class="ufps-row" >
                                     <div class="ufps-col-mobile-12 ufps-col-netbook-6" >
                                         <div class="ufps-row" >
-                                            <div class="ufps-col-mobile-12 ufps-col-netbook-3" > Fecha Inicio:</div >
-                                            <div class="ufps-col-mobile-12 ufps-col-netbook-9" > <input type="Date"  name="fe_in" class="ufps-input-line" value="<%=sd.format(date) %>" required></div>
+                                            <div class="ufps-col-mobile-12 ufps-col-netbook-3"> Fecha Inicio:</div >
+                                            <div class="ufps-col-mobile-12 ufps-col-netbook-9" > <input type="Date"  id="fe_in" name="fe_in" class="ufps-input-line" value="<%=sd.format(convenio.getFecha()) %>" required></div>
                                         </div>
                                     </div >
                                     <div class="ufps-col-mobile-12 ufps-col-netbook-6" >
                                         <div class="ufps-row" >
                                             <div class="ufps-col-mobile-12 ufps-col-netbook-3" > Fecha Fin:</div >
-                                            <div class="ufps-col-mobile-12 ufps-col-netbook-9" > <input type="Date"  nname="fe_out" class="ufps-input-line" value="<%=sd.format(date) %>" required></div>
+                                            <div class="ufps-col-mobile-12 ufps-col-netbook-9" > <input type="Date"  id="fe_out" name="fe_out" class="ufps-input-line" value="<%=sd.format(convenio.getVigencia()) %>" required></div>
                                         </div>    
                                     </div>
                                 </div>
                                 <div class="ufps-margin-top-10 ufps-pl-pr-15"><label>Descripcion</label></div>
-                                <textarea class="ufps-input" rows="4" cols="50" name="descr"></textarea>
+                                <textarea class="ufps-input" rows="4" cols="50" id="descr" name="descr"><%=convenio.getDescripcion() %></textarea>
                                 <div class="ufps-margin-top-10 ufps-pl-pr-15"><label>Razon del convenio</label></div>
-                                <textarea class="ufps-input" rows="4" cols="50" name="razon"></textarea>
+                                <textarea class="ufps-input" rows="4" cols="50" id="razon" name="razon"><%=convenio.getRazon() %></textarea>
 
                                 <div class="ufps-title-h1-red">
                                     La institucion se encuentra registrada
@@ -115,25 +114,10 @@
                                 <div class="ufps-margin-top-10 ufps-pl-pr-15">
                                     <div class="ufps-row" >
                                         <div class="ufps-col-mobile-12 ufps-col-netbook-6" >
-                                            <div class="label"><label class="ufps-title-input">Empresa o Institucion</label></div>
-                                            <input type="checkbox" id="ins_exis" name="ins_exis" onchange="exist_ins()">Institucion registrada<br>
-                                            <div id="exist" hidden>
+                                            <div class="label"><label class="ufps-title-input">Empresa o Institucion Adscrita</label></div>
+                                            <div id="exist">
                                                 <select class="ufps-input-line" id="ins_exi" name="ins_exi">
                                                 </select>
-                                            </div>
-                                            <div id="inputIns" class="ufps-margin-botton-10">
-                                                <input  class="ufps-input ufps-margin-top-10" type="text" id="ins_non" name="ins_non">
-                                            </div>
-
-                                        </div>
-                                        <div id="non_exist" class="ufps-col-mobile-12 ufps-col-netbook-6">
-
-                                            <div class="ufps-row">
-                                                <div class="ufps-col-mobile-12 ufps-col-netbook-6" > 
-                                                    <div class="label"><label class="ufps-title-input">Pais</label></div>
-                                                    <select class="ufps-input-line"  id="pai" name="pai">
-                                                    </select>
-                                                </div >
                                             </div>
                                         </div>
                                     </div >
@@ -145,76 +129,35 @@
                                     <div class="ufps-margin-top-10">
                                         <label>Tipo de convenio</label>
                                         <select id="tp_con" name="tp_con" class="ufps-input-line">
-                                            <%for (TipoConvenio tp : tps) {%>
+                                            <%
+                                            for (TipoConvenio tp : tps) {
+                                                if(tp.getId() == convenio.getId()){
+                                            %>
+                                            <option value="<%=tp.getId()%>" selected><%=tp.getTipo()%></option>
+                                                <%}else{%>
                                             <option value="<%=tp.getId()%>"><%=tp.getTipo()%></option>
-                                            <%}%>
+                                                 <%}
+                                            }%>
                                         </select>
                                     </div>
-                                    <input type="submit"  class="ufps-btn ufps-width-100 ufps-margin-top-10" value="Registrar">
+                                    <input type="submit"  class="ufps-btn ufps-width-100 ufps-margin-top-10" value="Guardar cambios">
                                     </form>
 
                                 </div>
                         </div>
                     </div >
                 </div >
-                <div class="ufps-col-mobile-12 ufps-margin-top-10 ufps-col-netbook-9" >
-                    <div class="ufps-section-form">
-                        <div class="ufps-title-section">
-                            Tabla de convenios Registrados
-                        </div>
-                        <div class="ufps-body-section-80 ufps-padding-5">
-
-                            <!--TABLA  DE CONVENIOS REGISTRADOS-->
-                            <table border="1" class="ufps-table ufps-table-responsive ufps-table-inserted ufps-text-center">
-                                <tr>
-                                    <th>Numero</th>
-                                    <th>Fecha</th>
-                                    <th>Vigencia</th>
-                                    <th>Institución</th>
-                                    <th>Acción</th>
-                                </tr>
-                                <%for (Convenio c : cs) {%>
-                                <tr> 
-                                    <td><%=c.getNumero()%></td>
-                                    <td><%=sd.format(c.getFecha())%></td>
-                                    <td><%=sd.format(c.getVigencia())%></td>
-                                    <td><%=c.getEmpresa().getNombre()%></td>
-                                    <td><a href="ControlConvenio?q=show&n_c=<%=c.getId()%>">Editar</a></td>
-                                </tr>
-                                <%}%>
-                            </table>
-
-                        </div>
-                    </div>
-                </div>
             </div>
-
-
-
-
 
             <script>
                 $(document).ready(function () {
                     load('ControlInstitucion?q=list', '#ins_exi');
-                    load('ControlPaises?q=list', '#pai');
                 });
 
                 function load(control, compnt) {
                     $.post(control, {}, function (response) {
                         $(compnt).html(response);
                     });
-                }
-
-                function exist_ins() {
-                    if ($('#ins_exis').is(':checked')) {
-                        $('#non_exist').hide();
-                        $('#exist').show();
-                        $('#inputIns').hide();
-                    } else {
-                        $('#non_exist').show();
-                        $('#exist').hide();
-                        $('#inputIns').show();
-                    }
                 }
             </script>
             <div class="ufps-footer">

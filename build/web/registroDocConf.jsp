@@ -163,5 +163,6 @@
             <p>Programa Ingeniería de Sistemas</p>
             <p>&copy; 2021 | Analisis y Diseño de Sistemas de Información</p>
         </div> 
+        <script src="js/ufps.min.js"></script>
     </body>
 </html>

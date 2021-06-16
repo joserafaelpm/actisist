@@ -66,8 +66,8 @@ public final class login_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                    </div>\r\n");
       out.write("                </div>\r\n");
       out.write("                <div class=\"ufps-navbar-right\">\r\n");
-      out.write("                    <a href=\"index.html\" class=\"ufps-navbar-btn\">Inicio</a>\r\n");
-      out.write("                    <a href=\"login.html\" class=\"ufps-navbar-btn\">Inicio Sesion</a>\r\n");
+      out.write("                    <a href=\"index.jsp\" class=\"ufps-navbar-btn\">Inicio</a>\r\n");
+      out.write("                    <a href=\"login.jsp\" class=\"ufps-navbar-btn\">Inicio Sesion</a>\r\n");
       out.write("                </div>\r\n");
       out.write("                <div class=\"ufps-navbar-left\">\r\n");
       out.write("                    <div class=\"ufps-navbar-corporate\">\r\n");
@@ -101,6 +101,7 @@ public final class login_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("            <p>Programa Ingeniería de Sistemas</p>\r\n");
       out.write("            <p>&copy; 2021 | Analisis y Diseño de Sistemas de Información</p>\r\n");
       out.write("        </div>\r\n");
+      out.write("        <script src=\"js/ufps.min.js\"></script>\r\n");
       out.write("    </body>\r\n");
       out.write("</html>");
     } catch (Throwable t) {

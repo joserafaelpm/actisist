@@ -11,8 +11,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import ufps.edu.co.dao.ConvenioActividadJpaController;
 import ufps.edu.co.dao.ConvenioJpaController;
 import ufps.edu.co.dao.TipoConvenioJpaController;
+import ufps.edu.co.dao.exceptions.NonexistentEntityException;
 import ufps.edu.co.dto.Convenio;
 import ufps.edu.co.dto.Institucion;
 import ufps.edu.co.dto.Pais;
@@ -69,7 +71,15 @@ public class AdministrarConvenio {
         return new ConvenioJpaController(Conexion.getConexion().getBd()).findConvenioEntities();
     }
     
+    public Convenio getConvenio(int id){
+        return new ConvenioJpaController(Conexion.getConexion().getBd()).findConvenio(id);
+    }
+    
     public List<TipoConvenio> listTypes(){
         return new TipoConvenioJpaController(Conexion.getConexion().getBd()).findTipoConvenioEntities();
+    }
+    
+    public void edit(Convenio convenio) throws NonexistentEntityException, Exception{
+        new ConvenioJpaController(Conexion.getConexion().getBd()).edit(convenio);
     }
 }

@@ -65,7 +65,8 @@
                 </div >
 
                 <%
-                    SimpleDateFormat sd = new SimpleDateFormat("dd/MM/yyyy");
+                    SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
+                    Date date = new Date();
                     List<Convenio> cs = ((List<Convenio>) request.getSession().getAttribute("cs"));
                     List<TipoConvenio> tps = ((List<TipoConvenio>) request.getSession().getAttribute("tps"));
                     Usuario user = ((Usuario) request.getSession().getAttribute("user"));
@@ -93,13 +94,13 @@
                                     <div class="ufps-col-mobile-12 ufps-col-netbook-6" >
                                         <div class="ufps-row" >
                                             <div class="ufps-col-mobile-12 ufps-col-netbook-3" > Fecha Inicio:</div >
-                                            <div class="ufps-col-mobile-12 ufps-col-netbook-9" > <input type="Date"  name="fe_in" class="ufps-input-line" required></div>
+                                            <div class="ufps-col-mobile-12 ufps-col-netbook-9" > <input type="Date"  name="fe_in" class="ufps-input-line" value="<%=sd.format(date) %>" required></div>
                                         </div>
                                     </div >
                                     <div class="ufps-col-mobile-12 ufps-col-netbook-6" >
                                         <div class="ufps-row" >
                                             <div class="ufps-col-mobile-12 ufps-col-netbook-3" > Fecha Fin:</div >
-                                            <div class="ufps-col-mobile-12 ufps-col-netbook-9" > <input type="Date"  nname="fe_out" class="ufps-input-line" required></div>
+                                            <div class="ufps-col-mobile-12 ufps-col-netbook-9" > <input type="Date"  nname="fe_out" class="ufps-input-line" value="<%=sd.format(date) %>" required></div>
                                         </div>    
                                     </div>
                                 </div>
@@ -128,11 +129,6 @@
                                         <div id="non_exist" class="ufps-col-mobile-12 ufps-col-netbook-6">
 
                                             <div class="ufps-row">
-                                                <div class="ufps-col-mobile-12 ufps-col-netbook-6" > 
-                                                    <div class="label"><label class="ufps-title-input">Pais</label></div>
-                                                    <select class="ufps-input-line"  id="pai" name="pai">
-                                                    </select>
-                                                </div >
                                                 <div class="ufps-col-mobile-12 ufps-col-netbook-6" > 
                                                     <div class="label"><label class="ufps-title-input">Pais</label></div>
                                                     <select class="ufps-input-line"  id="pai" name="pai">
@@ -183,7 +179,7 @@
                                     <td><%=sd.format(c.getFecha())%></td>
                                     <td><%=sd.format(c.getVigencia())%></td>
                                     <td><%=c.getEmpresa().getNombre()%></td>
-                                    <td><a href="ControlConvenio?q=edit&n_c=<%=c.getId()%>">Editar</a></td>
+                                    <td><a href="ControlConvenio?q=show&n_c=<%=c.getId()%>">Editar</a></td>
                                 </tr>
                                 <%}%>
                             </table>
@@ -225,6 +221,7 @@
                 <h3>Universidad Francisco de Paula Santander</h3>
                 <p>Programa Ingeniería de Sistemas</p>
                 <p>&copy; 2021 | Analisis y Diseño de Sistemas de Información</p>
-            </div>  
+            </div> 
+            <script src="js/ufps.min.js"></script>
     </body>
 </html>
