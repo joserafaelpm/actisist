@@ -67,7 +67,7 @@
         <div class="ufps-card-caption"> 
             <li> <a href="ControlUsuario?q=list"><i class="fa fa-user"></i>Registrar Docente y/o Conferencistas</a></li>
             <li><a href="verActividades.jsp"><i class="fa fa-list"></i> Ver actividades Registradas</a></li>
-            <li><a href="ControlConvenio?q=redi"><i class="fa fa-handshake"></i> Registrar Convenio</a></li>
+            <li><a href="ControlConvenio?q=list"><i class="fa fa-handshake"></i> Registrar Convenio</a></li>
             <li><a href=""><i class="fa fa-signal"></i> Generar Graficas</a></li>
         </div>
         <%

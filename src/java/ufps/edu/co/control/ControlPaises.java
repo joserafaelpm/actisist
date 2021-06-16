@@ -13,9 +13,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import ufps.edu.co.dao.PaisJpaController;
 import ufps.edu.co.dto.Pais;
-import ufps.edu.co.util.Conexion;
+import ufps.edu.co.negocio.AdministrarPaises;
 
 /**
  *
@@ -69,8 +68,8 @@ public class ControlPaises extends HttpServlet {
 
     private void listar(HttpServletRequest request, HttpServletResponse response) throws IOException {
         PrintWriter pw = new PrintWriter(response.getWriter());
-        PaisJpaController pjpa = new PaisJpaController(Conexion.getConexion().getBd());
-        List<Pais> ps = pjpa.findPaisEntities();
+        response.setContentType("text/html;charset=UTF-8");
+        List<Pais> ps = new AdministrarPaises().list();
         for(Pais p: ps){
            pw.println("<option value="+p.getId()+">"+p.getNombre()+"</option>"); 
         }

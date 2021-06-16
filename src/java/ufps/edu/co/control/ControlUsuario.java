@@ -123,7 +123,8 @@ public class ControlUsuario extends HttpServlet {
         try {
             SolicitudRegistro sr = new SolicitudRegistro(request.getParameter("token"));
             sr.setTypeUs(new Rol(Integer.parseInt(request.getParameter("type"))));
-            if ((sr = new AdministrarUsuario().accesoSolicitud(request, sr)) != null) {
+            request.getSession().setAttribute("types", new AdministrarUsuario().accesoSolicitud(request.getParameter("token"), sr)); 
+            if (request.getSession().getAttribute("types") != null) {
                 request.getSession().setAttribute("sol", sr);
                 response.sendRedirect("registrarDocConf.jsp");
             } else {

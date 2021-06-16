@@ -6,16 +6,12 @@
 package ufps.edu.co.control;
 
 import java.io.IOException;
-import javax.persistence.EntityManagerFactory;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import ufps.edu.co.dao.ConvenioJpaController;
-import ufps.edu.co.dao.TipoConvenioJpaController;
 import ufps.edu.co.negocio.AdministrarConvenio;
-import ufps.edu.co.util.Conexion;
 
 /**
  *
@@ -49,7 +45,9 @@ public class ControlConvenio extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         switch(request.getParameter("q")){
-            case "redi": this.redirigir(request, response);
+            case "list": this.list(request, response);
+            break;
+            case "edit": this.edit(request, response);
             break;
         }
     }
@@ -71,11 +69,15 @@ public class ControlConvenio extends HttpServlet {
         }
     }
     
-    private void redirigir(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        EntityManagerFactory em = Conexion.getConexion().getBd();
-        request.getSession().setAttribute("cs", new ConvenioJpaController(em).findConvenioEntities());
-        request.getSession().setAttribute("tps", new TipoConvenioJpaController(em).findTipoConvenioEntities());
+    private void list(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        AdministrarConvenio ac = new AdministrarConvenio();
+        request.getSession().setAttribute("cs", ac.list());
+        request.getSession().setAttribute("tps", ac.listTypes());
         response.sendRedirect("registroConvenio.jsp");
+    }
+    
+    private void edit(HttpServletRequest request, HttpServletResponse response) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     private void registrar(HttpServletRequest request, HttpServletResponse response) throws IOException {

@@ -10,11 +10,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.EntityManagerFactory;
 import javax.servlet.http.HttpServletRequest;
 import ufps.edu.co.dao.ConvenioJpaController;
-import ufps.edu.co.dao.InstitucionJpaController;
-import ufps.edu.co.dao.PaisInstitucionJpaController;
+import ufps.edu.co.dao.TipoConvenioJpaController;
 import ufps.edu.co.dto.Convenio;
 import ufps.edu.co.dto.Institucion;
 import ufps.edu.co.dto.Pais;
@@ -55,7 +53,7 @@ public class AdministrarConvenio {
             PaisInstitucion pi = new PaisInstitucion();
             pi.setPaisId(new Pais(Integer.parseInt(request.getParameter("pai"))));
             ps.add(pi);
-            this.registrarIns(i, ps);
+            new AdministrarInstituciones().registrarIns(i, ps);
             c.setEmpresa(i);
         }
         c.setTipoConvenio(new TipoConvenio(Integer.parseInt(request.getParameter("tp_con"))));
@@ -67,12 +65,11 @@ public class AdministrarConvenio {
         new ConvenioJpaController(Conexion.getConexion().getBd()).create(c);
     }
     
-    public void registrarIns(Institucion i, List<PaisInstitucion> ps ){
-        EntityManagerFactory em = Conexion.getConexion().getBd();
-        InstitucionJpaController ijpa = new InstitucionJpaController(em);
-        PaisInstitucionJpaController pjpa = new PaisInstitucionJpaController(em);
-        ijpa.create(i);
-        ps.get(0).setInstitucionId(i);
-        pjpa.create(ps.get(0));
+    public List<Convenio> list(){
+        return new ConvenioJpaController(Conexion.getConexion().getBd()).findConvenioEntities();
+    }
+    
+    public List<TipoConvenio> listTypes(){
+        return new TipoConvenioJpaController(Conexion.getConexion().getBd()).findTipoConvenioEntities();
     }
 }
