@@ -30,15 +30,18 @@
                 %>
                 <div class="ufps-navbar-right">
                     <a href="dashboard.jsp" class="ufps-navbar-btn">Inicio</a>
-                    <a href="misActividades.jsp" class="ufps-navbar-btn">Mis Actividades</a>
+                    <%if (user.getIdRol().getId() != 1) {%><a href="misActividades.jsp" class="ufps-navbar-btn">Mis Actividades</a><%}%>
                     <div class="ufps-dropdown" id="dropdown4">
-                <div class="ufps-dropdown-content">
-                <a href="miPerfil.jsp">Mi Perfil</a>
-                <a href="ControlUsuario?q=log">Cerrar Sesion</a>
-            </div>
-        </div>
-                    <a onclick="openDropdown('dropdown4')"  class="ufps-navbar-btn ufps-dropdown-btn">Hector Parra<img class="ufps-perfil-redonde" src="img/user.jpg"/>
-                    </a>
+                        <div class="ufps-dropdown-content">
+                            <%if (user.getIdRol().getId() != 1) {%><a href="miPerfil.jsp">Mi Perfil</a><%}%>
+                            <a href="ControlUsuario?q=log">Cerrar Sesion</a>
+                        </div>
+                    </div>
+                    <%if (user.getIdRol().getId() == 1) {%>
+                    <a onclick="openDropdown('dropdown4')"  class="ufps-navbar-btn ufps-dropdown-btn"><%=user.getNombre()%><img class="ufps-perfil-redonde" src="img/admin.png"/></a>
+                        <%} else {%>
+                    <a onclick="openDropdown('dropdown4')"  class="ufps-navbar-btn ufps-dropdown-btn"><%=user.getNombre() + " " + user.getApellido()%> <img class="ufps-perfil-redonde" src="<%=user.getDocente().encodeImage() %>"/></a>
+                        <%}%>
                 </div>
                 <div class="ufps-navbar-left">
                     <div class="ufps-navbar-corporate">
@@ -49,9 +52,6 @@
         </div>
 
         <div class="ufps-container ">  
-        <form action="ControlUsuario?q=log" method="POST"><button type="submit" class="ufps-margin-top-10">Cerrar sesión</button></form>
-
-
             <div class="ufps-rafael-titulo-adming ">
                 <h1>DASHBOARD ADMINISTRATIVA</h1>
             </div>

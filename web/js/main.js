@@ -44,53 +44,10 @@ $(document).ready(function () {
             reader.readAsDataURL(input.files[0]);
         }
     }
+    
+    
 
     $('#fileImagen').change(function () {
         readURL(this);
     });
-
-    /*Transferencia */
-    var dataArray1 = [
-        {
-            "nombre": "Beijing Jans",
-            "value": 132
-        },
-        {
-            "nombre": "Shanghai Shengai",
-            "value": 422
-        }
-    ];
-    var dataArray2 = [
-        {
-            "nombre": "UNAN",
-            "value": 132
-        },
-        {
-            "nombre": "Simon Bolivar",
-            "value": 422
-        }
-    ];
-
-    var settings1 = {
-        "dataArray": dataArray1,
-        "itemName": "nombre",
-        "valueName": "value",
-        "callable": function (items) {
-            console.dir(items)
-        }
-    };
-
-    var settings2 = {
-        "dataArray": dataArray2,
-        "itemName": "nombre",
-        "valueName": "value",
-        "callable": function (items) {
-            console.dir(items)
-        }
-    };
-
-    $("#transfer1").transfer(settings1);
-    $("#transfer2").transfer(settings2);
-    /*Transferencia*/
-
 });

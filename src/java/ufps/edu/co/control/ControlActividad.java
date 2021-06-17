@@ -12,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import ufps.edu.co.negocio.AdministrarActividad;
 
 /**
  *
@@ -31,8 +32,19 @@ public class ControlActividad extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        switch(request.getParameter("q")){
+            case "redi": this.redi_reg(request, response);
+            break;
+        }
     }
 
+    private void redi_reg(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        AdministrarActividad a = new AdministrarActividad();
+        request.getSession().setAttribute("typeAct", a.listTypeAct());
+        request.getSession().setAttribute("typeMov", a.listTypeMov());
+        response.sendRedirect("registrarActividad.jsp");
+    }
+    
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -70,5 +82,4 @@ public class ControlActividad extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
 }

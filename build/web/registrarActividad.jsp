@@ -1,3 +1,6 @@
+<%@page import="ufps.edu.co.dto.Tipo"%>
+<%@page import="java.util.List"%>
+<%@page import="ufps.edu.co.dto.Usuario"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="es">
@@ -11,6 +14,7 @@
         <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
         <link rel="stylesheet" href="css/jquery.transfer.css">
         <link rel="stylesheet" href="icon_font/css/icon_font.css">
+        <script src="js/JQuery.js"></script>
         <link rel="stylesheet" href="css/main.css">
     </head>
     <body>
@@ -22,25 +26,34 @@
                         <div class="ufps-btn-menu-bar"> </div>
                         <div class="ufps-btn-menu-bar"> </div>
                     </div>
-                </div>
+                </div><%
+                    Usuario user = ((Usuario) request.getSession().getAttribute("user"));
+                    List<Tipo> typeAct = ((List<Tipo>) request.getSession().getAttribute("typeAct"));
+                    List<Tipo> typeMov = ((List<Tipo>) request.getSession().getAttribute("typeMov"));
+                    if (user == null) {
+                        response.sendRedirect("login.jsp");
+                    }
+                %>
                 <div class="ufps-navbar-right">
-                    <a href="misActividades.jsp" class="ufps-navbar-btn">Inicio</a>
-                    <a href="index.jsp" class="ufps-navbar-btn">Mis Actividades</a>
-                    <a onclick="openDropdown('dropdown4')"  class="ufps-navbar-btn ufps-dropdown-btn">Hecttor Parra <img class="ufps-perfil-redonde" src="img/user.jpg"/></a>
-                </div>
-                <div class="ufps-dropdown" id="dropdown4">
-                    <div class="ufps-dropdown-content">
-                        <a href="#">Opción 1</a>
-                        <a href="#">Opción 2</a>
-                        <a href="#">Opción 3</a>
+                    <a href="dashboard.jsp" class="ufps-navbar-btn">Inicio</a>
+                    <%if (user.getIdRol().getId() != 1) {%><a href="misActividades.jsp" class="ufps-navbar-btn">Mis Actividades</a><%}%>
+                    <div class="ufps-dropdown" id="dropdown4">
+                        <div class="ufps-dropdown-content">
+                            <%if (user.getIdRol().getId() != 1) {%><a href="miPerfil.jsp">Mi Perfil</a><%}%>
+                            <a href="ControlUsuario?q=log">Cerrar Sesion</a>
+                        </div>
                     </div>
+                    <%if (user.getIdRol().getId() == 1) {%>
+                    <a onclick="openDropdown('dropdown4')"  class="ufps-navbar-btn ufps-dropdown-btn"><%=user.getNombre()%><img class="ufps-perfil-redonde" src="img/admin.png"/></a>
+                        <%} else {%>
+                    <a onclick="openDropdown('dropdown4')"  class="ufps-navbar-btn ufps-dropdown-btn"><%=user.getNombre() + " " + user.getApellido()%> <img class="ufps-perfil-redonde" src="<%=user.getDocente().encodeImage()%>"/></a>
+                        <%}%>
                 </div>
                 <div class="ufps-navbar-left">
                     <div class="ufps-navbar-corporate">
-                        <img  src="img/logo_ufps_inverted.png" alt="Logo UFPS">
+                        <img src="img/logo_ufps_inverted.png" alt="Logo UFPS">
                     </div>
                 </div>
-
             </div>
         </div>
         <div class="ufps-container">
@@ -51,7 +64,7 @@
 
                         <div class="ufps-row">
                             <div class="ufps-col-netbook-6 ufps-col-mobile-12 ">
-                              <div class="ufps-div-title ufps-title-color">
+                                <div class="ufps-div-title ufps-title-color">
                                     Informacion de la Imagen
                                 </div>
                                 <div class="ufps-row ufps-margin-top-10" >
@@ -85,10 +98,10 @@
                                 <div class="ufps-row ufps-margin-top-20" >
                                     <div class="ufps-col-mobile-12 ufps-col-netbook-2" >Tipo:</div >
                                     <div class="ufps-col-mobile-12 ufps-col-netbook-10" >
-                                        <select class="ufps-input-line" name="select">
-                                            <option value="value1">Value 1</option>
-                                            <option value="value2" selected>Value 2</option>
-                                            <option value="value3">Value 3</option>
+                                        <select class="ufps-input-line">
+                                            <%for (Tipo t : typeAct) {%>
+                                            <option value="<%=t.getId()%>"><%=t.getTipo()%></option>
+                                            <%}%>
                                         </select>
                                     </div >
                                 </div >
@@ -96,13 +109,12 @@
                                     <div class="ufps-col-mobile-12 ufps-col-netbook-2" >Semestre:</div >
                                     <div class="ufps-col-mobile-12 ufps-col-netbook-10" >
                                         <select class="ufps-input-line" name="select">
-                                            <option value="value1">Value 1</option>
-                                            <option value="value2" selected>Value 2</option>
-                                            <option value="value3">Value 3</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
                                         </select>
                                     </div>
                                 </div>
-                                
+
                                 <div class="ufps-pl-pr-15 ufps-margin-top-20">
                                     Tematica:
                                     <textarea class="ufps-input" rows="4" cols="50"></textarea>
@@ -115,58 +127,17 @@
                                     https://www.jqueryscript.net/form/Groupable-Searchable-Dual-Listbox-Transfer.jsp
                                     -->
                                     <div class="ufps-conferencistas-div">
-                                        <div id="transfer1" class="transfer-demo"></div>
+                                        <div id="transfer1"></div>
                                     </div
                                 </div>
                                 <div class="ufps-pl-pr-15 ufps-margin-top-20">
                                     Movilidad
                                     <select class="ufps-input-line" id="movilidadSelect" name="select">
-                                        <option value="entrante">Entrante</option>
-                                        <option value="saliente">Saliente</option>
+                                        <%for (Tipo t : typeMov) {%>
+                                        <option value="<%=t.getId()%>"><%=t.getTipo()%></option>
+                                        <%}%>
                                     </select>
                                 </div>
-                                <div id="movilidad" hidden class="ufps-pl-pr-15 ufps-margin-top-20">
-                                        <div class="ufps-card">
-                                            <div class="ufps-card-caption">
-                                                <p>Institucion de destino</p>
-                                                <div class="ufps-row" >
-                                                    <div class="ufps-col-mobile-12 ufps-col-netbook-6" >
-
-                                                        <div class="ufps-row ufps-margin-top-20" >
-                                                            <div class="ufps-col-mobile-12 ufps-col-netbook-4" >Pais Destino</div >
-                                                            <div class="ufps-col-mobile-12 ufps-col-netbook-8" >
-                                                                <select class="ufps-input-line" name="select">
-                                                                    <option value="value1">Colombia</option>
-                                                                    <option value="value2" selected>Japon</option>
-                                                                    <option value="value3">Value 3</option>
-                                                                </select>
-                                                            </div >
-                                                        </div >
-
-                                                    </div >
-                                                    <div class="ufps-col-mobile-12 ufps-col-netbook-6" >
-
-                                                        <div class="ufps-row ufps-margin-top-20" >
-                                                            <div class="ufps-col-mobile-12 ufps-col-netbook-4" >Ciudad</div >
-                                                            <div class="ufps-col-mobile-12 ufps-col-netbook-8" >
-                                                                <select class="ufps-input-line" name="select">
-                                                                    <option value="value1">Colombia</option>
-                                                                    <option value="value2" selected>Japon</option>
-                                                                    <option value="value3">Value 3</option>
-                                                                </select>
-                                                            </div >
-                                                        </div >
-
-                                                    </div >
-                                                </div >
-                                                <div class="ufps-margin-top-20">
-                                                    Tiempo de Estadia:
-                                                    <input type="number" id="fileImagen" class="ufps-input-line">
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
                                 <div class="ufps-margin-top-30">
                                     <label class="ufps-pl-pr-15 ">Convenios:</label>
                                 </div>
@@ -175,9 +146,9 @@
                                 https://www.jqueryscript.net/form/Groupable-Searchable-Dual-Listbox-Transfer.jsp
                                 -->
                                 <div class=" ufps-conferencistas-div">
-                                    <div id="transfer2" class="transfer-demo"></div>
+                                    <div id="transfer2"></div>
                                 </div>
-                                
+
                             </div>
                         </div>
                         <input type="submit"  class="ufps-btn ufps-width-100 ufps-margin-top-20" value="Registrar Actividad"></input>
@@ -201,5 +172,35 @@
     <script src="js/jquery.transfer.js"></script>
     <script src="js/ufps.min.js"></script>
     <script src="js/main.js"></script>
+    
+    <script>
+        $(document).ready(function (){
+            $.post("ControlUsuario?q=liste", {}, function(response) {
+                resolveResponse(response, "#transfer1");
+            });
+            
+            $.post("ControlConvenio?q=liste", {}, function(response) {
+                resolveResponse(response, "#transfer2");
+            });
+            
+            function resolveResponse(response, component){
+                var arr = response.split(",");
+                var res = [];
+                for(var i=0; i<arr.length; i++){
+                    var temp = arr[i].split(":");
+                    res.push({"data":temp[0],"value":temp[1],"selected":true});
+                }
+                var settings = {
+                    "dataArray": res,
+                    "itemName": "data",
+                    "valueName": "value",
+                    "callable": function (items) {
+                        console.log(items);
+                    }
+                };
+                $(component).transfer(settings);
+            }
+        });
+    </script>
 </body>
 </html>

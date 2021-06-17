@@ -6,8 +6,10 @@
 package ufps.edu.co.control;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -45,6 +47,7 @@ public class ControlConvenio extends HttpServlet {
             break;
             case "edit": this.edit(request, response);
             break;
+            case "liste": this.liste(request, response);
         }
     }
 
@@ -125,4 +128,15 @@ public class ControlConvenio extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    private void liste(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        PrintWriter pw = response.getWriter();
+        List<Convenio> convs = new AdministrarConvenio().list();
+        String rta = "";
+        for(Convenio c: convs){
+            rta += c.getEmpresa().getNombre()+":"+c.getId()+",";
+        }
+        if(rta.length()!=0)pw.print(rta.substring(0, rta.length()-1));
+        pw.flush();
+    }
 }

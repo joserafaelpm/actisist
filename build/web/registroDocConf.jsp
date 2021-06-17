@@ -24,7 +24,15 @@
         <link rel="stylesheet" href="css/main.css">
     </head>
     <body>
-        <div class="ufps-navbar ufps-navbar-delete_margin" id="menu">
+        <%
+            List<Rol> roles = ((List<Rol>) request.getSession().getAttribute("rjpa"));
+            List<Usuario> users = ((List<Usuario>) request.getSession().getAttribute("ujpa"));;
+            Usuario user = ((Usuario) request.getSession().getAttribute("user"));
+            if (user == null || !user.getIdRol().getRol().equalsIgnoreCase("admin")) {
+                response.sendRedirect("login.jsp");
+            }
+        %>
+        <div class="ufps-navbar" id="menu">
             <div class="ufps-container-fluid">
                 <div class="ufps-navbar-brand">
                     <div class="ufps-btn-menu" onclick="toggleMenu('menu')">
@@ -35,24 +43,27 @@
                 </div>
                 <div class="ufps-navbar-right">
                     <a href="dashboard.jsp" class="ufps-navbar-btn">Inicio</a>
-                    <a href="misActividades.jsp" class="ufps-navbar-btn">Mis Actividades</a>
-                    <a onclick="openDropdown('dropdown4')"  class="ufps-navbar-btn ufps-dropdown-btn">Hecttor Parra <img class="ufps-perfil-redonde" src="img/user.jpg"/></a>
-                </div>
-                <div class="ufps-dropdown" id="dropdown4">
-                    <div class="ufps-dropdown-content">
-                        <a href="#">Opción 1</a>
-                        <a href="#">Opción 2</a>
-                        <a href="#">Opción 3</a>
+                    <%if (user.getIdRol().getId() != 1) {%><a href="misActividades.jsp" class="ufps-navbar-btn">Mis Actividades</a><%}%>
+                    <div class="ufps-dropdown" id="dropdown4">
+                        <div class="ufps-dropdown-content">
+                            <%if (user.getIdRol().getId() != 1) {%><a href="#">Mi Perfil</a><%}%>
+                            <a href="ControlUsuario?q=log">Cerrar Sesion</a>
+                        </div>
                     </div>
+                    <%if (user.getIdRol().getId() == 1) {%>
+                    <a onclick="openDropdown('dropdown4')"  class="ufps-navbar-btn ufps-dropdown-btn"><%=user.getNombre()%><img class="ufps-perfil-redonde" src="img/admin.png"/></a>
+                        <%} else {%>
+                    <a onclick="openDropdown('dropdown4')"  class="ufps-navbar-btn ufps-dropdown-btn"><%=user.getNombre() + " " + user.getApellido()%> <img class="ufps-perfil-redonde" src="<%=user.getDocente().getImagenPerfil()%>"/></a>
+                        <%}%>
                 </div>
                 <div class="ufps-navbar-left">
                     <div class="ufps-navbar-corporate">
-                        <img  src="img/logo_ufps_inverted.png" alt="Logo UFPS">
+                        <img src="img/logo_ufps_inverted.png" alt="Logo UFPS">
                     </div>
                 </div>
-
             </div>
         </div>
+
         <div class="ufps-row" >
             <div class="ufps-col-mobile-12 ufps-margin-top-10 ufps-col-netbook-9" >
                 <div class="ufps-section-form">
@@ -60,23 +71,12 @@
                         Tabla de Docentes y/o Conferencistas Registrados
                     </div>
                     <div class="ufps-body-section-80 ufps-padding-5">
-
-
-
-                        <%
-                            List<Rol> roles = ((List<Rol>) request.getSession().getAttribute("rjpa"));
-                            List<Usuario> users = ((List<Usuario>) request.getSession().getAttribute("ujpa"));;
-                            Usuario user = ((Usuario) request.getSession().getAttribute("user"));
-                            if (user == null || !user.getIdRol().getRol().equalsIgnoreCase("admin")) {
-                                response.sendRedirect("login.jsp");
-                            }
-                        %>
                         <form action="ControlUsuario?q=reg_sol" method="POST">
                             <div class="ufps-tooltip ufps-input-line">
                                 <span class="ufps-tooltip-content-bottom">Ingresar el email del usuario a registrar</span>
                                 <input type="email" placeholder="some_email@mail.co" id="mail_us" name="mail_us" class="ufps-input-line">
                             </div>
-                            <select id="docOrConf" name="docOrConf" onchange="change_table()" class="ufps-dropdown-btn">
+                            <select id="docOrConf" name="docOrConf" onchange="change_table()" class="ufps-btn">
                                 <%
                                     for (Rol r : roles) {
                                         if (r.getId() != 1) {
@@ -87,7 +87,7 @@
                                     }
                                 %>
                             </select>
-                            <input type="submit" class="ufps-btn">
+                            <input type="submit" class="ufps-btn" value="Registrar">
                         </form>
 
                         <table id="tDoc" border="1" style="width: 100%" class="ufps-margin-top-20  ufps-table ufps-table-responsive ufps-table-inserted ufps-text-center">

@@ -6,6 +6,8 @@
 package ufps.edu.co.control;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -40,7 +42,7 @@ public class ControlUsuario extends HttpServlet {
             throws ServletException, IOException {
         try {
             switch (request.getParameter("q")) {
-                case "reg":
+                case "sign":
                     this.login(request, response);
                     break;
                 case "log":
@@ -49,8 +51,7 @@ public class ControlUsuario extends HttpServlet {
                 case "reg_sol":
                     this.registrarSolicitud(request, response);
                     break;
-                case "regDocente":
-                case "regConferencista":
+                case "reg":
                     this.registrarUsuario(request, response);
                     break;
                 case "access_sol": ;
@@ -58,6 +59,8 @@ public class ControlUsuario extends HttpServlet {
                     break;
                 case "list":
                     this.listar(request, response);
+                case "liste":
+                    this.liste(request, response);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -98,7 +101,7 @@ public class ControlUsuario extends HttpServlet {
         Long cod = Long.parseLong(cods.isEmpty() ? "0" : cods);
         String pw = request.getParameter("pw");
         Usuario u = new Usuario(doc, "", "");
-        if((u = new AdministrarUsuario().login(u, cod, pw)) != null){
+        if((u = new AdministrarUsuario().login(u, cod, pw)) != null && (u.getDocente()==null || (u.getDocente()!=null && u.getDocente().getActivo()))){
             request.getSession().setAttribute("user", u);
             response.sendRedirect("dashboard.jsp");
         }else{
@@ -118,14 +121,17 @@ public class ControlUsuario extends HttpServlet {
         sr.setEmail(email);
         sr.setTypeUs(new Rol(type_us));
         new AdministrarUsuario().registrarSolicitud(sr);
+        response.sendRedirect("registroDocConf.jsp");
     }
 
     private void accesoSolicitud(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
+            AdministrarUsuario admin = new AdministrarUsuario();
             SolicitudRegistro sr = new SolicitudRegistro(request.getParameter("token"));
             sr.setTypeUs(new Rol(Integer.parseInt(request.getParameter("type"))));
-            request.getSession().setAttribute("types", new AdministrarUsuario().accesoSolicitud(request.getParameter("token"), sr)); 
-            if (request.getSession().getAttribute("types") != null) {
+            sr = admin.accesoSolicitud(sr); 
+            if (sr != null) {
+                request.getSession().setAttribute("types", admin.getTypes(sr.getTypeUs().getId())); 
                 request.getSession().setAttribute("sol", sr);
                 response.sendRedirect("registrarDocConf.jsp");
             } else {
@@ -153,8 +159,22 @@ public class ControlUsuario extends HttpServlet {
 
     private void listar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         EntityManagerFactory em = Conexion.getConexion().getBd();
-        request.getSession().setAttribute("ujpa", new UsuarioJpaController(em).findUsuarioEntities());
+        request.getSession().setAttribute("ujpa", new AdministrarUsuario().list());
         request.getSession().setAttribute("rjpa", new RolJpaController(em).findRolEntities());
-        request.getRequestDispatcher("registroDocConf.jsp").forward(request, response);
+        response.sendRedirect("registroDocConf.jsp");
+    }
+    
+    public void liste(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        PrintWriter pw = response.getWriter();
+        Usuario u = ((Usuario)request.getSession().getAttribute("user"));
+        List<Usuario> users = new AdministrarUsuario().list();
+        String rta = "";
+        for(Usuario us: users){
+            if(!us.getDni().equals(u.getDni())){
+                rta += us.getNombre()+" "+us.getApellido()+":"+us.getDni()+",";
+            }
+        }
+        if(rta.length()!=0)pw.print(rta.substring(0, rta.length()-1));
+        pw.flush();
     }
 }

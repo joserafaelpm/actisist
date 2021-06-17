@@ -52,7 +52,7 @@
     <class>ufps.edu.co.dto.Proyecto</class>
     <class>ufps.edu.co.dto.SolicitudRegistro</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
-    <properties>
+    <properties> 
       <property name="hibernate.show_sql" value="true"/>
       <property name="hibernate.format_sql" value="true"/>
       <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>

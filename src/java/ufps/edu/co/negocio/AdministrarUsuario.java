@@ -6,13 +6,12 @@
 package ufps.edu.co.negocio;
 
 import java.io.InputStream;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.IOUtils;
@@ -28,8 +27,8 @@ import ufps.edu.co.dto.Conferencista;
 import ufps.edu.co.dto.Docente;
 import ufps.edu.co.dto.Institucion;
 import ufps.edu.co.dto.Pais;
+import ufps.edu.co.dto.Rol;
 import ufps.edu.co.dto.SolicitudRegistro;
-import ufps.edu.co.dto.Tipo;
 import ufps.edu.co.dto.TipoConferencista;
 import ufps.edu.co.dto.TipoDocente;
 import ufps.edu.co.dto.Usuario;
@@ -45,19 +44,19 @@ public class AdministrarUsuario {
     public AdministrarUsuario() {
     }
 
-    public Object accesoSolicitud(String token, SolicitudRegistro sr) {
+    public SolicitudRegistro accesoSolicitud(SolicitudRegistro sr) {
         EntityManagerFactory em = Conexion.getConexion().getBd();
-        List<Tipo> types = null;
         Integer tp = sr.getTypeUs().getId();
-        sr = new SolicitudRegistroJpaController(em).findSolicitudRegistro(token);
-        if (sr != null && sr.getTypeUs().getId().equals(tp)) {
-            if (sr.getTypeUs().getId() == 2) {
-                return new TipoDocenteJpaController(em).findTipoDocenteEntities();
-            } else {
-                return new TipoConferencistaJpaController(em).findTipoConferencistaEntities();
-            }
+        sr = new SolicitudRegistroJpaController(em).findSolicitudRegistro(sr.getToken());
+        return sr!=null && sr.getTypeUs().getId().equals(tp) ? sr : null;
+    }
+
+    public Object getTypes(int type) {
+        if (type == 2) {
+            return new TipoDocenteJpaController(Conexion.getConexion().getBd()).findTipoDocenteEntities();
+        } else {
+            return new TipoConferencistaJpaController(Conexion.getConexion().getBd()).findTipoConferencistaEntities();
         }
-        return types;
     }
 
     public Usuario login(Usuario u, Long cod, String pw) {
@@ -88,9 +87,11 @@ public class AdministrarUsuario {
     }
 
     public void registrarUsuario(HttpServletRequest request) throws PreexistingEntityException, Exception {
-        SolicitudRegistro s = ((SolicitudRegistro) request.getSession().getAttribute("sol"));
+        SolicitudRegistro sr = ((SolicitudRegistro) request.getSession().getAttribute("sol"));
+        Rol rol = sr.getTypeUs();
+        String email = sr.getEmail();
         InputStream imagen = null;
-        String nombre = "", apellido = "", contraseña = "";
+        String nombre = "", apellido = "", contraseña = "", token=sr.getToken();
         Long documento = 0L, cod = 0L;
         Integer ins_exi = 0, pai = 0, type = 0;
         List<FileItem> items = null;
@@ -109,8 +110,8 @@ public class AdministrarUsuario {
                 imagen = item.getInputStream();
             }
         }
-        Usuario u = new Usuario(documento, nombre, s.getEmail());
-        u.setIdRol(s.getTypeUs());
+        Usuario u = new Usuario(documento, nombre, email);
+        u.setIdRol(rol);
         u.setApellido(apellido);
         u.setContraseña(new PasswordAuthentication().hash(contraseña));
         EntityManagerFactory em = Conexion.getConexion().getBd();
@@ -119,30 +120,41 @@ public class AdministrarUsuario {
             Docente d = new Docente(documento, true, cod, IOUtils.toByteArray(imagen));
             d.setActivo(true);
             d.setIdTipoDocente(new TipoDocente(type));
-            this.registrarDocente(em, s, d);
+            this.registrarDocente(em, token, d);
         } else {
             Conferencista c = new Conferencista(documento);
             c.setInstitucionId(new Institucion(ins_exi));
             c.setPaisOrigen(new Pais(pai));
             c.setTipoConferencistaId(new TipoConferencista(type));
-            this.registrarConferencista(em, s, c);
+            this.registrarConferencista(em, token, c);
         }
     }
 
-    public void registrarDocente(EntityManagerFactory em, SolicitudRegistro s, Docente d) throws PreexistingEntityException, Exception {
+    public void registrarDocente(EntityManagerFactory em, String token, Docente d) throws PreexistingEntityException, Exception {
         new DocenteJpaController(em).create(d);
-        this.delSol(em, s);
+        this.delSol(em, token);
     }
 
-    public void registrarConferencista(EntityManagerFactory em, SolicitudRegistro s, Conferencista c) throws PreexistingEntityException, Exception {
+    public void registrarConferencista(EntityManagerFactory em, String token, Conferencista c) throws PreexistingEntityException, Exception {
         new ConferencistaJpaController(em).create(c);
-        this.delSol(em, s);
+        this.delSol(em, token);
     }
 
-    private void delSol(EntityManagerFactory em, SolicitudRegistro s) throws NonexistentEntityException {
-        new SolicitudRegistroJpaController(em).destroy(s.getToken());
+    private void delSol(EntityManagerFactory em, String token) throws NonexistentEntityException {
+        new SolicitudRegistroJpaController(em).destroy(token);
     }
 
+    public List<Usuario> list(){
+        List<Usuario> users = new UsuarioJpaController(Conexion.getConexion().getBd()).findUsuarioEntities();
+        List<Usuario> rta = new ArrayList<>();
+        for(Usuario us: users){
+            if(us.getIdRol().getId() != 1){
+                rta.add(us);
+            }
+        }
+        return rta;
+    }
+    
     /**
      * Para insertar al admin por si se borra
      *

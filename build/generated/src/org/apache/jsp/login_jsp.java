@@ -81,7 +81,7 @@ public final class login_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("            <h2 class=\"ufps-text-center\"><b>Inicio de sesion</b></h2>\r\n");
       out.write("            <div class=\"ufps-card margin-footer-card-50 ufps-width-div-50 ufps-margin-auto \">\r\n");
       out.write("                <div class=\"ufps-card-caption ufps-padding-10\">        \r\n");
-      out.write("                    <form  action=\"ControlUsuario?q=reg\" method=\"POST\">\r\n");
+      out.write("                    <form  action=\"ControlUsuario?q=sign\" method=\"POST\">\r\n");
       out.write("                        <label for=\"doc\" class=\"ufps-title-input\">Documento</label>\r\n");
       out.write("                        <input type=\"number\" name=\"doc\" id=\"doc\" class=\"ufps-input-line\" required/>\r\n");
       out.write("                        <label for=\"cod\" class=\"ufps-title-input\">Codigo</label>\r\n");

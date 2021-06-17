@@ -19,7 +19,6 @@ public class Conexion {
 
     private Conexion() {
         this.bd = Persistence.createEntityManagerFactory("actisistPU");
-        this.bd.getCache().evictAll();
     }
 
     public static Conexion getConexion() {
@@ -30,6 +29,7 @@ public class Conexion {
     }
 
     public EntityManagerFactory getBd() {
+        this.bd.getCache().evictAll();
         return bd;
     }
 }

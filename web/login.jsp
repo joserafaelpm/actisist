@@ -42,7 +42,7 @@
             <h2 class="ufps-text-center"><b>Inicio de sesion</b></h2>
             <div class="ufps-card margin-footer-card-50 ufps-width-div-50 ufps-margin-auto ">
                 <div class="ufps-card-caption ufps-padding-10">        
-                    <form  action="ControlUsuario?q=reg" method="POST">
+                    <form  action="ControlUsuario?q=sign" method="POST">
                         <label for="doc" class="ufps-title-input">Documento</label>
                         <input type="number" name="doc" id="doc" class="ufps-input-line" required/>
                         <label for="cod" class="ufps-title-input">Codigo</label>

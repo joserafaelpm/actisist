@@ -6,6 +6,7 @@
 package ufps.edu.co.dto;
 
 import java.io.Serializable;
+import java.util.Base64;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -142,4 +143,8 @@ public class Docente implements Serializable {
         return "ufps.edu.co.dto.Docente[ usuarioDni=" + usuarioDni + " ]";
     }
     
+    public String encodeImage(){
+        String encodedImage=Base64.getEncoder().encodeToString(this.imagenPerfil);
+        return "data:image/jpg;base64,"+encodedImage;
+    }
 }
