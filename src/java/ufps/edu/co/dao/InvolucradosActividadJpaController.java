@@ -6,16 +6,18 @@
 package ufps.edu.co.dao;
 
 import java.io.Serializable;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import ufps.edu.co.dto.Actividad;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import ufps.edu.co.dao.exceptions.IllegalOrphanException;
 import ufps.edu.co.dao.exceptions.NonexistentEntityException;
 import ufps.edu.co.dao.exceptions.PreexistingEntityException;
-import ufps.edu.co.dto.Actividad;
 import ufps.edu.co.dto.InvolucradosActividad;
 
 /**
@@ -33,24 +35,38 @@ public class InvolucradosActividadJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(InvolucradosActividad involucradosActividad) throws PreexistingEntityException, Exception {
+    public void create(InvolucradosActividad involucradosActividad) throws IllegalOrphanException, PreexistingEntityException, Exception {
+        List<String> illegalOrphanMessages = null;
+        Actividad actividadOrphanCheck = involucradosActividad.getActividad();
+        if (actividadOrphanCheck != null) {
+            InvolucradosActividad oldInvolucradosActividadOfActividad = actividadOrphanCheck.getInvolucradosActividad();
+            if (oldInvolucradosActividadOfActividad != null) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("The Actividad " + actividadOrphanCheck + " already has an item of type InvolucradosActividad whose actividad column cannot be null. Please make another selection for the actividad field.");
+            }
+        }
+        if (illegalOrphanMessages != null) {
+            throw new IllegalOrphanException(illegalOrphanMessages);
+        }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Actividad actividadId = involucradosActividad.getActividadId();
-            if (actividadId != null) {
-                actividadId = em.getReference(actividadId.getClass(), actividadId.getId());
-                involucradosActividad.setActividadId(actividadId);
+            Actividad actividad = involucradosActividad.getActividad();
+            if (actividad != null) {
+                actividad = em.getReference(actividad.getClass(), actividad.getId());
+                involucradosActividad.setActividad(actividad);
             }
             em.persist(involucradosActividad);
-            if (actividadId != null) {
-                actividadId.getInvolucradosActividadList().add(involucradosActividad);
-                actividadId = em.merge(actividadId);
+            if (actividad != null) {
+                actividad.setInvolucradosActividad(involucradosActividad);
+                actividad = em.merge(actividad);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
-            if (findInvolucradosActividad(involucradosActividad.getId()) != null) {
+            if (findInvolucradosActividad(involucradosActividad.getActividadId()) != null) {
                 throw new PreexistingEntityException("InvolucradosActividad " + involucradosActividad + " already exists.", ex);
             }
             throw ex;
@@ -61,32 +77,45 @@ public class InvolucradosActividadJpaController implements Serializable {
         }
     }
 
-    public void edit(InvolucradosActividad involucradosActividad) throws NonexistentEntityException, Exception {
+    public void edit(InvolucradosActividad involucradosActividad) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            InvolucradosActividad persistentInvolucradosActividad = em.find(InvolucradosActividad.class, involucradosActividad.getId());
-            Actividad actividadIdOld = persistentInvolucradosActividad.getActividadId();
-            Actividad actividadIdNew = involucradosActividad.getActividadId();
-            if (actividadIdNew != null) {
-                actividadIdNew = em.getReference(actividadIdNew.getClass(), actividadIdNew.getId());
-                involucradosActividad.setActividadId(actividadIdNew);
+            InvolucradosActividad persistentInvolucradosActividad = em.find(InvolucradosActividad.class, involucradosActividad.getActividadId());
+            Actividad actividadOld = persistentInvolucradosActividad.getActividad();
+            Actividad actividadNew = involucradosActividad.getActividad();
+            List<String> illegalOrphanMessages = null;
+            if (actividadNew != null && !actividadNew.equals(actividadOld)) {
+                InvolucradosActividad oldInvolucradosActividadOfActividad = actividadNew.getInvolucradosActividad();
+                if (oldInvolucradosActividadOfActividad != null) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("The Actividad " + actividadNew + " already has an item of type InvolucradosActividad whose actividad column cannot be null. Please make another selection for the actividad field.");
+                }
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            if (actividadNew != null) {
+                actividadNew = em.getReference(actividadNew.getClass(), actividadNew.getId());
+                involucradosActividad.setActividad(actividadNew);
             }
             involucradosActividad = em.merge(involucradosActividad);
-            if (actividadIdOld != null && !actividadIdOld.equals(actividadIdNew)) {
-                actividadIdOld.getInvolucradosActividadList().remove(involucradosActividad);
-                actividadIdOld = em.merge(actividadIdOld);
+            if (actividadOld != null && !actividadOld.equals(actividadNew)) {
+                actividadOld.setInvolucradosActividad(null);
+                actividadOld = em.merge(actividadOld);
             }
-            if (actividadIdNew != null && !actividadIdNew.equals(actividadIdOld)) {
-                actividadIdNew.getInvolucradosActividadList().add(involucradosActividad);
-                actividadIdNew = em.merge(actividadIdNew);
+            if (actividadNew != null && !actividadNew.equals(actividadOld)) {
+                actividadNew.setInvolucradosActividad(involucradosActividad);
+                actividadNew = em.merge(actividadNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = involucradosActividad.getId();
+                Integer id = involucradosActividad.getActividadId();
                 if (findInvolucradosActividad(id) == null) {
                     throw new NonexistentEntityException("The involucradosActividad with id " + id + " no longer exists.");
                 }
@@ -107,14 +136,14 @@ public class InvolucradosActividadJpaController implements Serializable {
             InvolucradosActividad involucradosActividad;
             try {
                 involucradosActividad = em.getReference(InvolucradosActividad.class, id);
-                involucradosActividad.getId();
+                involucradosActividad.getActividadId();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The involucradosActividad with id " + id + " no longer exists.", enfe);
             }
-            Actividad actividadId = involucradosActividad.getActividadId();
-            if (actividadId != null) {
-                actividadId.getInvolucradosActividadList().remove(involucradosActividad);
-                actividadId = em.merge(actividadId);
+            Actividad actividad = involucradosActividad.getActividad();
+            if (actividad != null) {
+                actividad.setInvolucradosActividad(null);
+                actividad = em.merge(actividad);
             }
             em.remove(involucradosActividad);
             em.getTransaction().commit();

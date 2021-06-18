@@ -35,7 +35,7 @@
                     Date date = new Date();
                     Usuario user = ((Usuario) request.getSession().getAttribute("user"));
                     Actividad act = (Actividad) request.getSession().getAttribute("act");
-                    List<InvolucradosActividad> insAct = act.getInvolucradosActividadList();
+                    InvolucradosActividad insAct = act.getInvolucradosActividad();
                     List<Tipo> typeAct = ((List<Tipo>) request.getSession().getAttribute("typeAct"));
                     List<Tipo> typeMov = ((List<Tipo>) request.getSession().getAttribute("typeMov"));
                     if (user == null) {
@@ -154,13 +154,13 @@
                                                 }%>
                                     </select>
                                     <label>Cantidad docentes Catedra:</label>
-                                    <input type="number" class="ufps-input" rows="4" cols="50" name="cantC" value="<%=(insAct.size()!=0 ? insAct.get(0).getCantDocC() : 0) %>">
+                                    <input type="number" class="ufps-input" rows="4" cols="50" name="cantC" value="<%=(insAct!=null ? insAct.getCantDocC() : 0) %>">
                                     Cantidad docentes Tiempo Completo:
-                                    <input type="number" class="ufps-input" rows="4" cols="50" name="cantTC" value="<%=(insAct.size()!=0 ? insAct.get(0).getCantDocTC(): 0) %>">
+                                    <input type="number" class="ufps-input" rows="4" cols="50" name="cantTC" value="<%=(insAct!=null ? insAct.getCantDocTC(): 0) %>">
                                     Cantidad docentes Catedra Tiempo Completo:
-                                    <input type="number" class="ufps-input" rows="4" cols="50" name="cantTCP" value="<%=(insAct.size()!=0 ? insAct.get(0).getCantDocCTP(): 0) %>">
+                                    <input type="number" class="ufps-input" rows="4" cols="50" name="cantTCP" value="<%=(insAct!=null ? insAct.getCantDocCTP(): 0) %>">
                                     Cantidad estudiantes:
-                                    <input type="number" class="ufps-input" rows="4" cols="50" name="cantE" value="<%=(insAct.size()!=0 ? insAct.get(0).getCantEst() : 0) %>">
+                                    <input type="number" class="ufps-input" rows="4" cols="50" name="cantE" value="<%=(insAct!=null ? insAct.getCantEst() : 0) %>">
                                 </div>
                                 Conferencistas:
                                 <!--Informacion: 

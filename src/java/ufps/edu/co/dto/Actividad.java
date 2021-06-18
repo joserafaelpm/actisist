@@ -22,6 +22,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -46,11 +47,6 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Actividad.findByFechaInicio", query = "SELECT a FROM Actividad a WHERE a.fechaInicio = :fechaInicio")
     , @NamedQuery(name = "Actividad.findByFechaFin", query = "SELECT a FROM Actividad a WHERE a.fechaFin = :fechaFin")})
 public class Actividad implements Serializable {
-
-    @Basic(optional = false)
-    @Lob
-    @Column(name = "imagen")
-    private byte[] imagen;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -79,6 +75,10 @@ public class Actividad implements Serializable {
     @Column(name = "fecha_fin")
     @Temporal(TemporalType.DATE)
     private Date fechaFin;
+    @Basic(optional = false)
+    @Lob
+    @Column(name = "imagen")
+    private byte[] imagen;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "actividadId")
     private List<Horario> horarioList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "actividadId")
@@ -96,8 +96,8 @@ public class Actividad implements Serializable {
     private List<ActividadAnexos> actividadAnexosList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "actividadId")
     private List<ConferencistaActividad> conferencistaActividadList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "actividadId")
-    private List<InvolucradosActividad> involucradosActividadList;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "actividad")
+    private InvolucradosActividad involucradosActividad;
 
     public Actividad() {
     }
@@ -106,13 +106,14 @@ public class Actividad implements Serializable {
         this.id = id;
     }
 
-    public Actividad(Integer id, String nombre, String tematica, String descripcion, int semestre, String lugar) {
+    public Actividad(Integer id, String nombre, String tematica, String descripcion, int semestre, String lugar, byte[] imagen) {
         this.id = id;
         this.nombre = nombre;
         this.tematica = tematica;
         this.descripcion = descripcion;
         this.semestre = semestre;
         this.lugar = lugar;
+        this.imagen = imagen;
     }
 
     public Integer getId() {
@@ -179,6 +180,14 @@ public class Actividad implements Serializable {
         this.fechaFin = fechaFin;
     }
 
+    public byte[] getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(byte[] imagen) {
+        this.imagen = imagen;
+    }
+
     @XmlTransient
     public List<Horario> getHorarioList() {
         return horarioList;
@@ -239,13 +248,12 @@ public class Actividad implements Serializable {
         this.conferencistaActividadList = conferencistaActividadList;
     }
 
-    @XmlTransient
-    public List<InvolucradosActividad> getInvolucradosActividadList() {
-        return involucradosActividadList;
+    public InvolucradosActividad getInvolucradosActividad() {
+        return involucradosActividad;
     }
 
-    public void setInvolucradosActividadList(List<InvolucradosActividad> involucradosActividadList) {
-        this.involucradosActividadList = involucradosActividadList;
+    public void setInvolucradosActividad(InvolucradosActividad involucradosActividad) {
+        this.involucradosActividad = involucradosActividad;
     }
 
     @Override
@@ -271,14 +279,6 @@ public class Actividad implements Serializable {
     @Override
     public String toString() {
         return "ufps.edu.co.dto.Actividad[ id=" + id + " ]";
-    }
-
-    public byte[] getImagen() {
-        return imagen;
-    }
-
-    public void setImagen(byte[] imagen) {
-        this.imagen = imagen;
     }
     
     public String encodeImage(){

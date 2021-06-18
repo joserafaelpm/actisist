@@ -5,6 +5,7 @@
  */
 package ufps.edu.co.dto;
 
+import ufps.edu.co.negocio.Tipo;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;

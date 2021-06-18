@@ -13,6 +13,7 @@ import javax.persistence.criteria.Root;
 import ufps.edu.co.dto.Usuario;
 import ufps.edu.co.dto.TipoMovilidad;
 import ufps.edu.co.dto.TipoActividad;
+import ufps.edu.co.dto.InvolucradosActividad;
 import ufps.edu.co.dto.Horario;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,6 @@ import ufps.edu.co.dto.Actividad;
 import ufps.edu.co.dto.ConvenioActividad;
 import ufps.edu.co.dto.ActividadAnexos;
 import ufps.edu.co.dto.ConferencistaActividad;
-import ufps.edu.co.dto.InvolucradosActividad;
 
 /**
  *
@@ -54,9 +54,6 @@ public class ActividadJpaController implements Serializable {
         if (actividad.getConferencistaActividadList() == null) {
             actividad.setConferencistaActividadList(new ArrayList<ConferencistaActividad>());
         }
-        if (actividad.getInvolucradosActividadList() == null) {
-            actividad.setInvolucradosActividadList(new ArrayList<InvolucradosActividad>());
-        }
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -75,6 +72,11 @@ public class ActividadJpaController implements Serializable {
             if (tipoActividadId != null) {
                 tipoActividadId = em.getReference(tipoActividadId.getClass(), tipoActividadId.getId());
                 actividad.setTipoActividadId(tipoActividadId);
+            }
+            InvolucradosActividad involucradosActividad = actividad.getInvolucradosActividad();
+            if (involucradosActividad != null) {
+                involucradosActividad = em.getReference(involucradosActividad.getClass(), involucradosActividad.getActividadId());
+                actividad.setInvolucradosActividad(involucradosActividad);
             }
             List<Horario> attachedHorarioList = new ArrayList<Horario>();
             for (Horario horarioListHorarioToAttach : actividad.getHorarioList()) {
@@ -100,12 +102,6 @@ public class ActividadJpaController implements Serializable {
                 attachedConferencistaActividadList.add(conferencistaActividadListConferencistaActividadToAttach);
             }
             actividad.setConferencistaActividadList(attachedConferencistaActividadList);
-            List<InvolucradosActividad> attachedInvolucradosActividadList = new ArrayList<InvolucradosActividad>();
-            for (InvolucradosActividad involucradosActividadListInvolucradosActividadToAttach : actividad.getInvolucradosActividadList()) {
-                involucradosActividadListInvolucradosActividadToAttach = em.getReference(involucradosActividadListInvolucradosActividadToAttach.getClass(), involucradosActividadListInvolucradosActividadToAttach.getId());
-                attachedInvolucradosActividadList.add(involucradosActividadListInvolucradosActividadToAttach);
-            }
-            actividad.setInvolucradosActividadList(attachedInvolucradosActividadList);
             em.persist(actividad);
             if (usuarioDni != null) {
                 usuarioDni.getActividadList().add(actividad);
@@ -118,6 +114,15 @@ public class ActividadJpaController implements Serializable {
             if (tipoActividadId != null) {
                 tipoActividadId.getActividadList().add(actividad);
                 tipoActividadId = em.merge(tipoActividadId);
+            }
+            if (involucradosActividad != null) {
+                Actividad oldActividadOfInvolucradosActividad = involucradosActividad.getActividad();
+                if (oldActividadOfInvolucradosActividad != null) {
+                    oldActividadOfInvolucradosActividad.setInvolucradosActividad(null);
+                    oldActividadOfInvolucradosActividad = em.merge(oldActividadOfInvolucradosActividad);
+                }
+                involucradosActividad.setActividad(actividad);
+                involucradosActividad = em.merge(involucradosActividad);
             }
             for (Horario horarioListHorario : actividad.getHorarioList()) {
                 Actividad oldActividadIdOfHorarioListHorario = horarioListHorario.getActividadId();
@@ -155,15 +160,6 @@ public class ActividadJpaController implements Serializable {
                     oldActividadIdOfConferencistaActividadListConferencistaActividad = em.merge(oldActividadIdOfConferencistaActividadListConferencistaActividad);
                 }
             }
-            for (InvolucradosActividad involucradosActividadListInvolucradosActividad : actividad.getInvolucradosActividadList()) {
-                Actividad oldActividadIdOfInvolucradosActividadListInvolucradosActividad = involucradosActividadListInvolucradosActividad.getActividadId();
-                involucradosActividadListInvolucradosActividad.setActividadId(actividad);
-                involucradosActividadListInvolucradosActividad = em.merge(involucradosActividadListInvolucradosActividad);
-                if (oldActividadIdOfInvolucradosActividadListInvolucradosActividad != null) {
-                    oldActividadIdOfInvolucradosActividadListInvolucradosActividad.getInvolucradosActividadList().remove(involucradosActividadListInvolucradosActividad);
-                    oldActividadIdOfInvolucradosActividadListInvolucradosActividad = em.merge(oldActividadIdOfInvolucradosActividadListInvolucradosActividad);
-                }
-            }
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -184,6 +180,8 @@ public class ActividadJpaController implements Serializable {
             TipoMovilidad tipoMovilidadIdNew = actividad.getTipoMovilidadId();
             TipoActividad tipoActividadIdOld = persistentActividad.getTipoActividadId();
             TipoActividad tipoActividadIdNew = actividad.getTipoActividadId();
+            InvolucradosActividad involucradosActividadOld = persistentActividad.getInvolucradosActividad();
+            InvolucradosActividad involucradosActividadNew = actividad.getInvolucradosActividad();
             List<Horario> horarioListOld = persistentActividad.getHorarioList();
             List<Horario> horarioListNew = actividad.getHorarioList();
             List<ConvenioActividad> convenioActividadListOld = persistentActividad.getConvenioActividadList();
@@ -192,9 +190,13 @@ public class ActividadJpaController implements Serializable {
             List<ActividadAnexos> actividadAnexosListNew = actividad.getActividadAnexosList();
             List<ConferencistaActividad> conferencistaActividadListOld = persistentActividad.getConferencistaActividadList();
             List<ConferencistaActividad> conferencistaActividadListNew = actividad.getConferencistaActividadList();
-            List<InvolucradosActividad> involucradosActividadListOld = persistentActividad.getInvolucradosActividadList();
-            List<InvolucradosActividad> involucradosActividadListNew = actividad.getInvolucradosActividadList();
             List<String> illegalOrphanMessages = null;
+            if (involucradosActividadOld != null && !involucradosActividadOld.equals(involucradosActividadNew)) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("You must retain InvolucradosActividad " + involucradosActividadOld + " since its actividad field is not nullable.");
+            }
             for (Horario horarioListOldHorario : horarioListOld) {
                 if (!horarioListNew.contains(horarioListOldHorario)) {
                     if (illegalOrphanMessages == null) {
@@ -227,14 +229,6 @@ public class ActividadJpaController implements Serializable {
                     illegalOrphanMessages.add("You must retain ConferencistaActividad " + conferencistaActividadListOldConferencistaActividad + " since its actividadId field is not nullable.");
                 }
             }
-            for (InvolucradosActividad involucradosActividadListOldInvolucradosActividad : involucradosActividadListOld) {
-                if (!involucradosActividadListNew.contains(involucradosActividadListOldInvolucradosActividad)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain InvolucradosActividad " + involucradosActividadListOldInvolucradosActividad + " since its actividadId field is not nullable.");
-                }
-            }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
@@ -249,6 +243,10 @@ public class ActividadJpaController implements Serializable {
             if (tipoActividadIdNew != null) {
                 tipoActividadIdNew = em.getReference(tipoActividadIdNew.getClass(), tipoActividadIdNew.getId());
                 actividad.setTipoActividadId(tipoActividadIdNew);
+            }
+            if (involucradosActividadNew != null) {
+                involucradosActividadNew = em.getReference(involucradosActividadNew.getClass(), involucradosActividadNew.getActividadId());
+                actividad.setInvolucradosActividad(involucradosActividadNew);
             }
             List<Horario> attachedHorarioListNew = new ArrayList<Horario>();
             for (Horario horarioListNewHorarioToAttach : horarioListNew) {
@@ -278,13 +276,6 @@ public class ActividadJpaController implements Serializable {
             }
             conferencistaActividadListNew = attachedConferencistaActividadListNew;
             actividad.setConferencistaActividadList(conferencistaActividadListNew);
-            List<InvolucradosActividad> attachedInvolucradosActividadListNew = new ArrayList<InvolucradosActividad>();
-            for (InvolucradosActividad involucradosActividadListNewInvolucradosActividadToAttach : involucradosActividadListNew) {
-                involucradosActividadListNewInvolucradosActividadToAttach = em.getReference(involucradosActividadListNewInvolucradosActividadToAttach.getClass(), involucradosActividadListNewInvolucradosActividadToAttach.getId());
-                attachedInvolucradosActividadListNew.add(involucradosActividadListNewInvolucradosActividadToAttach);
-            }
-            involucradosActividadListNew = attachedInvolucradosActividadListNew;
-            actividad.setInvolucradosActividadList(involucradosActividadListNew);
             actividad = em.merge(actividad);
             if (usuarioDniOld != null && !usuarioDniOld.equals(usuarioDniNew)) {
                 usuarioDniOld.getActividadList().remove(actividad);
@@ -309,6 +300,15 @@ public class ActividadJpaController implements Serializable {
             if (tipoActividadIdNew != null && !tipoActividadIdNew.equals(tipoActividadIdOld)) {
                 tipoActividadIdNew.getActividadList().add(actividad);
                 tipoActividadIdNew = em.merge(tipoActividadIdNew);
+            }
+            if (involucradosActividadNew != null && !involucradosActividadNew.equals(involucradosActividadOld)) {
+                Actividad oldActividadOfInvolucradosActividad = involucradosActividadNew.getActividad();
+                if (oldActividadOfInvolucradosActividad != null) {
+                    oldActividadOfInvolucradosActividad.setInvolucradosActividad(null);
+                    oldActividadOfInvolucradosActividad = em.merge(oldActividadOfInvolucradosActividad);
+                }
+                involucradosActividadNew.setActividad(actividad);
+                involucradosActividadNew = em.merge(involucradosActividadNew);
             }
             for (Horario horarioListNewHorario : horarioListNew) {
                 if (!horarioListOld.contains(horarioListNewHorario)) {
@@ -354,17 +354,6 @@ public class ActividadJpaController implements Serializable {
                     }
                 }
             }
-            for (InvolucradosActividad involucradosActividadListNewInvolucradosActividad : involucradosActividadListNew) {
-                if (!involucradosActividadListOld.contains(involucradosActividadListNewInvolucradosActividad)) {
-                    Actividad oldActividadIdOfInvolucradosActividadListNewInvolucradosActividad = involucradosActividadListNewInvolucradosActividad.getActividadId();
-                    involucradosActividadListNewInvolucradosActividad.setActividadId(actividad);
-                    involucradosActividadListNewInvolucradosActividad = em.merge(involucradosActividadListNewInvolucradosActividad);
-                    if (oldActividadIdOfInvolucradosActividadListNewInvolucradosActividad != null && !oldActividadIdOfInvolucradosActividadListNewInvolucradosActividad.equals(actividad)) {
-                        oldActividadIdOfInvolucradosActividadListNewInvolucradosActividad.getInvolucradosActividadList().remove(involucradosActividadListNewInvolucradosActividad);
-                        oldActividadIdOfInvolucradosActividadListNewInvolucradosActividad = em.merge(oldActividadIdOfInvolucradosActividadListNewInvolucradosActividad);
-                    }
-                }
-            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
@@ -395,6 +384,13 @@ public class ActividadJpaController implements Serializable {
                 throw new NonexistentEntityException("The actividad with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
+            InvolucradosActividad involucradosActividadOrphanCheck = actividad.getInvolucradosActividad();
+            if (involucradosActividadOrphanCheck != null) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Actividad (" + actividad + ") cannot be destroyed since the InvolucradosActividad " + involucradosActividadOrphanCheck + " in its involucradosActividad field has a non-nullable actividad field.");
+            }
             List<Horario> horarioListOrphanCheck = actividad.getHorarioList();
             for (Horario horarioListOrphanCheckHorario : horarioListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
@@ -422,13 +418,6 @@ public class ActividadJpaController implements Serializable {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
                 illegalOrphanMessages.add("This Actividad (" + actividad + ") cannot be destroyed since the ConferencistaActividad " + conferencistaActividadListOrphanCheckConferencistaActividad + " in its conferencistaActividadList field has a non-nullable actividadId field.");
-            }
-            List<InvolucradosActividad> involucradosActividadListOrphanCheck = actividad.getInvolucradosActividadList();
-            for (InvolucradosActividad involucradosActividadListOrphanCheckInvolucradosActividad : involucradosActividadListOrphanCheck) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("This Actividad (" + actividad + ") cannot be destroyed since the InvolucradosActividad " + involucradosActividadListOrphanCheckInvolucradosActividad + " in its involucradosActividadList field has a non-nullable actividadId field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

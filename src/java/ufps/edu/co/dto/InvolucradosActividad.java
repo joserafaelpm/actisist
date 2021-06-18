@@ -11,9 +11,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "InvolucradosActividad.findAll", query = "SELECT i FROM InvolucradosActividad i")
-    , @NamedQuery(name = "InvolucradosActividad.findById", query = "SELECT i FROM InvolucradosActividad i WHERE i.id = :id")
+    , @NamedQuery(name = "InvolucradosActividad.findByActividadId", query = "SELECT i FROM InvolucradosActividad i WHERE i.actividadId = :actividadId")
     , @NamedQuery(name = "InvolucradosActividad.findByCantDocTC", query = "SELECT i FROM InvolucradosActividad i WHERE i.cantDocTC = :cantDocTC")
     , @NamedQuery(name = "InvolucradosActividad.findByCantDocC", query = "SELECT i FROM InvolucradosActividad i WHERE i.cantDocC = :cantDocC")
     , @NamedQuery(name = "InvolucradosActividad.findByCantDocCTP", query = "SELECT i FROM InvolucradosActividad i WHERE i.cantDocCTP = :cantDocCTP")
@@ -36,8 +36,8 @@ public class InvolucradosActividad implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
-    @Column(name = "id")
-    private Integer id;
+    @Column(name = "actividad_id")
+    private Integer actividadId;
     @Column(name = "cantDocTC")
     private Integer cantDocTC;
     @Column(name = "cantDocC")
@@ -46,23 +46,23 @@ public class InvolucradosActividad implements Serializable {
     private Integer cantDocCTP;
     @Column(name = "cantEst")
     private Integer cantEst;
-    @JoinColumn(name = "actividad_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Actividad actividadId;
+    @JoinColumn(name = "actividad_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @OneToOne(optional = false)
+    private Actividad actividad;
 
     public InvolucradosActividad() {
     }
 
-    public InvolucradosActividad(Integer id) {
-        this.id = id;
+    public InvolucradosActividad(Integer actividadId) {
+        this.actividadId = actividadId;
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getActividadId() {
+        return actividadId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setActividadId(Integer actividadId) {
+        this.actividadId = actividadId;
     }
 
     public Integer getCantDocTC() {
@@ -97,18 +97,18 @@ public class InvolucradosActividad implements Serializable {
         this.cantEst = cantEst;
     }
 
-    public Actividad getActividadId() {
-        return actividadId;
+    public Actividad getActividad() {
+        return actividad;
     }
 
-    public void setActividadId(Actividad actividadId) {
-        this.actividadId = actividadId;
+    public void setActividad(Actividad actividad) {
+        this.actividad = actividad;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += (actividadId != null ? actividadId.hashCode() : 0);
         return hash;
     }
 
@@ -119,7 +119,7 @@ public class InvolucradosActividad implements Serializable {
             return false;
         }
         InvolucradosActividad other = (InvolucradosActividad) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.actividadId == null && other.actividadId != null) || (this.actividadId != null && !this.actividadId.equals(other.actividadId))) {
             return false;
         }
         return true;
@@ -127,7 +127,7 @@ public class InvolucradosActividad implements Serializable {
 
     @Override
     public String toString() {
-        return "ufps.edu.co.dto.InvolucradosActividad[ id=" + id + " ]";
+        return "ufps.edu.co.dto.InvolucradosActividad[ actividadId=" + actividadId + " ]";
     }
     
 }

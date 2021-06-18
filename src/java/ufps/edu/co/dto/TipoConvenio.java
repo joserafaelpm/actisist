@@ -5,6 +5,7 @@
  */
 package ufps.edu.co.dto;
 
+import ufps.edu.co.negocio.Tipo;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
@@ -31,7 +32,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "TipoConvenio.findAll", query = "SELECT t FROM TipoConvenio t")
     , @NamedQuery(name = "TipoConvenio.findById", query = "SELECT t FROM TipoConvenio t WHERE t.id = :id")
-    , @NamedQuery(name = "TipoConvenio.findByTipoConvenio", query = "SELECT t FROM TipoConvenio t WHERE t.tipoConvenio = :tipoConvenio")})
+    , @NamedQuery(name = "TipoConvenio.findByTipo", query = "SELECT t FROM TipoConvenio t WHERE t.tipo = :tipo")})
 public class TipoConvenio implements Serializable, Tipo {
 
     private static final long serialVersionUID = 1L;
@@ -41,8 +42,8 @@ public class TipoConvenio implements Serializable, Tipo {
     @Column(name = "id")
     private Integer id;
     @Basic(optional = false)
-    @Column(name = "tipo_convenio")
-    private String tipoConvenio;
+    @Column(name = "tipo")
+    private String tipo;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tipoConvenio")
     private List<Convenio> convenioList;
 
@@ -53,9 +54,9 @@ public class TipoConvenio implements Serializable, Tipo {
         this.id = id;
     }
 
-    public TipoConvenio(Integer id, String tipoConvenio) {
+    public TipoConvenio(Integer id, String tipo) {
         this.id = id;
-        this.tipoConvenio = tipoConvenio;
+        this.tipo = tipo;
     }
 
     @Override
@@ -67,12 +68,13 @@ public class TipoConvenio implements Serializable, Tipo {
         this.id = id;
     }
 
-    public String getTipoConvenio() {
-        return tipoConvenio;
+    @Override
+    public String getTipo() {
+        return tipo;
     }
 
-    public void setTipoConvenio(String tipoConvenio) {
-        this.tipoConvenio = tipoConvenio;
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 
     @XmlTransient
@@ -107,11 +109,6 @@ public class TipoConvenio implements Serializable, Tipo {
     @Override
     public String toString() {
         return "ufps.edu.co.dto.TipoConvenio[ id=" + id + " ]";
-    }
-    
-    @Override
-    public String getTipo() {
-        return this.tipoConvenio;
     }
     
 }

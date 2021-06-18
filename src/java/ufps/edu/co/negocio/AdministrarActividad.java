@@ -15,6 +15,7 @@ import ufps.edu.co.dao.InvolucradosActividadJpaController;
 import ufps.edu.co.dao.TipoActividadJpaController;
 import ufps.edu.co.dao.TipoMovilidadJpaController;
 import ufps.edu.co.dao.UsuarioJpaController;
+import ufps.edu.co.dao.exceptions.NonexistentEntityException;
 import ufps.edu.co.dto.Actividad;
 import ufps.edu.co.dto.ConferencistaActividad;
 import ufps.edu.co.dto.Convenio;
@@ -30,10 +31,24 @@ public class AdministrarActividad {
     
     public void registrar(Actividad act, String conv, String conf){
         EntityManagerFactory em = Conexion.getConexion().getBd();
-        ActividadJpaController ajpa = new ActividadJpaController(em);
+        new ActividadJpaController(em).create(act);
+        this.createRel(act, em, conf, conv);
+    }
+    
+    public void editar(Actividad act, String conv, String conf) throws Exception {
+        EntityManagerFactory em = Conexion.getConexion().getBd();
+        Actividad get = this.getActividad(act);
+        if(get.getInvolucradosActividad()!=null){
+            new InvolucradosActividadJpaController(em).create(act.getInvolucradosActividad());
+        }
+        this.destroyAll(get, em);
+        this.createRel(act, em, conf, conv);
+        new ActividadJpaController(em).edit(act);
+    }
+    
+    private void createRel(Actividad act, EntityManagerFactory em, String conf, String conv){
         ConvenioActividadJpaController cjpa = new ConvenioActividadJpaController(em);
         ConferencistaActividadJpaController cojpa = new ConferencistaActividadJpaController(em);
-        ajpa.create(act);
         if(conv != null && !conv.isEmpty()){
             String [] values = conv.split(",");
             for(String val: values){
@@ -54,15 +69,20 @@ public class AdministrarActividad {
         }
     }
     
-    public void editar(Actividad act, String conv, String conf) throws Exception {
-        EntityManagerFactory em = Conexion.getConexion().getBd();
-        Actividad get = this.getActividad(act);
-        if(get.getInvolucradosActividadList().isEmpty()){
-            new InvolucradosActividadJpaController(em).create(act.getInvolucradosActividadList().get(0));
+    private void destroyAll(Actividad a, EntityManagerFactory emf) throws NonexistentEntityException{
+        ConferencistaActividadJpaController cajpa = new ConferencistaActividadJpaController(emf);
+        for(ConferencistaActividad ca: a.getConferencistaActividadList()){
+            System.out.println("ca"+ca.getId());
+            cajpa.destroy(ca.getId());
         }
-        new ActividadJpaController(em).edit(act);
+        
+        ConvenioActividadJpaController cojpa = new ConvenioActividadJpaController(emf);
+        for(ConvenioActividad ca: a.getConvenioActividadList()){
+            System.out.println("co"+ca.getId());
+            cojpa.destroy(ca.getId());
+        }
     }
-    
+
     public Actividad getActividad(Actividad a){
         return new ActividadJpaController(Conexion.getConexion().getBd()).findActividad(a.getId());
     }

@@ -198,10 +198,8 @@ public class ControlActividad extends HttpServlet {
             inAct.setCantDocTC(cantTC);
             inAct.setCantDocCTP(cantTCP);
             inAct.setCantDocC(cantE);
-            inAct.setActividadId(act);
-            List<InvolucradosActividad> lin = new ArrayList<>();
-            lin.add(inAct);
-            act.setInvolucradosActividadList(lin);
+            inAct.setActividad(act);
+            act.setInvolucradosActividad(inAct);
         }
         
         act.setNombre(nombre);
