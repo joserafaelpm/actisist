@@ -47,10 +47,10 @@ public class Pais implements Serializable {
     @Basic(optional = false)
     @Column(name = "nombre")
     private String nombre;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "paisId")
-    private List<PaisInstitucion> paisInstitucionList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "paisOrigen")
     private List<Conferencista> conferencistaList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "paisId")
+    private List<PaisInstitucion> paisInstitucionList;
 
     public Pais() {
     }
@@ -90,21 +90,21 @@ public class Pais implements Serializable {
     }
 
     @XmlTransient
-    public List<PaisInstitucion> getPaisInstitucionList() {
-        return paisInstitucionList;
-    }
-
-    public void setPaisInstitucionList(List<PaisInstitucion> paisInstitucionList) {
-        this.paisInstitucionList = paisInstitucionList;
-    }
-
-    @XmlTransient
     public List<Conferencista> getConferencistaList() {
         return conferencistaList;
     }
 
     public void setConferencistaList(List<Conferencista> conferencistaList) {
         this.conferencistaList = conferencistaList;
+    }
+
+    @XmlTransient
+    public List<PaisInstitucion> getPaisInstitucionList() {
+        return paisInstitucionList;
+    }
+
+    public void setPaisInstitucionList(List<PaisInstitucion> paisInstitucionList) {
+        this.paisInstitucionList = paisInstitucionList;
     }
 
     @Override

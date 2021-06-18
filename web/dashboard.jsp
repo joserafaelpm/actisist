@@ -14,6 +14,7 @@
 
     </head>
     <body>
+        <!--HEADER-->
         <div class="ufps-navbar" id="menu">
             <div class="ufps-container-fluid">
                 <div class="ufps-navbar-brand">
@@ -30,7 +31,7 @@
                 %>
                 <div class="ufps-navbar-right">
                     <a href="dashboard.jsp" class="ufps-navbar-btn">Inicio</a>
-                    <%if (user.getIdRol().getId() != 1) {%><a href="misActividades.jsp" class="ufps-navbar-btn">Mis Actividades</a><%}%>
+                    <%if (user.getIdRol().getId() != 1) {%><a href="ControlActividad?q=showFor" class="ufps-navbar-btn">Mis Actividades</a><%}%>
                     <div class="ufps-dropdown" id="dropdown4">
                         <div class="ufps-dropdown-content">
                             <%if (user.getIdRol().getId() != 1) {%><a href="miPerfil.jsp">Mi Perfil</a><%}%>
@@ -50,14 +51,14 @@
                 </div>
             </div>
         </div>
-
+        <!--FIN HEADER-->
         <div class="ufps-container ">  
-            <div class="ufps-rafael-titulo-adming ">
-                <h1>DASHBOARD ADMINISTRATIVA</h1>
-            </div>
             <%
                 if (user.getIdRol().getRol().equalsIgnoreCase("admin")) {
             %>
+            <div class="ufps-rafael-titulo-adming ">
+                <h1>DASHBOARD ADMINISTRATIVA</h1>
+            </div>
             <div class="ufps-row" >
                 <div class="ufps-col-mobile-12 ufps-col-netbook-4" >
                     <a href="ControlUsuario?q=list">
@@ -70,7 +71,7 @@
                 </div >
                 <div class="ufps-col-mobile-12 ufps-col-netbook-4" >
 
-                    <a href="verActividades.jsp">
+                    <a href="ControlActividad?q=show">
                         <div class="ufps-option-adm">
                             <div class="icono"><i class="fa fa-list fa-4x"></i></div>
                             <div class="titulo">Ver actividades registradas</div>

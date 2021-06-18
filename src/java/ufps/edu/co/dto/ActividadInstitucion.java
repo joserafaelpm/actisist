@@ -37,12 +37,12 @@ public class ActividadInstitucion implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @JoinColumn(name = "actividad_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Actividad actividadId;
     @JoinColumn(name = "institucion_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Institucion institucionId;
+    @JoinColumn(name = "actividad_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Institucion actividadId;
 
     public ActividadInstitucion() {
     }
@@ -59,20 +59,20 @@ public class ActividadInstitucion implements Serializable {
         this.id = id;
     }
 
-    public Actividad getActividadId() {
-        return actividadId;
-    }
-
-    public void setActividadId(Actividad actividadId) {
-        this.actividadId = actividadId;
-    }
-
     public Institucion getInstitucionId() {
         return institucionId;
     }
 
     public void setInstitucionId(Institucion institucionId) {
         this.institucionId = institucionId;
+    }
+
+    public Institucion getActividadId() {
+        return actividadId;
+    }
+
+    public void setActividadId(Institucion actividadId) {
+        this.actividadId = actividadId;
     }
 
     @Override

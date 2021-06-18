@@ -46,11 +46,13 @@ public class Institucion implements Serializable {
     @OneToMany(mappedBy = "empresa")
     private List<Convenio> convenioList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "institucionId")
+    private List<Conferencista> conferencistaList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "institucionId")
     private List<PaisInstitucion> paisInstitucionList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "institucionId")
     private List<ActividadInstitucion> actividadInstitucionList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "institucionId")
-    private List<Conferencista> conferencistaList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "actividadId")
+    private List<ActividadInstitucion> actividadInstitucionList1;
 
     public Institucion() {
     }
@@ -90,6 +92,15 @@ public class Institucion implements Serializable {
     }
 
     @XmlTransient
+    public List<Conferencista> getConferencistaList() {
+        return conferencistaList;
+    }
+
+    public void setConferencistaList(List<Conferencista> conferencistaList) {
+        this.conferencistaList = conferencistaList;
+    }
+
+    @XmlTransient
     public List<PaisInstitucion> getPaisInstitucionList() {
         return paisInstitucionList;
     }
@@ -108,12 +119,12 @@ public class Institucion implements Serializable {
     }
 
     @XmlTransient
-    public List<Conferencista> getConferencistaList() {
-        return conferencistaList;
+    public List<ActividadInstitucion> getActividadInstitucionList1() {
+        return actividadInstitucionList1;
     }
 
-    public void setConferencistaList(List<Conferencista> conferencistaList) {
-        this.conferencistaList = conferencistaList;
+    public void setActividadInstitucionList1(List<ActividadInstitucion> actividadInstitucionList1) {
+        this.actividadInstitucionList1 = actividadInstitucionList1;
     }
 
     @Override

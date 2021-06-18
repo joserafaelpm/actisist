@@ -10,7 +10,7 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import ufps.edu.co.dto.ActividadAcademica;
+import ufps.edu.co.dto.Actividad;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -35,27 +35,27 @@ public class TipoMovilidadJpaController implements Serializable {
     }
 
     public void create(TipoMovilidad tipoMovilidad) {
-        if (tipoMovilidad.getActividadAcademicaList() == null) {
-            tipoMovilidad.setActividadAcademicaList(new ArrayList<ActividadAcademica>());
+        if (tipoMovilidad.getActividadList() == null) {
+            tipoMovilidad.setActividadList(new ArrayList<Actividad>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            List<ActividadAcademica> attachedActividadAcademicaList = new ArrayList<ActividadAcademica>();
-            for (ActividadAcademica actividadAcademicaListActividadAcademicaToAttach : tipoMovilidad.getActividadAcademicaList()) {
-                actividadAcademicaListActividadAcademicaToAttach = em.getReference(actividadAcademicaListActividadAcademicaToAttach.getClass(), actividadAcademicaListActividadAcademicaToAttach.getId());
-                attachedActividadAcademicaList.add(actividadAcademicaListActividadAcademicaToAttach);
+            List<Actividad> attachedActividadList = new ArrayList<Actividad>();
+            for (Actividad actividadListActividadToAttach : tipoMovilidad.getActividadList()) {
+                actividadListActividadToAttach = em.getReference(actividadListActividadToAttach.getClass(), actividadListActividadToAttach.getId());
+                attachedActividadList.add(actividadListActividadToAttach);
             }
-            tipoMovilidad.setActividadAcademicaList(attachedActividadAcademicaList);
+            tipoMovilidad.setActividadList(attachedActividadList);
             em.persist(tipoMovilidad);
-            for (ActividadAcademica actividadAcademicaListActividadAcademica : tipoMovilidad.getActividadAcademicaList()) {
-                TipoMovilidad oldTipoMovilidadIdOfActividadAcademicaListActividadAcademica = actividadAcademicaListActividadAcademica.getTipoMovilidadId();
-                actividadAcademicaListActividadAcademica.setTipoMovilidadId(tipoMovilidad);
-                actividadAcademicaListActividadAcademica = em.merge(actividadAcademicaListActividadAcademica);
-                if (oldTipoMovilidadIdOfActividadAcademicaListActividadAcademica != null) {
-                    oldTipoMovilidadIdOfActividadAcademicaListActividadAcademica.getActividadAcademicaList().remove(actividadAcademicaListActividadAcademica);
-                    oldTipoMovilidadIdOfActividadAcademicaListActividadAcademica = em.merge(oldTipoMovilidadIdOfActividadAcademicaListActividadAcademica);
+            for (Actividad actividadListActividad : tipoMovilidad.getActividadList()) {
+                TipoMovilidad oldTipoMovilidadIdOfActividadListActividad = actividadListActividad.getTipoMovilidadId();
+                actividadListActividad.setTipoMovilidadId(tipoMovilidad);
+                actividadListActividad = em.merge(actividadListActividad);
+                if (oldTipoMovilidadIdOfActividadListActividad != null) {
+                    oldTipoMovilidadIdOfActividadListActividad.getActividadList().remove(actividadListActividad);
+                    oldTipoMovilidadIdOfActividadListActividad = em.merge(oldTipoMovilidadIdOfActividadListActividad);
                 }
             }
             em.getTransaction().commit();
@@ -72,36 +72,36 @@ public class TipoMovilidadJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             TipoMovilidad persistentTipoMovilidad = em.find(TipoMovilidad.class, tipoMovilidad.getId());
-            List<ActividadAcademica> actividadAcademicaListOld = persistentTipoMovilidad.getActividadAcademicaList();
-            List<ActividadAcademica> actividadAcademicaListNew = tipoMovilidad.getActividadAcademicaList();
+            List<Actividad> actividadListOld = persistentTipoMovilidad.getActividadList();
+            List<Actividad> actividadListNew = tipoMovilidad.getActividadList();
             List<String> illegalOrphanMessages = null;
-            for (ActividadAcademica actividadAcademicaListOldActividadAcademica : actividadAcademicaListOld) {
-                if (!actividadAcademicaListNew.contains(actividadAcademicaListOldActividadAcademica)) {
+            for (Actividad actividadListOldActividad : actividadListOld) {
+                if (!actividadListNew.contains(actividadListOldActividad)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain ActividadAcademica " + actividadAcademicaListOldActividadAcademica + " since its tipoMovilidadId field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Actividad " + actividadListOldActividad + " since its tipoMovilidadId field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            List<ActividadAcademica> attachedActividadAcademicaListNew = new ArrayList<ActividadAcademica>();
-            for (ActividadAcademica actividadAcademicaListNewActividadAcademicaToAttach : actividadAcademicaListNew) {
-                actividadAcademicaListNewActividadAcademicaToAttach = em.getReference(actividadAcademicaListNewActividadAcademicaToAttach.getClass(), actividadAcademicaListNewActividadAcademicaToAttach.getId());
-                attachedActividadAcademicaListNew.add(actividadAcademicaListNewActividadAcademicaToAttach);
+            List<Actividad> attachedActividadListNew = new ArrayList<Actividad>();
+            for (Actividad actividadListNewActividadToAttach : actividadListNew) {
+                actividadListNewActividadToAttach = em.getReference(actividadListNewActividadToAttach.getClass(), actividadListNewActividadToAttach.getId());
+                attachedActividadListNew.add(actividadListNewActividadToAttach);
             }
-            actividadAcademicaListNew = attachedActividadAcademicaListNew;
-            tipoMovilidad.setActividadAcademicaList(actividadAcademicaListNew);
+            actividadListNew = attachedActividadListNew;
+            tipoMovilidad.setActividadList(actividadListNew);
             tipoMovilidad = em.merge(tipoMovilidad);
-            for (ActividadAcademica actividadAcademicaListNewActividadAcademica : actividadAcademicaListNew) {
-                if (!actividadAcademicaListOld.contains(actividadAcademicaListNewActividadAcademica)) {
-                    TipoMovilidad oldTipoMovilidadIdOfActividadAcademicaListNewActividadAcademica = actividadAcademicaListNewActividadAcademica.getTipoMovilidadId();
-                    actividadAcademicaListNewActividadAcademica.setTipoMovilidadId(tipoMovilidad);
-                    actividadAcademicaListNewActividadAcademica = em.merge(actividadAcademicaListNewActividadAcademica);
-                    if (oldTipoMovilidadIdOfActividadAcademicaListNewActividadAcademica != null && !oldTipoMovilidadIdOfActividadAcademicaListNewActividadAcademica.equals(tipoMovilidad)) {
-                        oldTipoMovilidadIdOfActividadAcademicaListNewActividadAcademica.getActividadAcademicaList().remove(actividadAcademicaListNewActividadAcademica);
-                        oldTipoMovilidadIdOfActividadAcademicaListNewActividadAcademica = em.merge(oldTipoMovilidadIdOfActividadAcademicaListNewActividadAcademica);
+            for (Actividad actividadListNewActividad : actividadListNew) {
+                if (!actividadListOld.contains(actividadListNewActividad)) {
+                    TipoMovilidad oldTipoMovilidadIdOfActividadListNewActividad = actividadListNewActividad.getTipoMovilidadId();
+                    actividadListNewActividad.setTipoMovilidadId(tipoMovilidad);
+                    actividadListNewActividad = em.merge(actividadListNewActividad);
+                    if (oldTipoMovilidadIdOfActividadListNewActividad != null && !oldTipoMovilidadIdOfActividadListNewActividad.equals(tipoMovilidad)) {
+                        oldTipoMovilidadIdOfActividadListNewActividad.getActividadList().remove(actividadListNewActividad);
+                        oldTipoMovilidadIdOfActividadListNewActividad = em.merge(oldTipoMovilidadIdOfActividadListNewActividad);
                     }
                 }
             }
@@ -135,12 +135,12 @@ public class TipoMovilidadJpaController implements Serializable {
                 throw new NonexistentEntityException("The tipoMovilidad with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            List<ActividadAcademica> actividadAcademicaListOrphanCheck = tipoMovilidad.getActividadAcademicaList();
-            for (ActividadAcademica actividadAcademicaListOrphanCheckActividadAcademica : actividadAcademicaListOrphanCheck) {
+            List<Actividad> actividadListOrphanCheck = tipoMovilidad.getActividadList();
+            for (Actividad actividadListOrphanCheckActividad : actividadListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This TipoMovilidad (" + tipoMovilidad + ") cannot be destroyed since the ActividadAcademica " + actividadAcademicaListOrphanCheckActividadAcademica + " in its actividadAcademicaList field has a non-nullable tipoMovilidadId field.");
+                illegalOrphanMessages.add("This TipoMovilidad (" + tipoMovilidad + ") cannot be destroyed since the Actividad " + actividadListOrphanCheckActividad + " in its actividadList field has a non-nullable tipoMovilidadId field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

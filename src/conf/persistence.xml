@@ -26,9 +26,7 @@
     <class>ufps.edu.co.entity.TipoActividad</class>
     <class>ufps.edu.co.entity.Pais</class>
     <class>ufps.edu.co.dto.PaisInstitucion</class>
-    <class>ufps.edu.co.dto.TipoConvenio</class>
     <class>ufps.edu.co.dto.ActividadAcademica</class>
-    <class>ufps.edu.co.dto.TipoDocente</class>
     <class>ufps.edu.co.dto.Contrato</class>
     <class>ufps.edu.co.dto.InvolucradosActividad</class>
     <class>ufps.edu.co.dto.Institucion</class>
@@ -37,10 +35,8 @@
     <class>ufps.edu.co.dto.Horario</class>
     <class>ufps.edu.co.dto.Titulo</class>
     <class>ufps.edu.co.dto.Actividad</class>
-    <class>ufps.edu.co.dto.TipoActividad</class>
     <class>ufps.edu.co.dto.Rol</class>
     <class>ufps.edu.co.dto.ConvenioActividad</class>
-    <class>ufps.edu.co.dto.TipoMovilidad</class>
     <class>ufps.edu.co.dto.Docente</class>
     <class>ufps.edu.co.dto.Pais</class>
     <class>ufps.edu.co.dto.ActividadInstitucion</class>
@@ -48,11 +44,15 @@
     <class>ufps.edu.co.dto.ActividadAnexos</class>
     <class>ufps.edu.co.dto.Usuario</class>
     <class>ufps.edu.co.dto.Convenio</class>
-    <class>ufps.edu.co.dto.TipoConferencista</class>
     <class>ufps.edu.co.dto.Proyecto</class>
     <class>ufps.edu.co.dto.SolicitudRegistro</class>
+    <class>ufps.edu.co.dto.TipoConferencista</class>
+    <class>ufps.edu.co.dto.TipoConvenio</class>
+    <class>ufps.edu.co.dto.TipoDocente</class>
+    <class>ufps.edu.co.dto.TipoMovilidad</class>
+    <class>ufps.edu.co.dto.TipoActividad</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
-    <properties> 
+    <properties>
       <property name="hibernate.show_sql" value="true"/>
       <property name="hibernate.format_sql" value="true"/>
       <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>

@@ -5,6 +5,8 @@
  */
 package ufps.edu.co.negocio;
 
+import ufps.edu.co.dto.TipoDocente;
+import ufps.edu.co.dto.TipoConferencista;
 import java.io.InputStream;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -29,8 +31,6 @@ import ufps.edu.co.dto.Institucion;
 import ufps.edu.co.dto.Pais;
 import ufps.edu.co.dto.Rol;
 import ufps.edu.co.dto.SolicitudRegistro;
-import ufps.edu.co.dto.TipoConferencista;
-import ufps.edu.co.dto.TipoDocente;
 import ufps.edu.co.dto.Usuario;
 import ufps.edu.co.util.Conexion;
 import ufps.edu.co.util.PasswordAuthentication;

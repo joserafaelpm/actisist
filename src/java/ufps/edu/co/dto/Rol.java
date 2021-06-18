@@ -43,10 +43,10 @@ public class Rol implements Serializable {
     @Basic(optional = false)
     @Column(name = "rol")
     private String rol;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeUs")
-    private List<SolicitudRegistro> solicitudRegistroList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idRol")
     private List<Usuario> usuarioList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeUs")
+    private List<SolicitudRegistro> solicitudRegistroList;
 
     public Rol() {
     }
@@ -77,21 +77,21 @@ public class Rol implements Serializable {
     }
 
     @XmlTransient
-    public List<SolicitudRegistro> getSolicitudRegistroList() {
-        return solicitudRegistroList;
-    }
-
-    public void setSolicitudRegistroList(List<SolicitudRegistro> solicitudRegistroList) {
-        this.solicitudRegistroList = solicitudRegistroList;
-    }
-
-    @XmlTransient
     public List<Usuario> getUsuarioList() {
         return usuarioList;
     }
 
     public void setUsuarioList(List<Usuario> usuarioList) {
         this.usuarioList = usuarioList;
+    }
+
+    @XmlTransient
+    public List<SolicitudRegistro> getSolicitudRegistroList() {
+        return solicitudRegistroList;
+    }
+
+    public void setSolicitudRegistroList(List<SolicitudRegistro> solicitudRegistroList) {
+        this.solicitudRegistroList = solicitudRegistroList;
     }
 
     @Override

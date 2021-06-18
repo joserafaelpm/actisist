@@ -14,7 +14,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import ufps.edu.co.dao.exceptions.NonexistentEntityException;
-import ufps.edu.co.dto.ActividadAcademica;
+import ufps.edu.co.dto.Actividad;
 import ufps.edu.co.dto.Convenio;
 import ufps.edu.co.dto.ConvenioActividad;
 
@@ -38,10 +38,10 @@ public class ConvenioActividadJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            ActividadAcademica actividadAcademicaId = convenioActividad.getActividadAcademicaId();
-            if (actividadAcademicaId != null) {
-                actividadAcademicaId = em.getReference(actividadAcademicaId.getClass(), actividadAcademicaId.getId());
-                convenioActividad.setActividadAcademicaId(actividadAcademicaId);
+            Actividad actividadId = convenioActividad.getActividadId();
+            if (actividadId != null) {
+                actividadId = em.getReference(actividadId.getClass(), actividadId.getId());
+                convenioActividad.setActividadId(actividadId);
             }
             Convenio convenioId = convenioActividad.getConvenioId();
             if (convenioId != null) {
@@ -49,9 +49,9 @@ public class ConvenioActividadJpaController implements Serializable {
                 convenioActividad.setConvenioId(convenioId);
             }
             em.persist(convenioActividad);
-            if (actividadAcademicaId != null) {
-                actividadAcademicaId.getConvenioActividadList().add(convenioActividad);
-                actividadAcademicaId = em.merge(actividadAcademicaId);
+            if (actividadId != null) {
+                actividadId.getConvenioActividadList().add(convenioActividad);
+                actividadId = em.merge(actividadId);
             }
             if (convenioId != null) {
                 convenioId.getConvenioActividadList().add(convenioActividad);
@@ -71,26 +71,26 @@ public class ConvenioActividadJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             ConvenioActividad persistentConvenioActividad = em.find(ConvenioActividad.class, convenioActividad.getId());
-            ActividadAcademica actividadAcademicaIdOld = persistentConvenioActividad.getActividadAcademicaId();
-            ActividadAcademica actividadAcademicaIdNew = convenioActividad.getActividadAcademicaId();
+            Actividad actividadIdOld = persistentConvenioActividad.getActividadId();
+            Actividad actividadIdNew = convenioActividad.getActividadId();
             Convenio convenioIdOld = persistentConvenioActividad.getConvenioId();
             Convenio convenioIdNew = convenioActividad.getConvenioId();
-            if (actividadAcademicaIdNew != null) {
-                actividadAcademicaIdNew = em.getReference(actividadAcademicaIdNew.getClass(), actividadAcademicaIdNew.getId());
-                convenioActividad.setActividadAcademicaId(actividadAcademicaIdNew);
+            if (actividadIdNew != null) {
+                actividadIdNew = em.getReference(actividadIdNew.getClass(), actividadIdNew.getId());
+                convenioActividad.setActividadId(actividadIdNew);
             }
             if (convenioIdNew != null) {
                 convenioIdNew = em.getReference(convenioIdNew.getClass(), convenioIdNew.getId());
                 convenioActividad.setConvenioId(convenioIdNew);
             }
             convenioActividad = em.merge(convenioActividad);
-            if (actividadAcademicaIdOld != null && !actividadAcademicaIdOld.equals(actividadAcademicaIdNew)) {
-                actividadAcademicaIdOld.getConvenioActividadList().remove(convenioActividad);
-                actividadAcademicaIdOld = em.merge(actividadAcademicaIdOld);
+            if (actividadIdOld != null && !actividadIdOld.equals(actividadIdNew)) {
+                actividadIdOld.getConvenioActividadList().remove(convenioActividad);
+                actividadIdOld = em.merge(actividadIdOld);
             }
-            if (actividadAcademicaIdNew != null && !actividadAcademicaIdNew.equals(actividadAcademicaIdOld)) {
-                actividadAcademicaIdNew.getConvenioActividadList().add(convenioActividad);
-                actividadAcademicaIdNew = em.merge(actividadAcademicaIdNew);
+            if (actividadIdNew != null && !actividadIdNew.equals(actividadIdOld)) {
+                actividadIdNew.getConvenioActividadList().add(convenioActividad);
+                actividadIdNew = em.merge(actividadIdNew);
             }
             if (convenioIdOld != null && !convenioIdOld.equals(convenioIdNew)) {
                 convenioIdOld.getConvenioActividadList().remove(convenioActividad);
@@ -129,10 +129,10 @@ public class ConvenioActividadJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The convenioActividad with id " + id + " no longer exists.", enfe);
             }
-            ActividadAcademica actividadAcademicaId = convenioActividad.getActividadAcademicaId();
-            if (actividadAcademicaId != null) {
-                actividadAcademicaId.getConvenioActividadList().remove(convenioActividad);
-                actividadAcademicaId = em.merge(actividadAcademicaId);
+            Actividad actividadId = convenioActividad.getActividadId();
+            if (actividadId != null) {
+                actividadId.getConvenioActividadList().remove(convenioActividad);
+                actividadId = em.merge(actividadId);
             }
             Convenio convenioId = convenioActividad.getConvenioId();
             if (convenioId != null) {

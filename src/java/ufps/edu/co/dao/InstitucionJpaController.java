@@ -17,9 +17,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import ufps.edu.co.dao.exceptions.IllegalOrphanException;
 import ufps.edu.co.dao.exceptions.NonexistentEntityException;
+import ufps.edu.co.dto.Conferencista;
 import ufps.edu.co.dto.PaisInstitucion;
 import ufps.edu.co.dto.ActividadInstitucion;
-import ufps.edu.co.dto.Conferencista;
 import ufps.edu.co.dto.Institucion;
 
 /**
@@ -41,14 +41,17 @@ public class InstitucionJpaController implements Serializable {
         if (institucion.getConvenioList() == null) {
             institucion.setConvenioList(new ArrayList<Convenio>());
         }
+        if (institucion.getConferencistaList() == null) {
+            institucion.setConferencistaList(new ArrayList<Conferencista>());
+        }
         if (institucion.getPaisInstitucionList() == null) {
             institucion.setPaisInstitucionList(new ArrayList<PaisInstitucion>());
         }
         if (institucion.getActividadInstitucionList() == null) {
             institucion.setActividadInstitucionList(new ArrayList<ActividadInstitucion>());
         }
-        if (institucion.getConferencistaList() == null) {
-            institucion.setConferencistaList(new ArrayList<Conferencista>());
+        if (institucion.getActividadInstitucionList1() == null) {
+            institucion.setActividadInstitucionList1(new ArrayList<ActividadInstitucion>());
         }
         EntityManager em = null;
         try {
@@ -60,6 +63,12 @@ public class InstitucionJpaController implements Serializable {
                 attachedConvenioList.add(convenioListConvenioToAttach);
             }
             institucion.setConvenioList(attachedConvenioList);
+            List<Conferencista> attachedConferencistaList = new ArrayList<Conferencista>();
+            for (Conferencista conferencistaListConferencistaToAttach : institucion.getConferencistaList()) {
+                conferencistaListConferencistaToAttach = em.getReference(conferencistaListConferencistaToAttach.getClass(), conferencistaListConferencistaToAttach.getUsuarioDni());
+                attachedConferencistaList.add(conferencistaListConferencistaToAttach);
+            }
+            institucion.setConferencistaList(attachedConferencistaList);
             List<PaisInstitucion> attachedPaisInstitucionList = new ArrayList<PaisInstitucion>();
             for (PaisInstitucion paisInstitucionListPaisInstitucionToAttach : institucion.getPaisInstitucionList()) {
                 paisInstitucionListPaisInstitucionToAttach = em.getReference(paisInstitucionListPaisInstitucionToAttach.getClass(), paisInstitucionListPaisInstitucionToAttach.getId());
@@ -72,12 +81,12 @@ public class InstitucionJpaController implements Serializable {
                 attachedActividadInstitucionList.add(actividadInstitucionListActividadInstitucionToAttach);
             }
             institucion.setActividadInstitucionList(attachedActividadInstitucionList);
-            List<Conferencista> attachedConferencistaList = new ArrayList<Conferencista>();
-            for (Conferencista conferencistaListConferencistaToAttach : institucion.getConferencistaList()) {
-                conferencistaListConferencistaToAttach = em.getReference(conferencistaListConferencistaToAttach.getClass(), conferencistaListConferencistaToAttach.getUsuarioDni());
-                attachedConferencistaList.add(conferencistaListConferencistaToAttach);
+            List<ActividadInstitucion> attachedActividadInstitucionList1 = new ArrayList<ActividadInstitucion>();
+            for (ActividadInstitucion actividadInstitucionList1ActividadInstitucionToAttach : institucion.getActividadInstitucionList1()) {
+                actividadInstitucionList1ActividadInstitucionToAttach = em.getReference(actividadInstitucionList1ActividadInstitucionToAttach.getClass(), actividadInstitucionList1ActividadInstitucionToAttach.getId());
+                attachedActividadInstitucionList1.add(actividadInstitucionList1ActividadInstitucionToAttach);
             }
-            institucion.setConferencistaList(attachedConferencistaList);
+            institucion.setActividadInstitucionList1(attachedActividadInstitucionList1);
             em.persist(institucion);
             for (Convenio convenioListConvenio : institucion.getConvenioList()) {
                 Institucion oldEmpresaOfConvenioListConvenio = convenioListConvenio.getEmpresa();
@@ -86,6 +95,15 @@ public class InstitucionJpaController implements Serializable {
                 if (oldEmpresaOfConvenioListConvenio != null) {
                     oldEmpresaOfConvenioListConvenio.getConvenioList().remove(convenioListConvenio);
                     oldEmpresaOfConvenioListConvenio = em.merge(oldEmpresaOfConvenioListConvenio);
+                }
+            }
+            for (Conferencista conferencistaListConferencista : institucion.getConferencistaList()) {
+                Institucion oldInstitucionIdOfConferencistaListConferencista = conferencistaListConferencista.getInstitucionId();
+                conferencistaListConferencista.setInstitucionId(institucion);
+                conferencistaListConferencista = em.merge(conferencistaListConferencista);
+                if (oldInstitucionIdOfConferencistaListConferencista != null) {
+                    oldInstitucionIdOfConferencistaListConferencista.getConferencistaList().remove(conferencistaListConferencista);
+                    oldInstitucionIdOfConferencistaListConferencista = em.merge(oldInstitucionIdOfConferencistaListConferencista);
                 }
             }
             for (PaisInstitucion paisInstitucionListPaisInstitucion : institucion.getPaisInstitucionList()) {
@@ -106,13 +124,13 @@ public class InstitucionJpaController implements Serializable {
                     oldInstitucionIdOfActividadInstitucionListActividadInstitucion = em.merge(oldInstitucionIdOfActividadInstitucionListActividadInstitucion);
                 }
             }
-            for (Conferencista conferencistaListConferencista : institucion.getConferencistaList()) {
-                Institucion oldInstitucionIdOfConferencistaListConferencista = conferencistaListConferencista.getInstitucionId();
-                conferencistaListConferencista.setInstitucionId(institucion);
-                conferencistaListConferencista = em.merge(conferencistaListConferencista);
-                if (oldInstitucionIdOfConferencistaListConferencista != null) {
-                    oldInstitucionIdOfConferencistaListConferencista.getConferencistaList().remove(conferencistaListConferencista);
-                    oldInstitucionIdOfConferencistaListConferencista = em.merge(oldInstitucionIdOfConferencistaListConferencista);
+            for (ActividadInstitucion actividadInstitucionList1ActividadInstitucion : institucion.getActividadInstitucionList1()) {
+                Institucion oldActividadIdOfActividadInstitucionList1ActividadInstitucion = actividadInstitucionList1ActividadInstitucion.getActividadId();
+                actividadInstitucionList1ActividadInstitucion.setActividadId(institucion);
+                actividadInstitucionList1ActividadInstitucion = em.merge(actividadInstitucionList1ActividadInstitucion);
+                if (oldActividadIdOfActividadInstitucionList1ActividadInstitucion != null) {
+                    oldActividadIdOfActividadInstitucionList1ActividadInstitucion.getActividadInstitucionList1().remove(actividadInstitucionList1ActividadInstitucion);
+                    oldActividadIdOfActividadInstitucionList1ActividadInstitucion = em.merge(oldActividadIdOfActividadInstitucionList1ActividadInstitucion);
                 }
             }
             em.getTransaction().commit();
@@ -131,13 +149,23 @@ public class InstitucionJpaController implements Serializable {
             Institucion persistentInstitucion = em.find(Institucion.class, institucion.getId());
             List<Convenio> convenioListOld = persistentInstitucion.getConvenioList();
             List<Convenio> convenioListNew = institucion.getConvenioList();
+            List<Conferencista> conferencistaListOld = persistentInstitucion.getConferencistaList();
+            List<Conferencista> conferencistaListNew = institucion.getConferencistaList();
             List<PaisInstitucion> paisInstitucionListOld = persistentInstitucion.getPaisInstitucionList();
             List<PaisInstitucion> paisInstitucionListNew = institucion.getPaisInstitucionList();
             List<ActividadInstitucion> actividadInstitucionListOld = persistentInstitucion.getActividadInstitucionList();
             List<ActividadInstitucion> actividadInstitucionListNew = institucion.getActividadInstitucionList();
-            List<Conferencista> conferencistaListOld = persistentInstitucion.getConferencistaList();
-            List<Conferencista> conferencistaListNew = institucion.getConferencistaList();
+            List<ActividadInstitucion> actividadInstitucionList1Old = persistentInstitucion.getActividadInstitucionList1();
+            List<ActividadInstitucion> actividadInstitucionList1New = institucion.getActividadInstitucionList1();
             List<String> illegalOrphanMessages = null;
+            for (Conferencista conferencistaListOldConferencista : conferencistaListOld) {
+                if (!conferencistaListNew.contains(conferencistaListOldConferencista)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain Conferencista " + conferencistaListOldConferencista + " since its institucionId field is not nullable.");
+                }
+            }
             for (PaisInstitucion paisInstitucionListOldPaisInstitucion : paisInstitucionListOld) {
                 if (!paisInstitucionListNew.contains(paisInstitucionListOldPaisInstitucion)) {
                     if (illegalOrphanMessages == null) {
@@ -154,12 +182,12 @@ public class InstitucionJpaController implements Serializable {
                     illegalOrphanMessages.add("You must retain ActividadInstitucion " + actividadInstitucionListOldActividadInstitucion + " since its institucionId field is not nullable.");
                 }
             }
-            for (Conferencista conferencistaListOldConferencista : conferencistaListOld) {
-                if (!conferencistaListNew.contains(conferencistaListOldConferencista)) {
+            for (ActividadInstitucion actividadInstitucionList1OldActividadInstitucion : actividadInstitucionList1Old) {
+                if (!actividadInstitucionList1New.contains(actividadInstitucionList1OldActividadInstitucion)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Conferencista " + conferencistaListOldConferencista + " since its institucionId field is not nullable.");
+                    illegalOrphanMessages.add("You must retain ActividadInstitucion " + actividadInstitucionList1OldActividadInstitucion + " since its actividadId field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -172,6 +200,13 @@ public class InstitucionJpaController implements Serializable {
             }
             convenioListNew = attachedConvenioListNew;
             institucion.setConvenioList(convenioListNew);
+            List<Conferencista> attachedConferencistaListNew = new ArrayList<Conferencista>();
+            for (Conferencista conferencistaListNewConferencistaToAttach : conferencistaListNew) {
+                conferencistaListNewConferencistaToAttach = em.getReference(conferencistaListNewConferencistaToAttach.getClass(), conferencistaListNewConferencistaToAttach.getUsuarioDni());
+                attachedConferencistaListNew.add(conferencistaListNewConferencistaToAttach);
+            }
+            conferencistaListNew = attachedConferencistaListNew;
+            institucion.setConferencistaList(conferencistaListNew);
             List<PaisInstitucion> attachedPaisInstitucionListNew = new ArrayList<PaisInstitucion>();
             for (PaisInstitucion paisInstitucionListNewPaisInstitucionToAttach : paisInstitucionListNew) {
                 paisInstitucionListNewPaisInstitucionToAttach = em.getReference(paisInstitucionListNewPaisInstitucionToAttach.getClass(), paisInstitucionListNewPaisInstitucionToAttach.getId());
@@ -186,13 +221,13 @@ public class InstitucionJpaController implements Serializable {
             }
             actividadInstitucionListNew = attachedActividadInstitucionListNew;
             institucion.setActividadInstitucionList(actividadInstitucionListNew);
-            List<Conferencista> attachedConferencistaListNew = new ArrayList<Conferencista>();
-            for (Conferencista conferencistaListNewConferencistaToAttach : conferencistaListNew) {
-                conferencistaListNewConferencistaToAttach = em.getReference(conferencistaListNewConferencistaToAttach.getClass(), conferencistaListNewConferencistaToAttach.getUsuarioDni());
-                attachedConferencistaListNew.add(conferencistaListNewConferencistaToAttach);
+            List<ActividadInstitucion> attachedActividadInstitucionList1New = new ArrayList<ActividadInstitucion>();
+            for (ActividadInstitucion actividadInstitucionList1NewActividadInstitucionToAttach : actividadInstitucionList1New) {
+                actividadInstitucionList1NewActividadInstitucionToAttach = em.getReference(actividadInstitucionList1NewActividadInstitucionToAttach.getClass(), actividadInstitucionList1NewActividadInstitucionToAttach.getId());
+                attachedActividadInstitucionList1New.add(actividadInstitucionList1NewActividadInstitucionToAttach);
             }
-            conferencistaListNew = attachedConferencistaListNew;
-            institucion.setConferencistaList(conferencistaListNew);
+            actividadInstitucionList1New = attachedActividadInstitucionList1New;
+            institucion.setActividadInstitucionList1(actividadInstitucionList1New);
             institucion = em.merge(institucion);
             for (Convenio convenioListOldConvenio : convenioListOld) {
                 if (!convenioListNew.contains(convenioListOldConvenio)) {
@@ -208,6 +243,17 @@ public class InstitucionJpaController implements Serializable {
                     if (oldEmpresaOfConvenioListNewConvenio != null && !oldEmpresaOfConvenioListNewConvenio.equals(institucion)) {
                         oldEmpresaOfConvenioListNewConvenio.getConvenioList().remove(convenioListNewConvenio);
                         oldEmpresaOfConvenioListNewConvenio = em.merge(oldEmpresaOfConvenioListNewConvenio);
+                    }
+                }
+            }
+            for (Conferencista conferencistaListNewConferencista : conferencistaListNew) {
+                if (!conferencistaListOld.contains(conferencistaListNewConferencista)) {
+                    Institucion oldInstitucionIdOfConferencistaListNewConferencista = conferencistaListNewConferencista.getInstitucionId();
+                    conferencistaListNewConferencista.setInstitucionId(institucion);
+                    conferencistaListNewConferencista = em.merge(conferencistaListNewConferencista);
+                    if (oldInstitucionIdOfConferencistaListNewConferencista != null && !oldInstitucionIdOfConferencistaListNewConferencista.equals(institucion)) {
+                        oldInstitucionIdOfConferencistaListNewConferencista.getConferencistaList().remove(conferencistaListNewConferencista);
+                        oldInstitucionIdOfConferencistaListNewConferencista = em.merge(oldInstitucionIdOfConferencistaListNewConferencista);
                     }
                 }
             }
@@ -233,14 +279,14 @@ public class InstitucionJpaController implements Serializable {
                     }
                 }
             }
-            for (Conferencista conferencistaListNewConferencista : conferencistaListNew) {
-                if (!conferencistaListOld.contains(conferencistaListNewConferencista)) {
-                    Institucion oldInstitucionIdOfConferencistaListNewConferencista = conferencistaListNewConferencista.getInstitucionId();
-                    conferencistaListNewConferencista.setInstitucionId(institucion);
-                    conferencistaListNewConferencista = em.merge(conferencistaListNewConferencista);
-                    if (oldInstitucionIdOfConferencistaListNewConferencista != null && !oldInstitucionIdOfConferencistaListNewConferencista.equals(institucion)) {
-                        oldInstitucionIdOfConferencistaListNewConferencista.getConferencistaList().remove(conferencistaListNewConferencista);
-                        oldInstitucionIdOfConferencistaListNewConferencista = em.merge(oldInstitucionIdOfConferencistaListNewConferencista);
+            for (ActividadInstitucion actividadInstitucionList1NewActividadInstitucion : actividadInstitucionList1New) {
+                if (!actividadInstitucionList1Old.contains(actividadInstitucionList1NewActividadInstitucion)) {
+                    Institucion oldActividadIdOfActividadInstitucionList1NewActividadInstitucion = actividadInstitucionList1NewActividadInstitucion.getActividadId();
+                    actividadInstitucionList1NewActividadInstitucion.setActividadId(institucion);
+                    actividadInstitucionList1NewActividadInstitucion = em.merge(actividadInstitucionList1NewActividadInstitucion);
+                    if (oldActividadIdOfActividadInstitucionList1NewActividadInstitucion != null && !oldActividadIdOfActividadInstitucionList1NewActividadInstitucion.equals(institucion)) {
+                        oldActividadIdOfActividadInstitucionList1NewActividadInstitucion.getActividadInstitucionList1().remove(actividadInstitucionList1NewActividadInstitucion);
+                        oldActividadIdOfActividadInstitucionList1NewActividadInstitucion = em.merge(oldActividadIdOfActividadInstitucionList1NewActividadInstitucion);
                     }
                 }
             }
@@ -274,6 +320,13 @@ public class InstitucionJpaController implements Serializable {
                 throw new NonexistentEntityException("The institucion with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
+            List<Conferencista> conferencistaListOrphanCheck = institucion.getConferencistaList();
+            for (Conferencista conferencistaListOrphanCheckConferencista : conferencistaListOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Institucion (" + institucion + ") cannot be destroyed since the Conferencista " + conferencistaListOrphanCheckConferencista + " in its conferencistaList field has a non-nullable institucionId field.");
+            }
             List<PaisInstitucion> paisInstitucionListOrphanCheck = institucion.getPaisInstitucionList();
             for (PaisInstitucion paisInstitucionListOrphanCheckPaisInstitucion : paisInstitucionListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
@@ -288,12 +341,12 @@ public class InstitucionJpaController implements Serializable {
                 }
                 illegalOrphanMessages.add("This Institucion (" + institucion + ") cannot be destroyed since the ActividadInstitucion " + actividadInstitucionListOrphanCheckActividadInstitucion + " in its actividadInstitucionList field has a non-nullable institucionId field.");
             }
-            List<Conferencista> conferencistaListOrphanCheck = institucion.getConferencistaList();
-            for (Conferencista conferencistaListOrphanCheckConferencista : conferencistaListOrphanCheck) {
+            List<ActividadInstitucion> actividadInstitucionList1OrphanCheck = institucion.getActividadInstitucionList1();
+            for (ActividadInstitucion actividadInstitucionList1OrphanCheckActividadInstitucion : actividadInstitucionList1OrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Institucion (" + institucion + ") cannot be destroyed since the Conferencista " + conferencistaListOrphanCheckConferencista + " in its conferencistaList field has a non-nullable institucionId field.");
+                illegalOrphanMessages.add("This Institucion (" + institucion + ") cannot be destroyed since the ActividadInstitucion " + actividadInstitucionList1OrphanCheckActividadInstitucion + " in its actividadInstitucionList1 field has a non-nullable actividadId field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

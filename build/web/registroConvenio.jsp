@@ -83,7 +83,7 @@
                         <div class="ufps-body-section-80 ufps-padding-5">
 
 
-                            <form action="ControlConvenio?q=reg" method="POST">
+                            <form action="ControlConvenio?q=reg" method="POST" accept-charset="ISO-8859-1">
                                 <div class="ufps-row" >
                                     <div class="ufps-col-mobile-12 ufps-col-netbook-3" >Numero de convenio:</div >
                                     <div class="ufps-col-mobile-12 ufps-col-netbook-9" >
@@ -151,9 +151,8 @@
                                         </select>
                                     </div>
                                     <input type="submit"  class="ufps-btn ufps-width-100 ufps-margin-top-10" value="Registrar">
-                                    </form>
-
                                 </div>
+                            </form>
                         </div>
                     </div >
                 </div >

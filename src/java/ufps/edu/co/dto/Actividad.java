@@ -6,6 +6,7 @@
 package ufps.edu.co.dto;
 
 import java.io.Serializable;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -16,6 +17,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -45,6 +47,11 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Actividad.findByFechaFin", query = "SELECT a FROM Actividad a WHERE a.fechaFin = :fechaFin")})
 public class Actividad implements Serializable {
 
+    @Basic(optional = false)
+    @Lob
+    @Column(name = "imagen")
+    private byte[] imagen;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,21 +80,24 @@ public class Actividad implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date fechaFin;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "actividadId")
-    private List<Proyecto> proyectoList;
+    private List<Horario> horarioList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "actividadId")
+    private List<ConvenioActividad> convenioActividadList;
     @JoinColumn(name = "usuario_dni", referencedColumnName = "dni")
     @ManyToOne(optional = false)
     private Usuario usuarioDni;
+    @JoinColumn(name = "tipo_movilidad_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private TipoMovilidad tipoMovilidadId;
     @JoinColumn(name = "tipo_actividad_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private TipoActividad tipoActividadId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "actividadId")
     private List<ActividadAnexos> actividadAnexosList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "actividadId")
-    private List<ActividadInstitucion> actividadInstitucionList;
+    private List<ConferencistaActividad> conferencistaActividadList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "actividadId")
     private List<InvolucradosActividad> involucradosActividadList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "actividadId")
-    private List<ActividadAcademica> actividadAcademicaList;
 
     public Actividad() {
     }
@@ -170,12 +180,21 @@ public class Actividad implements Serializable {
     }
 
     @XmlTransient
-    public List<Proyecto> getProyectoList() {
-        return proyectoList;
+    public List<Horario> getHorarioList() {
+        return horarioList;
     }
 
-    public void setProyectoList(List<Proyecto> proyectoList) {
-        this.proyectoList = proyectoList;
+    public void setHorarioList(List<Horario> horarioList) {
+        this.horarioList = horarioList;
+    }
+
+    @XmlTransient
+    public List<ConvenioActividad> getConvenioActividadList() {
+        return convenioActividadList;
+    }
+
+    public void setConvenioActividadList(List<ConvenioActividad> convenioActividadList) {
+        this.convenioActividadList = convenioActividadList;
     }
 
     public Usuario getUsuarioDni() {
@@ -184,6 +203,14 @@ public class Actividad implements Serializable {
 
     public void setUsuarioDni(Usuario usuarioDni) {
         this.usuarioDni = usuarioDni;
+    }
+
+    public TipoMovilidad getTipoMovilidadId() {
+        return tipoMovilidadId;
+    }
+
+    public void setTipoMovilidadId(TipoMovilidad tipoMovilidadId) {
+        this.tipoMovilidadId = tipoMovilidadId;
     }
 
     public TipoActividad getTipoActividadId() {
@@ -204,12 +231,12 @@ public class Actividad implements Serializable {
     }
 
     @XmlTransient
-    public List<ActividadInstitucion> getActividadInstitucionList() {
-        return actividadInstitucionList;
+    public List<ConferencistaActividad> getConferencistaActividadList() {
+        return conferencistaActividadList;
     }
 
-    public void setActividadInstitucionList(List<ActividadInstitucion> actividadInstitucionList) {
-        this.actividadInstitucionList = actividadInstitucionList;
+    public void setConferencistaActividadList(List<ConferencistaActividad> conferencistaActividadList) {
+        this.conferencistaActividadList = conferencistaActividadList;
     }
 
     @XmlTransient
@@ -219,15 +246,6 @@ public class Actividad implements Serializable {
 
     public void setInvolucradosActividadList(List<InvolucradosActividad> involucradosActividadList) {
         this.involucradosActividadList = involucradosActividadList;
-    }
-
-    @XmlTransient
-    public List<ActividadAcademica> getActividadAcademicaList() {
-        return actividadAcademicaList;
-    }
-
-    public void setActividadAcademicaList(List<ActividadAcademica> actividadAcademicaList) {
-        this.actividadAcademicaList = actividadAcademicaList;
     }
 
     @Override
@@ -254,5 +272,17 @@ public class Actividad implements Serializable {
     public String toString() {
         return "ufps.edu.co.dto.Actividad[ id=" + id + " ]";
     }
+
+    public byte[] getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(byte[] imagen) {
+        this.imagen = imagen;
+    }
     
+    public String encodeImage(){
+        String encodedImage=Base64.getEncoder().encodeToString(this.imagen);
+        return "data:image/jpg;base64,"+encodedImage;
+    }
 }

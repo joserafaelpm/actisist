@@ -108,7 +108,7 @@ public class TipoConvenio implements Serializable, Tipo {
     public String toString() {
         return "ufps.edu.co.dto.TipoConvenio[ id=" + id + " ]";
     }
-
+    
     @Override
     public String getTipo() {
         return this.tipoConvenio;

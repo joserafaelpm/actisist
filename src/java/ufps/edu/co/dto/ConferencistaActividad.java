@@ -40,9 +40,9 @@ public class ConferencistaActividad implements Serializable {
     @JoinColumn(name = "usuario_dni", referencedColumnName = "dni")
     @ManyToOne(optional = false)
     private Usuario usuarioDni;
-    @JoinColumn(name = "actividad_academica_id", referencedColumnName = "id")
+    @JoinColumn(name = "actividad_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private ActividadAcademica actividadAcademicaId;
+    private Actividad actividadId;
 
     public ConferencistaActividad() {
     }
@@ -67,12 +67,12 @@ public class ConferencistaActividad implements Serializable {
         this.usuarioDni = usuarioDni;
     }
 
-    public ActividadAcademica getActividadAcademicaId() {
-        return actividadAcademicaId;
+    public Actividad getActividadId() {
+        return actividadId;
     }
 
-    public void setActividadAcademicaId(ActividadAcademica actividadAcademicaId) {
-        this.actividadAcademicaId = actividadAcademicaId;
+    public void setActividadId(Actividad actividadId) {
+        this.actividadId = actividadId;
     }
 
     @Override

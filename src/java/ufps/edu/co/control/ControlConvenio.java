@@ -134,7 +134,7 @@ public class ControlConvenio extends HttpServlet {
         List<Convenio> convs = new AdministrarConvenio().list();
         String rta = "";
         for(Convenio c: convs){
-            rta += c.getEmpresa().getNombre()+":"+c.getId()+",";
+            rta += c.getEmpresa().getNombre()+" No."+c.getNumero()+":"+c.getId()+",";
         }
         if(rta.length()!=0)pw.print(rta.substring(0, rta.length()-1));
         pw.flush();

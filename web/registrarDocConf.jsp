@@ -58,7 +58,7 @@
                     Registrar Docente
                 </div>
                 <div class="ufps-body-section ufps-padding-5">
-                    <form action="ControlUsuario?q=reg" method="POST" enctype="multipart/form-data">
+                    <form action="ControlUsuario?q=reg" method="POST" enctype="multipart/form-data" accept-charset="ISO-8859-1">
                         <div class="label"><label class="ufps-title-input" for="name">Nombre</label></div>
                         <input type="text" id="nam" name="nam" class="ufps-input-line" required>
                         <div class="label"><label class="ufps-title-input" for="ape">Apellidos</label></div>

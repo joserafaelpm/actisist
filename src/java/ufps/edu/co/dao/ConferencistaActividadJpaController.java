@@ -15,7 +15,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import ufps.edu.co.dao.exceptions.NonexistentEntityException;
 import ufps.edu.co.dto.Usuario;
-import ufps.edu.co.dto.ActividadAcademica;
+import ufps.edu.co.dto.Actividad;
 import ufps.edu.co.dto.ConferencistaActividad;
 
 /**
@@ -43,19 +43,19 @@ public class ConferencistaActividadJpaController implements Serializable {
                 usuarioDni = em.getReference(usuarioDni.getClass(), usuarioDni.getDni());
                 conferencistaActividad.setUsuarioDni(usuarioDni);
             }
-            ActividadAcademica actividadAcademicaId = conferencistaActividad.getActividadAcademicaId();
-            if (actividadAcademicaId != null) {
-                actividadAcademicaId = em.getReference(actividadAcademicaId.getClass(), actividadAcademicaId.getId());
-                conferencistaActividad.setActividadAcademicaId(actividadAcademicaId);
+            Actividad actividadId = conferencistaActividad.getActividadId();
+            if (actividadId != null) {
+                actividadId = em.getReference(actividadId.getClass(), actividadId.getId());
+                conferencistaActividad.setActividadId(actividadId);
             }
             em.persist(conferencistaActividad);
             if (usuarioDni != null) {
                 usuarioDni.getConferencistaActividadList().add(conferencistaActividad);
                 usuarioDni = em.merge(usuarioDni);
             }
-            if (actividadAcademicaId != null) {
-                actividadAcademicaId.getConferencistaActividadList().add(conferencistaActividad);
-                actividadAcademicaId = em.merge(actividadAcademicaId);
+            if (actividadId != null) {
+                actividadId.getConferencistaActividadList().add(conferencistaActividad);
+                actividadId = em.merge(actividadId);
             }
             em.getTransaction().commit();
         } finally {
@@ -73,15 +73,15 @@ public class ConferencistaActividadJpaController implements Serializable {
             ConferencistaActividad persistentConferencistaActividad = em.find(ConferencistaActividad.class, conferencistaActividad.getId());
             Usuario usuarioDniOld = persistentConferencistaActividad.getUsuarioDni();
             Usuario usuarioDniNew = conferencistaActividad.getUsuarioDni();
-            ActividadAcademica actividadAcademicaIdOld = persistentConferencistaActividad.getActividadAcademicaId();
-            ActividadAcademica actividadAcademicaIdNew = conferencistaActividad.getActividadAcademicaId();
+            Actividad actividadIdOld = persistentConferencistaActividad.getActividadId();
+            Actividad actividadIdNew = conferencistaActividad.getActividadId();
             if (usuarioDniNew != null) {
                 usuarioDniNew = em.getReference(usuarioDniNew.getClass(), usuarioDniNew.getDni());
                 conferencistaActividad.setUsuarioDni(usuarioDniNew);
             }
-            if (actividadAcademicaIdNew != null) {
-                actividadAcademicaIdNew = em.getReference(actividadAcademicaIdNew.getClass(), actividadAcademicaIdNew.getId());
-                conferencistaActividad.setActividadAcademicaId(actividadAcademicaIdNew);
+            if (actividadIdNew != null) {
+                actividadIdNew = em.getReference(actividadIdNew.getClass(), actividadIdNew.getId());
+                conferencistaActividad.setActividadId(actividadIdNew);
             }
             conferencistaActividad = em.merge(conferencistaActividad);
             if (usuarioDniOld != null && !usuarioDniOld.equals(usuarioDniNew)) {
@@ -92,13 +92,13 @@ public class ConferencistaActividadJpaController implements Serializable {
                 usuarioDniNew.getConferencistaActividadList().add(conferencistaActividad);
                 usuarioDniNew = em.merge(usuarioDniNew);
             }
-            if (actividadAcademicaIdOld != null && !actividadAcademicaIdOld.equals(actividadAcademicaIdNew)) {
-                actividadAcademicaIdOld.getConferencistaActividadList().remove(conferencistaActividad);
-                actividadAcademicaIdOld = em.merge(actividadAcademicaIdOld);
+            if (actividadIdOld != null && !actividadIdOld.equals(actividadIdNew)) {
+                actividadIdOld.getConferencistaActividadList().remove(conferencistaActividad);
+                actividadIdOld = em.merge(actividadIdOld);
             }
-            if (actividadAcademicaIdNew != null && !actividadAcademicaIdNew.equals(actividadAcademicaIdOld)) {
-                actividadAcademicaIdNew.getConferencistaActividadList().add(conferencistaActividad);
-                actividadAcademicaIdNew = em.merge(actividadAcademicaIdNew);
+            if (actividadIdNew != null && !actividadIdNew.equals(actividadIdOld)) {
+                actividadIdNew.getConferencistaActividadList().add(conferencistaActividad);
+                actividadIdNew = em.merge(actividadIdNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -134,10 +134,10 @@ public class ConferencistaActividadJpaController implements Serializable {
                 usuarioDni.getConferencistaActividadList().remove(conferencistaActividad);
                 usuarioDni = em.merge(usuarioDni);
             }
-            ActividadAcademica actividadAcademicaId = conferencistaActividad.getActividadAcademicaId();
-            if (actividadAcademicaId != null) {
-                actividadAcademicaId.getConferencistaActividadList().remove(conferencistaActividad);
-                actividadAcademicaId = em.merge(actividadAcademicaId);
+            Actividad actividadId = conferencistaActividad.getActividadId();
+            if (actividadId != null) {
+                actividadId.getConferencistaActividadList().remove(conferencistaActividad);
+                actividadId = em.merge(actividadId);
             }
             em.remove(conferencistaActividad);
             em.getTransaction().commit();

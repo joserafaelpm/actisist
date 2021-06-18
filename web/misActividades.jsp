@@ -4,6 +4,10 @@
     Author     : dunke
 --%>
 
+<%@page import="java.util.Date"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.util.List"%>
+<%@page import="ufps.edu.co.dto.Actividad"%>
 <%@page import="ufps.edu.co.dto.Usuario"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -33,6 +37,9 @@
                         </div>
                     </div>
                     <%
+                        SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
+                        Date date = new Date();
+                        List<Actividad> acts = (List<Actividad>)request.getSession().getAttribute("acts");
                         Usuario user = ((Usuario) request.getSession().getAttribute("user"));
                         if (user == null) {
                             response.sendRedirect("login.jsp");
@@ -72,8 +79,8 @@
                             <div class="label"><label class="ufps-title-input">Nombre</label></div>
                             <input type="text"  name="nombre" id="nombreData" class="ufps-input-line" required>
                             <div class="label"><label class="ufps-title-input">Fecha</label></div>
-                            <input type="date"  name="fecha" id="fechaData"  value="2017-06-01" class="ufps-input-line" required>
-                            <div class="label"><label class="ufps-title-input">Hora</label></div>
+                            <input type="date"  name="fecha" id="fechaData"  value="<%=sd.format(date) %>" class="ufps-input-line" required>
+                            <div class="label"><label class="ufps-title-input">Tipo</label></div>
                             <input type="text"  name="hora" id="horaData" class="ufps-input-line" required>
                             <div class="label"><label class="ufps-title-input">Lugar</label></div>
                             <input type="text"  name="lugar" id="lugarData" class="ufps-input-line" required>
@@ -93,21 +100,22 @@
                                             <th></th>
                                             <th>Nombre</th>
                                             <th>Fecha</th>
-                                            <th>Hora</th>
+                                            <th>Tipo</th>
                                             <th>Lugar</th>
                                             <th>Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <%for(Actividad a : acts){%>
                                         <tr>
                                             <td style="text-align: center;"><input type="checkbox"></td>
-                                            <td style="text-align: center;">Activida 1</td>
-                                            <td style="text-align: center;">2021-06-02</td>
-                                            <td style="text-align: center;">09:00 a.m.</td>
-                                            <td style="text-align: center;">Cúcuta</td>
-                                            <td style="text-align: center;"><a href="#"><i class="fa fa-edit"></i></a><a href="#"><i class="fa fa-times"></i></a></td>
-
+                                            <td style="text-align: center;"><%=a.getNombre() %></td>
+                                            <td style="text-align: center;"><%=sd.format(a.getFechaInicio()) %></td>
+                                            <td style="text-align: center;"><%=a.getTipoActividadId().getTipo() %></td>
+                                            <td style="text-align: center;"><%=a.getLugar() %></td>
+                                            <td style="text-align: center;"><a href="ControlActividad?q=edit&id=<%=a.getId() %>"><i class="fa fa-edit"></i></a><a href="ControlActividad?q=del&id=<%=a.getId() %>"><i class="fa fa-times"></i></a></td>
                                         </tr>    
+                                        <%}%>
                                     </tbody>
                                 </table>
                             </div>  

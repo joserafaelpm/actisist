@@ -10,15 +10,15 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import ufps.edu.co.dto.PaisInstitucion;
+import ufps.edu.co.dto.Conferencista;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import ufps.edu.co.dao.exceptions.IllegalOrphanException;
 import ufps.edu.co.dao.exceptions.NonexistentEntityException;
-import ufps.edu.co.dto.Conferencista;
 import ufps.edu.co.dto.Pais;
+import ufps.edu.co.dto.PaisInstitucion;
 
 /**
  *
@@ -36,38 +36,29 @@ public class PaisJpaController implements Serializable {
     }
 
     public void create(Pais pais) {
-        if (pais.getPaisInstitucionList() == null) {
-            pais.setPaisInstitucionList(new ArrayList<PaisInstitucion>());
-        }
         if (pais.getConferencistaList() == null) {
             pais.setConferencistaList(new ArrayList<Conferencista>());
+        }
+        if (pais.getPaisInstitucionList() == null) {
+            pais.setPaisInstitucionList(new ArrayList<PaisInstitucion>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            List<PaisInstitucion> attachedPaisInstitucionList = new ArrayList<PaisInstitucion>();
-            for (PaisInstitucion paisInstitucionListPaisInstitucionToAttach : pais.getPaisInstitucionList()) {
-                paisInstitucionListPaisInstitucionToAttach = em.getReference(paisInstitucionListPaisInstitucionToAttach.getClass(), paisInstitucionListPaisInstitucionToAttach.getId());
-                attachedPaisInstitucionList.add(paisInstitucionListPaisInstitucionToAttach);
-            }
-            pais.setPaisInstitucionList(attachedPaisInstitucionList);
             List<Conferencista> attachedConferencistaList = new ArrayList<Conferencista>();
             for (Conferencista conferencistaListConferencistaToAttach : pais.getConferencistaList()) {
                 conferencistaListConferencistaToAttach = em.getReference(conferencistaListConferencistaToAttach.getClass(), conferencistaListConferencistaToAttach.getUsuarioDni());
                 attachedConferencistaList.add(conferencistaListConferencistaToAttach);
             }
             pais.setConferencistaList(attachedConferencistaList);
-            em.persist(pais);
-            for (PaisInstitucion paisInstitucionListPaisInstitucion : pais.getPaisInstitucionList()) {
-                Pais oldPaisIdOfPaisInstitucionListPaisInstitucion = paisInstitucionListPaisInstitucion.getPaisId();
-                paisInstitucionListPaisInstitucion.setPaisId(pais);
-                paisInstitucionListPaisInstitucion = em.merge(paisInstitucionListPaisInstitucion);
-                if (oldPaisIdOfPaisInstitucionListPaisInstitucion != null) {
-                    oldPaisIdOfPaisInstitucionListPaisInstitucion.getPaisInstitucionList().remove(paisInstitucionListPaisInstitucion);
-                    oldPaisIdOfPaisInstitucionListPaisInstitucion = em.merge(oldPaisIdOfPaisInstitucionListPaisInstitucion);
-                }
+            List<PaisInstitucion> attachedPaisInstitucionList = new ArrayList<PaisInstitucion>();
+            for (PaisInstitucion paisInstitucionListPaisInstitucionToAttach : pais.getPaisInstitucionList()) {
+                paisInstitucionListPaisInstitucionToAttach = em.getReference(paisInstitucionListPaisInstitucionToAttach.getClass(), paisInstitucionListPaisInstitucionToAttach.getId());
+                attachedPaisInstitucionList.add(paisInstitucionListPaisInstitucionToAttach);
             }
+            pais.setPaisInstitucionList(attachedPaisInstitucionList);
+            em.persist(pais);
             for (Conferencista conferencistaListConferencista : pais.getConferencistaList()) {
                 Pais oldPaisOrigenOfConferencistaListConferencista = conferencistaListConferencista.getPaisOrigen();
                 conferencistaListConferencista.setPaisOrigen(pais);
@@ -75,6 +66,15 @@ public class PaisJpaController implements Serializable {
                 if (oldPaisOrigenOfConferencistaListConferencista != null) {
                     oldPaisOrigenOfConferencistaListConferencista.getConferencistaList().remove(conferencistaListConferencista);
                     oldPaisOrigenOfConferencistaListConferencista = em.merge(oldPaisOrigenOfConferencistaListConferencista);
+                }
+            }
+            for (PaisInstitucion paisInstitucionListPaisInstitucion : pais.getPaisInstitucionList()) {
+                Pais oldPaisIdOfPaisInstitucionListPaisInstitucion = paisInstitucionListPaisInstitucion.getPaisId();
+                paisInstitucionListPaisInstitucion.setPaisId(pais);
+                paisInstitucionListPaisInstitucion = em.merge(paisInstitucionListPaisInstitucion);
+                if (oldPaisIdOfPaisInstitucionListPaisInstitucion != null) {
+                    oldPaisIdOfPaisInstitucionListPaisInstitucion.getPaisInstitucionList().remove(paisInstitucionListPaisInstitucion);
+                    oldPaisIdOfPaisInstitucionListPaisInstitucion = em.merge(oldPaisIdOfPaisInstitucionListPaisInstitucion);
                 }
             }
             em.getTransaction().commit();
@@ -91,19 +91,11 @@ public class PaisJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Pais persistentPais = em.find(Pais.class, pais.getId());
-            List<PaisInstitucion> paisInstitucionListOld = persistentPais.getPaisInstitucionList();
-            List<PaisInstitucion> paisInstitucionListNew = pais.getPaisInstitucionList();
             List<Conferencista> conferencistaListOld = persistentPais.getConferencistaList();
             List<Conferencista> conferencistaListNew = pais.getConferencistaList();
+            List<PaisInstitucion> paisInstitucionListOld = persistentPais.getPaisInstitucionList();
+            List<PaisInstitucion> paisInstitucionListNew = pais.getPaisInstitucionList();
             List<String> illegalOrphanMessages = null;
-            for (PaisInstitucion paisInstitucionListOldPaisInstitucion : paisInstitucionListOld) {
-                if (!paisInstitucionListNew.contains(paisInstitucionListOldPaisInstitucion)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain PaisInstitucion " + paisInstitucionListOldPaisInstitucion + " since its paisId field is not nullable.");
-                }
-            }
             for (Conferencista conferencistaListOldConferencista : conferencistaListOld) {
                 if (!conferencistaListNew.contains(conferencistaListOldConferencista)) {
                     if (illegalOrphanMessages == null) {
@@ -112,16 +104,17 @@ public class PaisJpaController implements Serializable {
                     illegalOrphanMessages.add("You must retain Conferencista " + conferencistaListOldConferencista + " since its paisOrigen field is not nullable.");
                 }
             }
+            for (PaisInstitucion paisInstitucionListOldPaisInstitucion : paisInstitucionListOld) {
+                if (!paisInstitucionListNew.contains(paisInstitucionListOldPaisInstitucion)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain PaisInstitucion " + paisInstitucionListOldPaisInstitucion + " since its paisId field is not nullable.");
+                }
+            }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            List<PaisInstitucion> attachedPaisInstitucionListNew = new ArrayList<PaisInstitucion>();
-            for (PaisInstitucion paisInstitucionListNewPaisInstitucionToAttach : paisInstitucionListNew) {
-                paisInstitucionListNewPaisInstitucionToAttach = em.getReference(paisInstitucionListNewPaisInstitucionToAttach.getClass(), paisInstitucionListNewPaisInstitucionToAttach.getId());
-                attachedPaisInstitucionListNew.add(paisInstitucionListNewPaisInstitucionToAttach);
-            }
-            paisInstitucionListNew = attachedPaisInstitucionListNew;
-            pais.setPaisInstitucionList(paisInstitucionListNew);
             List<Conferencista> attachedConferencistaListNew = new ArrayList<Conferencista>();
             for (Conferencista conferencistaListNewConferencistaToAttach : conferencistaListNew) {
                 conferencistaListNewConferencistaToAttach = em.getReference(conferencistaListNewConferencistaToAttach.getClass(), conferencistaListNewConferencistaToAttach.getUsuarioDni());
@@ -129,18 +122,14 @@ public class PaisJpaController implements Serializable {
             }
             conferencistaListNew = attachedConferencistaListNew;
             pais.setConferencistaList(conferencistaListNew);
-            pais = em.merge(pais);
-            for (PaisInstitucion paisInstitucionListNewPaisInstitucion : paisInstitucionListNew) {
-                if (!paisInstitucionListOld.contains(paisInstitucionListNewPaisInstitucion)) {
-                    Pais oldPaisIdOfPaisInstitucionListNewPaisInstitucion = paisInstitucionListNewPaisInstitucion.getPaisId();
-                    paisInstitucionListNewPaisInstitucion.setPaisId(pais);
-                    paisInstitucionListNewPaisInstitucion = em.merge(paisInstitucionListNewPaisInstitucion);
-                    if (oldPaisIdOfPaisInstitucionListNewPaisInstitucion != null && !oldPaisIdOfPaisInstitucionListNewPaisInstitucion.equals(pais)) {
-                        oldPaisIdOfPaisInstitucionListNewPaisInstitucion.getPaisInstitucionList().remove(paisInstitucionListNewPaisInstitucion);
-                        oldPaisIdOfPaisInstitucionListNewPaisInstitucion = em.merge(oldPaisIdOfPaisInstitucionListNewPaisInstitucion);
-                    }
-                }
+            List<PaisInstitucion> attachedPaisInstitucionListNew = new ArrayList<PaisInstitucion>();
+            for (PaisInstitucion paisInstitucionListNewPaisInstitucionToAttach : paisInstitucionListNew) {
+                paisInstitucionListNewPaisInstitucionToAttach = em.getReference(paisInstitucionListNewPaisInstitucionToAttach.getClass(), paisInstitucionListNewPaisInstitucionToAttach.getId());
+                attachedPaisInstitucionListNew.add(paisInstitucionListNewPaisInstitucionToAttach);
             }
+            paisInstitucionListNew = attachedPaisInstitucionListNew;
+            pais.setPaisInstitucionList(paisInstitucionListNew);
+            pais = em.merge(pais);
             for (Conferencista conferencistaListNewConferencista : conferencistaListNew) {
                 if (!conferencistaListOld.contains(conferencistaListNewConferencista)) {
                     Pais oldPaisOrigenOfConferencistaListNewConferencista = conferencistaListNewConferencista.getPaisOrigen();
@@ -149,6 +138,17 @@ public class PaisJpaController implements Serializable {
                     if (oldPaisOrigenOfConferencistaListNewConferencista != null && !oldPaisOrigenOfConferencistaListNewConferencista.equals(pais)) {
                         oldPaisOrigenOfConferencistaListNewConferencista.getConferencistaList().remove(conferencistaListNewConferencista);
                         oldPaisOrigenOfConferencistaListNewConferencista = em.merge(oldPaisOrigenOfConferencistaListNewConferencista);
+                    }
+                }
+            }
+            for (PaisInstitucion paisInstitucionListNewPaisInstitucion : paisInstitucionListNew) {
+                if (!paisInstitucionListOld.contains(paisInstitucionListNewPaisInstitucion)) {
+                    Pais oldPaisIdOfPaisInstitucionListNewPaisInstitucion = paisInstitucionListNewPaisInstitucion.getPaisId();
+                    paisInstitucionListNewPaisInstitucion.setPaisId(pais);
+                    paisInstitucionListNewPaisInstitucion = em.merge(paisInstitucionListNewPaisInstitucion);
+                    if (oldPaisIdOfPaisInstitucionListNewPaisInstitucion != null && !oldPaisIdOfPaisInstitucionListNewPaisInstitucion.equals(pais)) {
+                        oldPaisIdOfPaisInstitucionListNewPaisInstitucion.getPaisInstitucionList().remove(paisInstitucionListNewPaisInstitucion);
+                        oldPaisIdOfPaisInstitucionListNewPaisInstitucion = em.merge(oldPaisIdOfPaisInstitucionListNewPaisInstitucion);
                     }
                 }
             }
@@ -182,19 +182,19 @@ public class PaisJpaController implements Serializable {
                 throw new NonexistentEntityException("The pais with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            List<PaisInstitucion> paisInstitucionListOrphanCheck = pais.getPaisInstitucionList();
-            for (PaisInstitucion paisInstitucionListOrphanCheckPaisInstitucion : paisInstitucionListOrphanCheck) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("This Pais (" + pais + ") cannot be destroyed since the PaisInstitucion " + paisInstitucionListOrphanCheckPaisInstitucion + " in its paisInstitucionList field has a non-nullable paisId field.");
-            }
             List<Conferencista> conferencistaListOrphanCheck = pais.getConferencistaList();
             for (Conferencista conferencistaListOrphanCheckConferencista : conferencistaListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
                 illegalOrphanMessages.add("This Pais (" + pais + ") cannot be destroyed since the Conferencista " + conferencistaListOrphanCheckConferencista + " in its conferencistaList field has a non-nullable paisOrigen field.");
+            }
+            List<PaisInstitucion> paisInstitucionListOrphanCheck = pais.getPaisInstitucionList();
+            for (PaisInstitucion paisInstitucionListOrphanCheckPaisInstitucion : paisInstitucionListOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Pais (" + pais + ") cannot be destroyed since the PaisInstitucion " + paisInstitucionListOrphanCheckPaisInstitucion + " in its paisInstitucionList field has a non-nullable paisId field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

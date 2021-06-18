@@ -5,6 +5,7 @@
  */
 package ufps.edu.co.negocio;
 
+import ufps.edu.co.dto.TipoConvenio;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,7 +20,6 @@ import ufps.edu.co.dto.Convenio;
 import ufps.edu.co.dto.Institucion;
 import ufps.edu.co.dto.Pais;
 import ufps.edu.co.dto.PaisInstitucion;
-import ufps.edu.co.dto.TipoConvenio;
 import ufps.edu.co.util.Conexion;
 
 /**

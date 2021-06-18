@@ -53,14 +53,14 @@ public class Usuario implements Serializable {
     private String correo;
     @Column(name = "contrase\u00f1a")
     private String contraseña;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioDni")
-    private List<Titulo> tituloList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioDni")
-    private List<Actividad> actividadList;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "usuario")
     private Docente docente;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioDni")
+    private List<Titulo> tituloList;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "usuario")
     private Conferencista conferencista;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioDni")
+    private List<Actividad> actividadList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioDni")
     private List<ConferencistaActividad> conferencistaActividadList;
     @JoinColumn(name = "id_rol", referencedColumnName = "id")
@@ -120,6 +120,14 @@ public class Usuario implements Serializable {
         this.contraseña = contraseña;
     }
 
+    public Docente getDocente() {
+        return docente;
+    }
+
+    public void setDocente(Docente docente) {
+        this.docente = docente;
+    }
+
     @XmlTransient
     public List<Titulo> getTituloList() {
         return tituloList;
@@ -129,6 +137,14 @@ public class Usuario implements Serializable {
         this.tituloList = tituloList;
     }
 
+    public Conferencista getConferencista() {
+        return conferencista;
+    }
+
+    public void setConferencista(Conferencista conferencista) {
+        this.conferencista = conferencista;
+    }
+
     @XmlTransient
     public List<Actividad> getActividadList() {
         return actividadList;
@@ -136,22 +152,6 @@ public class Usuario implements Serializable {
 
     public void setActividadList(List<Actividad> actividadList) {
         this.actividadList = actividadList;
-    }
-
-    public Docente getDocente() {
-        return docente;
-    }
-
-    public void setDocente(Docente docente) {
-        this.docente = docente;
-    }
-
-    public Conferencista getConferencista() {
-        return conferencista;
-    }
-
-    public void setConferencista(Conferencista conferencista) {
-        this.conferencista = conferencista;
     }
 
     @XmlTransient

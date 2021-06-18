@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import ufps.edu.co.dao.RolJpaController;
-import ufps.edu.co.dao.UsuarioJpaController;
 import ufps.edu.co.dto.Rol;
 import ufps.edu.co.dto.SolicitudRegistro;
 import ufps.edu.co.dto.Usuario;

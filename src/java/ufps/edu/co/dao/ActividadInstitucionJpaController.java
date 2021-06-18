@@ -14,7 +14,6 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import ufps.edu.co.dao.exceptions.NonexistentEntityException;
-import ufps.edu.co.dto.Actividad;
 import ufps.edu.co.dto.ActividadInstitucion;
 import ufps.edu.co.dto.Institucion;
 
@@ -38,24 +37,24 @@ public class ActividadInstitucionJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Actividad actividadId = actividadInstitucion.getActividadId();
-            if (actividadId != null) {
-                actividadId = em.getReference(actividadId.getClass(), actividadId.getId());
-                actividadInstitucion.setActividadId(actividadId);
-            }
             Institucion institucionId = actividadInstitucion.getInstitucionId();
             if (institucionId != null) {
                 institucionId = em.getReference(institucionId.getClass(), institucionId.getId());
                 actividadInstitucion.setInstitucionId(institucionId);
             }
-            em.persist(actividadInstitucion);
+            Institucion actividadId = actividadInstitucion.getActividadId();
             if (actividadId != null) {
-                actividadId.getActividadInstitucionList().add(actividadInstitucion);
-                actividadId = em.merge(actividadId);
+                actividadId = em.getReference(actividadId.getClass(), actividadId.getId());
+                actividadInstitucion.setActividadId(actividadId);
             }
+            em.persist(actividadInstitucion);
             if (institucionId != null) {
                 institucionId.getActividadInstitucionList().add(actividadInstitucion);
                 institucionId = em.merge(institucionId);
+            }
+            if (actividadId != null) {
+                actividadId.getActividadInstitucionList().add(actividadInstitucion);
+                actividadId = em.merge(actividadId);
             }
             em.getTransaction().commit();
         } finally {
@@ -71,27 +70,19 @@ public class ActividadInstitucionJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             ActividadInstitucion persistentActividadInstitucion = em.find(ActividadInstitucion.class, actividadInstitucion.getId());
-            Actividad actividadIdOld = persistentActividadInstitucion.getActividadId();
-            Actividad actividadIdNew = actividadInstitucion.getActividadId();
             Institucion institucionIdOld = persistentActividadInstitucion.getInstitucionId();
             Institucion institucionIdNew = actividadInstitucion.getInstitucionId();
-            if (actividadIdNew != null) {
-                actividadIdNew = em.getReference(actividadIdNew.getClass(), actividadIdNew.getId());
-                actividadInstitucion.setActividadId(actividadIdNew);
-            }
+            Institucion actividadIdOld = persistentActividadInstitucion.getActividadId();
+            Institucion actividadIdNew = actividadInstitucion.getActividadId();
             if (institucionIdNew != null) {
                 institucionIdNew = em.getReference(institucionIdNew.getClass(), institucionIdNew.getId());
                 actividadInstitucion.setInstitucionId(institucionIdNew);
             }
+            if (actividadIdNew != null) {
+                actividadIdNew = em.getReference(actividadIdNew.getClass(), actividadIdNew.getId());
+                actividadInstitucion.setActividadId(actividadIdNew);
+            }
             actividadInstitucion = em.merge(actividadInstitucion);
-            if (actividadIdOld != null && !actividadIdOld.equals(actividadIdNew)) {
-                actividadIdOld.getActividadInstitucionList().remove(actividadInstitucion);
-                actividadIdOld = em.merge(actividadIdOld);
-            }
-            if (actividadIdNew != null && !actividadIdNew.equals(actividadIdOld)) {
-                actividadIdNew.getActividadInstitucionList().add(actividadInstitucion);
-                actividadIdNew = em.merge(actividadIdNew);
-            }
             if (institucionIdOld != null && !institucionIdOld.equals(institucionIdNew)) {
                 institucionIdOld.getActividadInstitucionList().remove(actividadInstitucion);
                 institucionIdOld = em.merge(institucionIdOld);
@@ -99,6 +90,14 @@ public class ActividadInstitucionJpaController implements Serializable {
             if (institucionIdNew != null && !institucionIdNew.equals(institucionIdOld)) {
                 institucionIdNew.getActividadInstitucionList().add(actividadInstitucion);
                 institucionIdNew = em.merge(institucionIdNew);
+            }
+            if (actividadIdOld != null && !actividadIdOld.equals(actividadIdNew)) {
+                actividadIdOld.getActividadInstitucionList().remove(actividadInstitucion);
+                actividadIdOld = em.merge(actividadIdOld);
+            }
+            if (actividadIdNew != null && !actividadIdNew.equals(actividadIdOld)) {
+                actividadIdNew.getActividadInstitucionList().add(actividadInstitucion);
+                actividadIdNew = em.merge(actividadIdNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -129,15 +128,15 @@ public class ActividadInstitucionJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The actividadInstitucion with id " + id + " no longer exists.", enfe);
             }
-            Actividad actividadId = actividadInstitucion.getActividadId();
-            if (actividadId != null) {
-                actividadId.getActividadInstitucionList().remove(actividadInstitucion);
-                actividadId = em.merge(actividadId);
-            }
             Institucion institucionId = actividadInstitucion.getInstitucionId();
             if (institucionId != null) {
                 institucionId.getActividadInstitucionList().remove(actividadInstitucion);
                 institucionId = em.merge(institucionId);
+            }
+            Institucion actividadId = actividadInstitucion.getActividadId();
+            if (actividadId != null) {
+                actividadId.getActividadInstitucionList().remove(actividadInstitucion);
+                actividadId = em.merge(actividadId);
             }
             em.remove(actividadInstitucion);
             em.getTransaction().commit();

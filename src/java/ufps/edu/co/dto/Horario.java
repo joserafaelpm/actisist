@@ -52,9 +52,9 @@ public class Horario implements Serializable {
     @Column(name = "horaFin")
     @Temporal(TemporalType.DATE)
     private Date horaFin;
-    @JoinColumn(name = "actividad_academica_id", referencedColumnName = "id")
+    @JoinColumn(name = "actividad_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private ActividadAcademica actividadAcademicaId;
+    private Actividad actividadId;
 
     public Horario() {
     }
@@ -95,12 +95,12 @@ public class Horario implements Serializable {
         this.horaFin = horaFin;
     }
 
-    public ActividadAcademica getActividadAcademicaId() {
-        return actividadAcademicaId;
+    public Actividad getActividadId() {
+        return actividadId;
     }
 
-    public void setActividadAcademicaId(ActividadAcademica actividadAcademicaId) {
-        this.actividadAcademicaId = actividadAcademicaId;
+    public void setActividadId(Actividad actividadId) {
+        this.actividadId = actividadId;
     }
 
     @Override

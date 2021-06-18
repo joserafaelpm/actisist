@@ -14,7 +14,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import ufps.edu.co.dao.exceptions.NonexistentEntityException;
-import ufps.edu.co.dto.ActividadAcademica;
+import ufps.edu.co.dto.Actividad;
 import ufps.edu.co.dto.Horario;
 
 /**
@@ -37,15 +37,15 @@ public class HorarioJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            ActividadAcademica actividadAcademicaId = horario.getActividadAcademicaId();
-            if (actividadAcademicaId != null) {
-                actividadAcademicaId = em.getReference(actividadAcademicaId.getClass(), actividadAcademicaId.getId());
-                horario.setActividadAcademicaId(actividadAcademicaId);
+            Actividad actividadId = horario.getActividadId();
+            if (actividadId != null) {
+                actividadId = em.getReference(actividadId.getClass(), actividadId.getId());
+                horario.setActividadId(actividadId);
             }
             em.persist(horario);
-            if (actividadAcademicaId != null) {
-                actividadAcademicaId.getHorarioList().add(horario);
-                actividadAcademicaId = em.merge(actividadAcademicaId);
+            if (actividadId != null) {
+                actividadId.getHorarioList().add(horario);
+                actividadId = em.merge(actividadId);
             }
             em.getTransaction().commit();
         } finally {
@@ -61,20 +61,20 @@ public class HorarioJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Horario persistentHorario = em.find(Horario.class, horario.getId());
-            ActividadAcademica actividadAcademicaIdOld = persistentHorario.getActividadAcademicaId();
-            ActividadAcademica actividadAcademicaIdNew = horario.getActividadAcademicaId();
-            if (actividadAcademicaIdNew != null) {
-                actividadAcademicaIdNew = em.getReference(actividadAcademicaIdNew.getClass(), actividadAcademicaIdNew.getId());
-                horario.setActividadAcademicaId(actividadAcademicaIdNew);
+            Actividad actividadIdOld = persistentHorario.getActividadId();
+            Actividad actividadIdNew = horario.getActividadId();
+            if (actividadIdNew != null) {
+                actividadIdNew = em.getReference(actividadIdNew.getClass(), actividadIdNew.getId());
+                horario.setActividadId(actividadIdNew);
             }
             horario = em.merge(horario);
-            if (actividadAcademicaIdOld != null && !actividadAcademicaIdOld.equals(actividadAcademicaIdNew)) {
-                actividadAcademicaIdOld.getHorarioList().remove(horario);
-                actividadAcademicaIdOld = em.merge(actividadAcademicaIdOld);
+            if (actividadIdOld != null && !actividadIdOld.equals(actividadIdNew)) {
+                actividadIdOld.getHorarioList().remove(horario);
+                actividadIdOld = em.merge(actividadIdOld);
             }
-            if (actividadAcademicaIdNew != null && !actividadAcademicaIdNew.equals(actividadAcademicaIdOld)) {
-                actividadAcademicaIdNew.getHorarioList().add(horario);
-                actividadAcademicaIdNew = em.merge(actividadAcademicaIdNew);
+            if (actividadIdNew != null && !actividadIdNew.equals(actividadIdOld)) {
+                actividadIdNew.getHorarioList().add(horario);
+                actividadIdNew = em.merge(actividadIdNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -105,10 +105,10 @@ public class HorarioJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The horario with id " + id + " no longer exists.", enfe);
             }
-            ActividadAcademica actividadAcademicaId = horario.getActividadAcademicaId();
-            if (actividadAcademicaId != null) {
-                actividadAcademicaId.getHorarioList().remove(horario);
-                actividadAcademicaId = em.merge(actividadAcademicaId);
+            Actividad actividadId = horario.getActividadId();
+            if (actividadId != null) {
+                actividadId.getHorarioList().remove(horario);
+                actividadId = em.merge(actividadId);
             }
             em.remove(horario);
             em.getTransaction().commit();

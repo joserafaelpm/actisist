@@ -1,3 +1,5 @@
+<%@page import="java.util.Date"%>
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="ufps.edu.co.dto.Tipo"%>
 <%@page import="java.util.List"%>
 <%@page import="ufps.edu.co.dto.Usuario"%>
@@ -27,6 +29,8 @@
                         <div class="ufps-btn-menu-bar"> </div>
                     </div>
                 </div><%
+                    SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
+                    Date date = new Date();
                     Usuario user = ((Usuario) request.getSession().getAttribute("user"));
                     List<Tipo> typeAct = ((List<Tipo>) request.getSession().getAttribute("typeAct"));
                     List<Tipo> typeMov = ((List<Tipo>) request.getSession().getAttribute("typeMov"));
@@ -59,7 +63,7 @@
         <div class="ufps-container">
 
             <div class="ufps-card">
-                <form>
+                <form action="ControlActividad?q=reg" method="POST" enctype="multipart/form-data" accept-charset="ISO-8859-1">
                     <div class="ufps-card-caption ufps-padding-5 ">
 
                         <div class="ufps-row">
@@ -69,7 +73,7 @@
                                 </div>
                                 <div class="ufps-row ufps-margin-top-10" >
                                     <div class="ufps-col-mobile-12 ufps-col-netbook-8" >
-                                        <input type="file" id="fileImagen" class="ufps-input-line">
+                                        <input type="file" accept="image/png,image/jpeg" name="imagen" id="fileImagen" class="ufps-input-line">
                                     </div >
                                     <div class="ufps-col-mobile-12 ufps-col-netbook-4" >
                                         <img id="previsualizaImagen" src="img/logo_ufps.png" class="ufps-img-responsive" />
@@ -85,20 +89,20 @@
                                     <div class="ufps-col-mobile-12 ufps-col-netbook-10" > 
                                         <div class="ufps-row" >
                                             <div class="ufps-col-mobile-12 ufps-col-netbook-3" > Fecha Inicio:</div >
-                                            <div class="ufps-col-mobile-12 ufps-col-netbook-9" > <input type="date"  name="nombre" class="ufps-input-line" required></div>
+                                            <div class="ufps-col-mobile-12 ufps-col-netbook-9" > <input type="date"  name="fe_in" value="<%=sd.format(date)%>" class="ufps-input-line" required></div>
                                         </div>
                                     </div >
                                     <div class="ufps-col-mobile-12 ufps-col-netbook-10" > 
                                         <div class="ufps-row" >
                                             <div class="ufps-col-mobile-12 ufps-col-netbook-3" > Fecha Fin:</div >
-                                            <div class="ufps-col-mobile-12 ufps-col-netbook-9" > <input type="date"  name="nombre" class="ufps-input-line" required></div>
+                                            <div class="ufps-col-mobile-12 ufps-col-netbook-9" > <input type="date"  name="fe_out" value="<%=sd.format(date)%>" class="ufps-input-line" required></div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="ufps-row ufps-margin-top-20" >
                                     <div class="ufps-col-mobile-12 ufps-col-netbook-2" >Tipo:</div >
                                     <div class="ufps-col-mobile-12 ufps-col-netbook-10" >
-                                        <select class="ufps-input-line">
+                                        <select class="ufps-input-line" name="typeAct">
                                             <%for (Tipo t : typeAct) {%>
                                             <option value="<%=t.getId()%>"><%=t.getTipo()%></option>
                                             <%}%>
@@ -108,7 +112,7 @@
                                 <div class="ufps-row ufps-margin-top-20" >
                                     <div class="ufps-col-mobile-12 ufps-col-netbook-2" >Semestre:</div >
                                     <div class="ufps-col-mobile-12 ufps-col-netbook-10" >
-                                        <select class="ufps-input-line" name="select">
+                                        <select class="ufps-input-line" name="sem">
                                             <option value="1">1</option>
                                             <option value="2">2</option>
                                         </select>
@@ -117,11 +121,19 @@
 
                                 <div class="ufps-pl-pr-15 ufps-margin-top-20">
                                     Tematica:
-                                    <textarea class="ufps-input" rows="4" cols="50"></textarea>
+                                    <textarea class="ufps-input" rows="4" cols="50" name="tema"></textarea>
                                     Descripción:
-                                    <textarea class="ufps-input" rows="4" cols="50"></textarea>
+                                    <textarea class="ufps-input" rows="4" cols="50" name="desc"></textarea>
                                     Lugar:
-                                    <input type="text" class="ufps-input" rows="4" cols="50"></input>
+                                    <input type="text" class="ufps-input" rows="4" cols="50" name="lugar"></input>
+                                    <div class="ufps-pl-pr-15 ufps-margin-top-20">
+                                        Movilidad
+                                        <select class="ufps-input-line" id="movilidadSelect" name="typeMov">
+                                            <%for (Tipo t : typeMov) {%>
+                                            <option value="<%=t.getId()%>"><%=t.getTipo()%></option>
+                                            <%}%>
+                                        </select>
+                                    </div>
                                     Conferencistas:
                                     <!--Informacion: 
                                     https://www.jqueryscript.net/form/Groupable-Searchable-Dual-Listbox-Transfer.jsp
@@ -129,14 +141,6 @@
                                     <div class="ufps-conferencistas-div">
                                         <div id="transfer1"></div>
                                     </div
-                                </div>
-                                <div class="ufps-pl-pr-15 ufps-margin-top-20">
-                                    Movilidad
-                                    <select class="ufps-input-line" id="movilidadSelect" name="select">
-                                        <%for (Tipo t : typeMov) {%>
-                                        <option value="<%=t.getId()%>"><%=t.getTipo()%></option>
-                                        <%}%>
-                                    </select>
                                 </div>
                                 <div class="ufps-margin-top-30">
                                     <label class="ufps-pl-pr-15 ">Convenios:</label>
@@ -151,11 +155,12 @@
 
                             </div>
                         </div>
+                        <input type="hidden" id="conf" name="conf">
+                        <input type="hidden" id="conv" name="conv">
                         <input type="submit"  class="ufps-btn ufps-width-100 ufps-margin-top-20" value="Registrar Actividad"></input>
-                </form>
+                    </div>
             </div>
-        </div>
-
+        </form>
     </div>
 
 
@@ -172,35 +177,45 @@
     <script src="js/jquery.transfer.js"></script>
     <script src="js/ufps.min.js"></script>
     <script src="js/main.js"></script>
-    
+
     <script>
-        $(document).ready(function (){
-            $.post("ControlUsuario?q=liste", {}, function(response) {
-                resolveResponse(response, "#transfer1");
-            });
-            
-            $.post("ControlConvenio?q=liste", {}, function(response) {
-                resolveResponse(response, "#transfer2");
-            });
-            
-            function resolveResponse(response, component){
-                var arr = response.split(",");
-                var res = [];
-                for(var i=0; i<arr.length; i++){
-                    var temp = arr[i].split(":");
-                    res.push({"data":temp[0],"value":temp[1],"selected":true});
-                }
-                var settings = {
-                    "dataArray": res,
-                    "itemName": "data",
-                    "valueName": "value",
-                    "callable": function (items) {
-                        console.log(items);
-                    }
-                };
-                $(component).transfer(settings);
-            }
-        });
+                        $(document).ready(function () {
+                            $.post("ControlUsuario?q=liste", {}, function (response) {
+                                resolveResponse(response, "#transfer1", "#conf", "Conferencistas");
+                            });
+
+                            $.post("ControlConvenio?q=liste", {}, function (response) {
+                                resolveResponse(response, "#transfer2", "#conv", "Convenios");
+                            });
+
+                            function resolveResponse(response, component, id, col) {
+                                var arr = response.split(",");
+                                var res = [];
+                                for (var i = 0; i < arr.length; i++) {
+                                    var temp = arr[i].split(":");
+                                    res.push({"data": temp[0], "value": temp[1]});
+                                }
+                                var settings = {
+                                    "dataArray": res,
+                                    "itemName": "data",
+                                    "valueName": "value",
+                                    "tabNameText": col,
+                                    "rightTabNameText": col + " selecionados",
+                                    "callable": function (items) {
+                                        var r = "";
+                                        items.forEach((element) => {
+                                            r += element.value + ",";
+                                        });
+                                        if (r.length > 0) {
+                                            r = r.substring(0, r.length - 1);
+                                        }
+                                        ;
+                                        $(id).val(r);
+                                    }
+                                };
+                                $(component).transfer(settings);
+                            }
+                        });
     </script>
 </body>
 </html>

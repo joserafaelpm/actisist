@@ -37,9 +37,9 @@ public class ConvenioActividad implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @JoinColumn(name = "actividad_academica_id", referencedColumnName = "id")
+    @JoinColumn(name = "actividad_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private ActividadAcademica actividadAcademicaId;
+    private Actividad actividadId;
     @JoinColumn(name = "convenio_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Convenio convenioId;
@@ -59,12 +59,12 @@ public class ConvenioActividad implements Serializable {
         this.id = id;
     }
 
-    public ActividadAcademica getActividadAcademicaId() {
-        return actividadAcademicaId;
+    public Actividad getActividadId() {
+        return actividadId;
     }
 
-    public void setActividadAcademicaId(ActividadAcademica actividadAcademicaId) {
-        this.actividadAcademicaId = actividadAcademicaId;
+    public void setActividadId(Actividad actividadId) {
+        this.actividadId = actividadId;
     }
 
     public Convenio getConvenioId() {
