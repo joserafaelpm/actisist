@@ -46,7 +46,7 @@
                         <label for="doc" class="ufps-title-input">Documento</label>
                         <input type="number" name="doc" id="doc" class="ufps-input-line" required/>
                         <label for="cod" class="ufps-title-input">Codigo</label>
-                        <input type="number" name="cod" id="cod" class="ufps-input-line"required/>
+                        <input type="number" name="cod" id="cod" class="ufps-input-line"/>
                         <label for="pw" class="ufps-title-input">Contraseña</label>
                         <input type="password" name="pw" id="pw" class="ufps-input-line"required/>
                         <div class="ufps-title-input">

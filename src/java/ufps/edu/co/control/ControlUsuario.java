@@ -6,7 +6,10 @@
 package ufps.edu.co.control;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.servlet.ServletException;
@@ -14,12 +17,19 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.IOUtils;
 import ufps.edu.co.dao.RolJpaController;
 import ufps.edu.co.dto.Rol;
 import ufps.edu.co.dto.SolicitudRegistro;
+import ufps.edu.co.dto.TipoDocente;
 import ufps.edu.co.dto.Usuario;
 import ufps.edu.co.negocio.AdministrarUsuario;
 import ufps.edu.co.util.Conexion;
+import ufps.edu.co.util.EmailService;
 
 /**
  *
@@ -60,6 +70,10 @@ public class ControlUsuario extends HttpServlet {
                     this.listar(request, response);
                 case "liste":
                     this.liste(request, response);
+                case "perfil":
+                    this.perfil(request, response);
+                case "edit":
+                    this.edit(request, response);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -102,7 +116,8 @@ public class ControlUsuario extends HttpServlet {
         Usuario u = new Usuario(doc, "", "");
         if((u = new AdministrarUsuario().login(u, cod, pw)) != null && (u.getDocente()==null || (u.getDocente()!=null && u.getDocente().getActivo()))){
             request.getSession().setAttribute("user", u);
-            response.sendRedirect("dashboard.jsp");
+            if(u.getIdRol().getId()==1)response.sendRedirect("dashboard.jsp");
+            else response.sendRedirect("ControlActividad?q=showFor");
         }else{
             this.logout(request, response);
         }
@@ -120,6 +135,7 @@ public class ControlUsuario extends HttpServlet {
         sr.setEmail(email);
         sr.setTypeUs(new Rol(type_us));
         new AdministrarUsuario().registrarSolicitud(sr);
+        new EmailService().sendEmail(sr);
         response.sendRedirect("registroDocConf.jsp");
     }
 
@@ -144,6 +160,42 @@ public class ControlUsuario extends HttpServlet {
     private void registrarUsuario(HttpServletRequest request, HttpServletResponse response) throws IOException, Exception {
         new AdministrarUsuario().registrarUsuario(request);
         response.sendRedirect("login.jsp");
+    }
+    
+    private void perfil(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        request.getSession().setAttribute("type", new AdministrarUsuario().getTypes(2));
+        request.getSession().setAttribute("user", new AdministrarUsuario().getUser((Usuario) request.getSession().getAttribute("user")));
+        response.sendRedirect("miPerfil.jsp");
+    }
+    
+    private void edit(HttpServletRequest request, HttpServletResponse response) throws FileUploadException, IOException, ParseException, Exception {
+        Usuario u = new Usuario(((Usuario) request.getSession().getAttribute("user")).getDni());
+        new AdministrarUsuario().edit(u, this.getUser(request, (Usuario) request.getSession().getAttribute("user")));
+        this.perfil(request, response);
+    }
+    
+    private String getUser(HttpServletRequest request, Usuario u) throws FileUploadException, IOException, ParseException{
+        String nombre = "", ape = "", titles = "";
+        Integer typeDoc = 0, vmg = 0;
+        InputStream imagen = null;
+        List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
+        for (FileItem item : items) {
+            if (item.isFormField()) {
+                nombre = item.getFieldName().equalsIgnoreCase("nombre") ? item.getString() : nombre;
+                ape = item.getFieldName().equalsIgnoreCase("ape") ? item.getString() : ape;
+                titles = item.getFieldName().equalsIgnoreCase("titles") ? item.getString() : titles;
+                typeDoc = item.getFieldName().equalsIgnoreCase("type") ? Integer.parseInt(item.getString()) : typeDoc;
+            } else {
+                imagen = item.getInputStream();
+            }
+        }
+
+        if(vmg != 0) u.getDocente().setImagenPerfil(IOUtils.toByteArray(imagen));
+        u.setNombre(nombre);
+        u.setApellido(ape);
+        u.getDocente().setIdTipoDocente(new TipoDocente(typeDoc));
+        
+        return titles;
     }
 
     /**

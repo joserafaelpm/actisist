@@ -30,11 +30,11 @@
                     }
                 %>
                 <div class="ufps-navbar-right">
-                    <a href="dashboard.jsp" class="ufps-navbar-btn">Inicio</a>
-                    <%if (user.getIdRol().getId() != 1) {%><a href="ControlActividad?q=showFor" class="ufps-navbar-btn">Mis Actividades</a><%}%>
+                    <%if (user.getIdRol().getId() == 1) {%><a href="dashboard.jsp" class="ufps-navbar-btn">Inicio</a>
+                    <%}else{%><a href="ControlActividad?q=showFor" class="ufps-navbar-btn">Mis Actividades</a><%}%>
                     <div class="ufps-dropdown" id="dropdown4">
                         <div class="ufps-dropdown-content">
-                            <%if (user.getIdRol().getId() != 1) {%><a href="miPerfil.jsp">Mi Perfil</a><%}%>
+                            <%if (user.getIdRol().getId() != 1) {%><a href="ControlUsuario?q=perfil">Mi Perfil</a><%}%>
                             <a href="ControlUsuario?q=log">Cerrar Sesion</a>
                         </div>
                     </div>

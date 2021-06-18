@@ -22,6 +22,7 @@ import ufps.edu.co.dao.DocenteJpaController;
 import ufps.edu.co.dao.SolicitudRegistroJpaController;
 import ufps.edu.co.dao.TipoConferencistaJpaController;
 import ufps.edu.co.dao.TipoDocenteJpaController;
+import ufps.edu.co.dao.TituloJpaController;
 import ufps.edu.co.dao.UsuarioJpaController;
 import ufps.edu.co.dao.exceptions.NonexistentEntityException;
 import ufps.edu.co.dao.exceptions.PreexistingEntityException;
@@ -31,6 +32,7 @@ import ufps.edu.co.dto.Institucion;
 import ufps.edu.co.dto.Pais;
 import ufps.edu.co.dto.Rol;
 import ufps.edu.co.dto.SolicitudRegistro;
+import ufps.edu.co.dto.Titulo;
 import ufps.edu.co.dto.Usuario;
 import ufps.edu.co.util.Conexion;
 import ufps.edu.co.util.PasswordAuthentication;
@@ -129,6 +131,10 @@ public class AdministrarUsuario {
             this.registrarConferencista(em, token, c);
         }
     }
+    
+    public Usuario getUser(Usuario u){
+        return new UsuarioJpaController(Conexion.getConexion().getBd()).findUsuario(u.getDni());
+    }
 
     public void registrarDocente(EntityManagerFactory em, String token, Docente d) throws PreexistingEntityException, Exception {
         new DocenteJpaController(em).create(d);
@@ -153,6 +159,29 @@ public class AdministrarUsuario {
             }
         }
         return rta;
+    }
+    
+    public void edit(Usuario u, String titles) throws NonexistentEntityException, Exception{
+        EntityManagerFactory em = Conexion.getConexion().getBd();
+        TituloJpaController tjpa = new TituloJpaController(em);
+        UsuarioJpaController ujpa = new UsuarioJpaController(em);
+        u = ujpa.findUsuario(u.getDni());
+        for(Titulo t: u.getTituloList()){
+            tjpa.destroy(t.getId());
+        }
+        String arr[] = titles.split("#");
+        List<Titulo> ts = new ArrayList<>();
+        for(String title: arr){
+            if(title != null && !title.isEmpty()){
+                Titulo ti = new Titulo();
+                ti.setDescripcion(title);
+                ti.setUsuarioDni(u);
+                tjpa.create(ti);
+                ts.add(ti);
+            }
+        }
+        u.setTituloList(ts);
+        ujpa.edit(u);
     }
     
     /**

@@ -5,6 +5,8 @@
  */
 package ufps.edu.co.control;
 
+import com.itextpdf.text.BadElementException;
+import com.itextpdf.text.DocumentException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -33,6 +35,7 @@ import ufps.edu.co.dto.Usuario;
 import ufps.edu.co.negocio.AdministrarActividad;
 import ufps.edu.co.negocio.AdministrarConvenio;
 import ufps.edu.co.negocio.AdministrarUsuario;
+import ufps.edu.co.negocio.InformePDF;
 
 /**
  *
@@ -77,6 +80,9 @@ public class ControlActividad extends HttpServlet {
             case "listeConv":
                 this.listeConv(request, response);
                 break;
+            case "info":
+                this.informe(request, response);
+                break;
         }
     }
 
@@ -91,7 +97,7 @@ public class ControlActividad extends HttpServlet {
         Actividad act = new Actividad();
         String list[] = this.getActividad(request, act, null);
         new AdministrarActividad().registrar(act, list[1], list[0]);
-        response.sendRedirect("registrarActividad.jsp");
+        this.showFor(request, response);
     }
 
     private void show(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -116,8 +122,9 @@ public class ControlActividad extends HttpServlet {
     
     private void editFor(HttpServletRequest request, HttpServletResponse response) throws FileUploadException, IOException, ParseException, Exception {
         Actividad act = new Actividad(((Actividad)request.getSession().getAttribute("act")).getId());
-        String list[] = this.getActividad(request, act, new InvolucradosActividad());
-        new AdministrarActividad().editar(act, list[1], list[0]);
+        InvolucradosActividad ia = new InvolucradosActividad();
+        String list[] = this.getActividad(request, act, ia);
+        new AdministrarActividad().editar(act, ia, list[1], list[0]);
         showFor(request, response);
     }
 
@@ -169,7 +176,7 @@ public class ControlActividad extends HttpServlet {
         SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
         act.setUsuarioDni(new Usuario(((Usuario) request.getSession().getAttribute("user")).getDni()));
         String nombre = "", fe_in = "", fe_out = "", tema = "", desc = "", lugar = "", conv = "", conf = "";
-        Integer typeAct = 0, typeMov = 0, sem = 0, cantC = 0, cantTC = 0, cantTCP = 0, cantE = 0;
+        Integer typeAct = 0, typeMov = 0, sem = 0, cantC = 0, cantTC = 0, cantTCP = 0, cantE = 0, vmg = 0;
         InputStream imagen = null;
         List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
         for (FileItem item : items) {
@@ -189,17 +196,19 @@ public class ControlActividad extends HttpServlet {
                 cantTC = item.getFieldName().equalsIgnoreCase("cantTC") ? Integer.parseInt(item.getString()) : cantTC;
                 cantTCP = item.getFieldName().equalsIgnoreCase("cantTCP") ? Integer.parseInt(item.getString()) : cantTCP;
                 cantE = item.getFieldName().equalsIgnoreCase("cantE") ? Integer.parseInt(item.getString()) : cantE;
+                vmg = item.getFieldName().equalsIgnoreCase("vmg") ? Integer.parseInt(item.getString()) : vmg;
             } else {
                 imagen = item.getInputStream();
             }
         }
+
         if(inAct!=null){
             inAct.setCantDocC(cantC);
             inAct.setCantDocTC(cantTC);
             inAct.setCantDocCTP(cantTCP);
-            inAct.setCantDocC(cantE);
+            inAct.setCantEst(cantE);
             inAct.setActividad(act);
-            act.setInvolucradosActividad(inAct);
+            inAct.setActividadId(act.getId());
         }
         
         act.setNombre(nombre);
@@ -209,13 +218,29 @@ public class ControlActividad extends HttpServlet {
         act.setTematica(tema);
         act.setFechaInicio(sd.parse(fe_in));
         act.setFechaFin(sd.parse(fe_out));
-        act.setImagen(IOUtils.toByteArray(imagen));
+        if(vmg != 0) act.setImagen(IOUtils.toByteArray(imagen));
         act.setTipoActividadId(new TipoActividad(typeAct));
         act.setTipoMovilidadId(new TipoMovilidad(typeMov));
         
         return new String[]{conf, conv};
     }
 
+    private void informe(HttpServletRequest request, HttpServletResponse response) throws DocumentException, BadElementException, IOException {
+        AdministrarActividad admin = new AdministrarActividad();
+        Usuario u = (Usuario)request.getSession().getAttribute("user");
+        List<Actividad> acts = new ArrayList<>();
+        String val[] = request.getParameterValues("act");
+        for(String s: val){
+            String sp[] = s.split("-");
+            if(sp[1].equals("true")){
+                acts.add(admin.getActividad(new Actividad(Integer.parseInt(sp[0]))));
+            }
+        }
+        new InformePDF(request.getServletContext().getRealPath("/"), acts).createPDF();
+        if(u.getIdRol().getId() == 1) this.show(request, response);   
+        else this.showFor(request, response);
+    }
+    
     /**
      * Handles the HTTP <code>GET</code> method.
      *

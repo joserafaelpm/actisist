@@ -33,8 +33,7 @@
                         <div class="ufps-btn-menu-bar"> </div>
                         <div class="ufps-btn-menu-bar"> </div>
                     </div>
-                </div>
-                <%
+                </div><%
                     SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
                     Date date = new Date();
                     List<Actividad> acts = (List<Actividad>)request.getSession().getAttribute("acts");
@@ -44,11 +43,11 @@
                     }
                 %>
                 <div class="ufps-navbar-right">
-                    <a href="dashboard.jsp" class="ufps-navbar-btn">Inicio</a>
-                    <%if (user.getIdRol().getId() != 1) {%><a href="misActividades.jsp" class="ufps-navbar-btn">Mis Actividades</a><%}%>
+                    <%if (user.getIdRol().getId() == 1) {%><a href="dashboard.jsp" class="ufps-navbar-btn">Inicio</a>
+                    <%}else{%><a href="ControlActividad?q=showFor" class="ufps-navbar-btn">Mis Actividades</a><%}%>
                     <div class="ufps-dropdown" id="dropdown4">
                         <div class="ufps-dropdown-content">
-                            <%if (user.getIdRol().getId() != 1) {%><a href="miPerfil.jsp">Mi Perfil</a><%}%>
+                            <%if (user.getIdRol().getId() != 1) {%><a href="ControlUsuario?q=perfil">Mi Perfil</a><%}%>
                             <a href="ControlUsuario?q=log">Cerrar Sesion</a>
                         </div>
                     </div>
@@ -66,7 +65,6 @@
             </div>
         </div>
         <!--FIN HEADER-->
-        
         <div class="ufps-container-fluid ">
             <div class="ufps-row ufps-margin-top-10" >
                 <div class="ufps-col-mobile-12 ufps-col-netbook-3" > 
@@ -85,12 +83,11 @@
                             <input type="text"  name="lugar" id="lugarData" class="ufps-input-line" required>
                             <div class="label"><label class="ufps-title-input">Docente</label></div>
                             <input type="text"  name="docente" id="docenteData" class="ufps-input-line" required>
-                            <a href="registrarActividad.jsp"  class="ufps-tx-center ufps-btn ufps-width-100 ufps-margin-top-10">Registrar Actividad</a>
-                            <form action="ControlActivida?q=info" method="POST">
+                            <form action="ControlActividad?q=info" method="POST">
                                 <%for(Actividad a: acts){%>
                                 <input type="hidden" name="act" id="<%=a.getId() %>" value="<%=a.getId() %>-false">
                                 <%}%>
-                                <input value="Generar Informe" class="ufps-btn ufps-width-100 ufps-margin-top-10 ufps-tx-center">
+                                <input type="submit" value="Generar Informe" class="ufps-btn ufps-width-100 ufps-margin-top-10 ufps-tx-center">
                             </form>
 
                         </div>

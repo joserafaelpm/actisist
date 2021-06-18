@@ -41,8 +41,8 @@
                     </div>
                 </div>
                 <div class="ufps-navbar-right">
-                    <a href="index.html" class="ufps-navbar-btn">Inicio</a>
-                    <a href="login.html" class="ufps-navbar-btn">Inicio Sesion</a>
+                    <a href="index.jsp" class="ufps-navbar-btn">Inicio</a>
+                    <a href="login.jsp" class="ufps-navbar-btn">Inicio Sesion</a>
                 </div>
                 <div class="ufps-navbar-left">
                     <div class="ufps-navbar-corporate">

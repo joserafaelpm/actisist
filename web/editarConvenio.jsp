@@ -23,7 +23,8 @@
         <link rel="stylesheet" href="css/main.css">
     </head>
     <body>
-        <div class="ufps-navbar ufps-navbar-delete_margin" id="menu">
+        <!--HEADER-->
+        <div class="ufps-navbar" id="menu">
             <div class="ufps-container-fluid">
                 <div class="ufps-navbar-brand">
                     <div class="ufps-btn-menu" onclick="toggleMenu('menu')">
@@ -31,27 +32,38 @@
                         <div class="ufps-btn-menu-bar"> </div>
                         <div class="ufps-btn-menu-bar"> </div>
                     </div>
-                </div>
+                </div><%
+                    SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
+                    Convenio convenio = ((Convenio) request.getSession().getAttribute("convenio"));
+                    List<TipoConvenio> tps = ((List<TipoConvenio>) request.getSession().getAttribute("tps"));
+                    Usuario user = ((Usuario) request.getSession().getAttribute("user"));
+                    if (user == null) {
+                        response.sendRedirect("login.jsp");
+                    }
+                %>
                 <div class="ufps-navbar-right">
-                    <a href="misActividades.jsp" class="ufps-navbar-btn">Inicio</a>
-                    <a href="index.jsp" class="ufps-navbar-btn">Mis Actividades</a>
-                    <a onclick="openDropdown('dropdown4')"  class="ufps-navbar-btn ufps-dropdown-btn">Hecttor Parra <img class="ufps-perfil-redonde" src="img/user.jpg"/></a>
-                </div>
-                <div class="ufps-dropdown" id="dropdown4">
-                    <div class="ufps-dropdown-content">
-                        <a href="#">Opción 1</a>
-                        <a href="#">Opción 2</a>
-                        <a href="#">Opción 3</a>
+                    <%if (user.getIdRol().getId() == 1) {%><a href="dashboard.jsp" class="ufps-navbar-btn">Inicio</a>
+                    <%}else{%><a href="ControlActividad?q=showFor" class="ufps-navbar-btn">Mis Actividades</a><%}%>
+                    <div class="ufps-dropdown" id="dropdown4">
+                        <div class="ufps-dropdown-content">
+                            <%if (user.getIdRol().getId() != 1) {%><a href="ControlUsuario?q=perfil">Mi Perfil</a><%}%>
+                            <a href="ControlUsuario?q=log">Cerrar Sesion</a>
+                        </div>
                     </div>
+                    <%if (user.getIdRol().getId() == 1) {%>
+                    <a onclick="openDropdown('dropdown4')"  class="ufps-navbar-btn ufps-dropdown-btn"><%=user.getNombre()%><img class="ufps-perfil-redonde" src="img/admin.png"/></a>
+                        <%} else {%>
+                    <a onclick="openDropdown('dropdown4')"  class="ufps-navbar-btn ufps-dropdown-btn"><%=user.getNombre() + " " + user.getApellido()%> <img class="ufps-perfil-redonde" src="<%=user.getDocente().encodeImage() %>"/></a>
+                        <%}%>
                 </div>
                 <div class="ufps-navbar-left">
                     <div class="ufps-navbar-corporate">
-                        <img  src="img/logo_ufps_inverted.png" alt="Logo UFPS">
+                        <img src="img/logo_ufps_inverted.png" alt="Logo UFPS">
                     </div>
                 </div>
-
             </div>
         </div>
+        <!--FIN HEADER-->
 
         <div class="ufps-container-fluid ufps-margin-top-10">
             <div class="ufps-row" >
@@ -63,17 +75,6 @@
                         <li><a href=""><i class="fa fa-signal"></i> Generar Graficas</a></li>
                     </ul>
                 </div >
-
-                <%
-                    SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
-                    Convenio convenio = ((Convenio) request.getSession().getAttribute("convenio"));
-                    List<TipoConvenio> tps = ((List<TipoConvenio>) request.getSession().getAttribute("tps"));
-                    Usuario user = ((Usuario) request.getSession().getAttribute("user"));
-                    if (user == null) {
-                        response.sendRedirect("login.jsp");
-                    }
-                %>
-
                 <div class="ufps-col-mobile-12 ufps-margin-top-10 ufps-col-netbook-9" >
                     <div class="ufps-section-form">
                         <div class="ufps-title-section">

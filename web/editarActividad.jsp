@@ -22,6 +22,7 @@
         <link rel="stylesheet" href="css/main.css">
     </head>
     <body>
+        <!--HEADER-->
         <div class="ufps-navbar" id="menu">
             <div class="ufps-container-fluid">
                 <div class="ufps-navbar-brand">
@@ -32,7 +33,6 @@
                     </div>
                 </div><%
                     SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
-                    Date date = new Date();
                     Usuario user = ((Usuario) request.getSession().getAttribute("user"));
                     Actividad act = (Actividad) request.getSession().getAttribute("act");
                     InvolucradosActividad insAct = act.getInvolucradosActividad();
@@ -43,18 +43,18 @@
                     }
                 %>
                 <div class="ufps-navbar-right">
-                    <a href="dashboard.jsp" class="ufps-navbar-btn">Inicio</a>
-                    <%if (user.getIdRol().getId() != 1) {%><a href="misActividades.jsp" class="ufps-navbar-btn">Mis Actividades</a><%}%>
+                    <%if (user.getIdRol().getId() == 1) {%><a href="dashboard.jsp" class="ufps-navbar-btn">Inicio</a>
+                    <%}else{%><a href="ControlActividad?q=showFor" class="ufps-navbar-btn">Mis Actividades</a><%}%>
                     <div class="ufps-dropdown" id="dropdown4">
                         <div class="ufps-dropdown-content">
-                            <%if (user.getIdRol().getId() != 1) {%><a href="miPerfil.jsp">Mi Perfil</a><%}%>
+                            <%if (user.getIdRol().getId() != 1) {%><a href="ControlUsuario?q=perfil">Mi Perfil</a><%}%>
                             <a href="ControlUsuario?q=log">Cerrar Sesion</a>
                         </div>
                     </div>
                     <%if (user.getIdRol().getId() == 1) {%>
                     <a onclick="openDropdown('dropdown4')"  class="ufps-navbar-btn ufps-dropdown-btn"><%=user.getNombre()%><img class="ufps-perfil-redonde" src="img/admin.png"/></a>
                         <%} else {%>
-                    <a onclick="openDropdown('dropdown4')"  class="ufps-navbar-btn ufps-dropdown-btn"><%=user.getNombre() + " " + user.getApellido()%> <img class="ufps-perfil-redonde" src="<%=user.getDocente().encodeImage()%>"/></a>
+                    <a onclick="openDropdown('dropdown4')"  class="ufps-navbar-btn ufps-dropdown-btn"><%=user.getNombre() + " " + user.getApellido()%> <img class="ufps-perfil-redonde" src="<%=user.getDocente().encodeImage() %>"/></a>
                         <%}%>
                 </div>
                 <div class="ufps-navbar-left">
@@ -64,6 +64,7 @@
                 </div>
             </div>
         </div>
+        <!--FIN HEADER-->
         <div class="ufps-container">
 
             <div class="ufps-card">
@@ -77,7 +78,8 @@
                                 </div>
                                 <div class="ufps-row ufps-margin-top-10" >
                                     <div class="ufps-col-mobile-12 ufps-col-netbook-8" >
-                                        <input type="file" accept="image/png,image/jpeg" name="imagen" id="fileImagen" src="<%=act.encodeImage()%>" class="ufps-input-line">
+                                        <input type="file" accept="image/png,image/jpeg" name="imagen" id="fileImagen" onchange="srcFrom()" class="ufps-input-line">
+                                        <input type="hidden" id="vmg" name="vmg" value="0">
                                     </div >
                                     <div class="ufps-col-mobile-12 ufps-col-netbook-4" >
                                         <img id="previsualizaImagen" src="<%=act.encodeImage()%>" class="ufps-img-responsive" />
@@ -253,6 +255,10 @@
                                 $(component).transfer(settings);
                             }
                         });
+                        
+                        function srcFrom(){
+                            $('#vmg').val(1);
+                        }
 </script>
 </body>
 </html>

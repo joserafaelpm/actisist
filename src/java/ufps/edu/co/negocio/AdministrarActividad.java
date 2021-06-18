@@ -20,6 +20,7 @@ import ufps.edu.co.dto.Actividad;
 import ufps.edu.co.dto.ConferencistaActividad;
 import ufps.edu.co.dto.Convenio;
 import ufps.edu.co.dto.ConvenioActividad;
+import ufps.edu.co.dto.InvolucradosActividad;
 import ufps.edu.co.dto.Usuario;
 import ufps.edu.co.util.Conexion;
 
@@ -35,15 +36,20 @@ public class AdministrarActividad {
         this.createRel(act, em, conf, conv);
     }
     
-    public void editar(Actividad act, String conv, String conf) throws Exception {
+    public void editar(Actividad act, InvolucradosActividad ia, String conv, String conf) throws Exception {
         EntityManagerFactory em = Conexion.getConexion().getBd();
+        ActividadJpaController ajpa = new ActividadJpaController(em);
         Actividad get = this.getActividad(act);
-        if(get.getInvolucradosActividad()!=null){
-            new InvolucradosActividadJpaController(em).create(act.getInvolucradosActividad());
-        }
+        if(act.getImagen()==null) act.setImagen(get.getImagen());
         this.destroyAll(get, em);
+        InvolucradosActividadJpaController iajpa = new InvolucradosActividadJpaController(em);
+        if(get.getInvolucradosActividad()!=null) iajpa.destroy(get.getInvolucradosActividad().getActividadId());
+        ajpa.destroy(act.getId());
+        ajpa.create(act);
+        ia.setActividad(act);
+        ia.setActividadId(act.getId());
+        iajpa.create(ia);
         this.createRel(act, em, conf, conv);
-        new ActividadJpaController(em).edit(act);
     }
     
     private void createRel(Actividad act, EntityManagerFactory em, String conf, String conv){
@@ -72,13 +78,11 @@ public class AdministrarActividad {
     private void destroyAll(Actividad a, EntityManagerFactory emf) throws NonexistentEntityException{
         ConferencistaActividadJpaController cajpa = new ConferencistaActividadJpaController(emf);
         for(ConferencistaActividad ca: a.getConferencistaActividadList()){
-            System.out.println("ca"+ca.getId());
             cajpa.destroy(ca.getId());
         }
         
         ConvenioActividadJpaController cojpa = new ConvenioActividadJpaController(emf);
         for(ConvenioActividad ca: a.getConvenioActividadList()){
-            System.out.println("co"+ca.getId());
             cojpa.destroy(ca.getId());
         }
     }
