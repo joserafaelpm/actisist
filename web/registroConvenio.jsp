@@ -95,13 +95,13 @@
                                     <div class="ufps-col-mobile-12 ufps-col-netbook-6" >
                                         <div class="ufps-row" >
                                             <div class="ufps-col-mobile-12 ufps-col-netbook-3" > Fecha Inicio:</div >
-                                            <div class="ufps-col-mobile-12 ufps-col-netbook-9" > <input type="Date"  name="fe_in" class="ufps-input-line" value="<%=sd.format(date) %>" required></div>
+                                            <div class="ufps-col-mobile-12 ufps-col-netbook-9" > <input type="date"  name="fe_in" class="ufps-input-line" value="<%=sd.format(date) %>" required></div>
                                         </div>
                                     </div >
                                     <div class="ufps-col-mobile-12 ufps-col-netbook-6" >
                                         <div class="ufps-row" >
                                             <div class="ufps-col-mobile-12 ufps-col-netbook-3" > Fecha Fin:</div >
-                                            <div class="ufps-col-mobile-12 ufps-col-netbook-9" > <input type="Date"  nname="fe_out" class="ufps-input-line" value="<%=sd.format(date) %>" required></div>
+                                            <div class="ufps-col-mobile-12 ufps-col-netbook-9" > <input type="date"  name="fe_out" class="ufps-input-line" value="<%=sd.format(date) %>" required></div>
                                         </div>    
                                     </div>
                                 </div>

@@ -18,7 +18,9 @@ import javax.servlet.http.HttpServletResponse;
 import ufps.edu.co.dto.Convenio;
 import ufps.edu.co.dto.Institucion;
 import ufps.edu.co.dto.TipoConvenio;
+import ufps.edu.co.dto.Usuario;
 import ufps.edu.co.negocio.AdministrarConvenio;
+import ufps.edu.co.negocio.AdministrarUsuario;
 
 /**
  *
@@ -100,8 +102,10 @@ public class ControlConvenio extends HttpServlet {
     }
 
     private void registrar(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Usuario u = new Usuario(((Usuario)request.getSession().getAttribute("user")).getDni());
         new AdministrarConvenio().registrarConvenio(request);
-        response.sendRedirect("registroConvenio.jsp");
+        request.getSession().setAttribute("user", new AdministrarUsuario().getUser(u));
+        this.list(request, response);
     }
     
     private void edit(HttpServletRequest request, HttpServletResponse response) throws ParseException, Exception {

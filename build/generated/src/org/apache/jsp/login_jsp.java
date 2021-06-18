@@ -85,7 +85,7 @@ public final class login_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                        <label for=\"doc\" class=\"ufps-title-input\">Documento</label>\r\n");
       out.write("                        <input type=\"number\" name=\"doc\" id=\"doc\" class=\"ufps-input-line\" required/>\r\n");
       out.write("                        <label for=\"cod\" class=\"ufps-title-input\">Codigo</label>\r\n");
-      out.write("                        <input type=\"number\" name=\"cod\" id=\"cod\" class=\"ufps-input-line\"required/>\r\n");
+      out.write("                        <input type=\"number\" name=\"cod\" id=\"cod\" class=\"ufps-input-line\"/>\r\n");
       out.write("                        <label for=\"pw\" class=\"ufps-title-input\">Contraseña</label>\r\n");
       out.write("                        <input type=\"password\" name=\"pw\" id=\"pw\" class=\"ufps-input-line\"required/>\r\n");
       out.write("                        <div class=\"ufps-title-input\">\r\n");

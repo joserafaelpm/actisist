@@ -169,8 +169,10 @@ public class ControlUsuario extends HttpServlet {
     }
     
     private void edit(HttpServletRequest request, HttpServletResponse response) throws FileUploadException, IOException, ParseException, Exception {
+        AdministrarUsuario admin = new AdministrarUsuario();
         Usuario u = new Usuario(((Usuario) request.getSession().getAttribute("user")).getDni());
-        new AdministrarUsuario().edit(u, this.getUser(request, (Usuario) request.getSession().getAttribute("user")));
+        admin.edit(u, this.getUser(request, (Usuario) request.getSession().getAttribute("user")));
+        request.getSession().setAttribute("user", admin.getUser(u));
         this.perfil(request, response);
     }
     
