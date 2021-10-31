@@ -185,16 +185,25 @@ public class AdministrarUsuario {
     }
     
     /**
-     * Para insertar al admin por si se borra
+     * Insertar Default
      *
      * @param args
      * @throws Exception
      */
-//    public static void main(String[] args) throws Exception {
-//        Usuario u = new Usuario(1150000L, "Administrador", "email_use@ufps.edu.co");
-//        u.setIdRol(new Rol(1));
-//        u.setContraseña(new PasswordAuthentication().hash("sistema#115"));
-//        EntityManagerFactory em = Conexion.getConexion().getBd();
-//        new UsuarioJpaController(em).create(u);
-//    }
+    public static void main(String[] args) throws Exception {
+        EntityManagerFactory em = Conexion.getConexion().getBd();
+        UsuarioJpaController uJpa = new UsuarioJpaController(em);
+                
+        Usuario u = new Usuario(1150L, "Administrador", "email_use@ufps.edu.co");
+        u.setIdRol(new Rol(1));
+        u.setContraseña(new PasswordAuthentication().hash("1150"));
+        
+        uJpa.create(u);
+        
+        u = new Usuario(1151L, "Judith Del Pilar", "other_email@ufps.edu.co");
+        u.setIdRol(new Rol(2));
+        u.setContraseña(new PasswordAuthentication().hash("1151"));
+        
+        uJpa.create(u);
+    }
 }

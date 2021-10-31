@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.servlet.ServletException;
@@ -116,7 +115,7 @@ public class ControlUsuario extends HttpServlet {
         Usuario u = new Usuario(doc, "", "");
         if((u = new AdministrarUsuario().login(u, cod, pw)) != null && (u.getDocente()==null || (u.getDocente()!=null && u.getDocente().getActivo()))){
             request.getSession().setAttribute("user", u);
-            if(u.getIdRol().getId()==1)response.sendRedirect("dashboard.jsp");
+            if(u.getIdRol().getId()==1)response.sendRedirect("templates/administrador/dashboard.jsp");
             else response.sendRedirect("ControlActividad?q=showFor");
         }else{
             this.logout(request, response);
@@ -136,7 +135,7 @@ public class ControlUsuario extends HttpServlet {
         sr.setTypeUs(new Rol(type_us));
         new AdministrarUsuario().registrarSolicitud(sr);
         new EmailService().sendEmail(sr);
-        response.sendRedirect("registroDocConf.jsp");
+        this.listar(request, response);
     }
 
     private void accesoSolicitud(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -148,7 +147,7 @@ public class ControlUsuario extends HttpServlet {
             if (sr != null) {
                 request.getSession().setAttribute("types", admin.getTypes(sr.getTypeUs().getId())); 
                 request.getSession().setAttribute("sol", sr);
-                response.sendRedirect("registrarDocConf.jsp");
+                response.sendRedirect("registro-doc-conf.jsp");
             } else {
                 response.sendRedirect("index.jsp");
             }
@@ -159,13 +158,13 @@ public class ControlUsuario extends HttpServlet {
 
     private void registrarUsuario(HttpServletRequest request, HttpServletResponse response) throws IOException, Exception {
         new AdministrarUsuario().registrarUsuario(request);
-        response.sendRedirect("login.jsp");
+        response.sendRedirect("index.jsp");
     }
     
     private void perfil(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.getSession().setAttribute("type", new AdministrarUsuario().getTypes(2));
         request.getSession().setAttribute("user", new AdministrarUsuario().getUser((Usuario) request.getSession().getAttribute("user")));
-        response.sendRedirect("miPerfil.jsp");
+        response.sendRedirect("templates/docente/mi-perfil.jsp");
     }
     
     private void edit(HttpServletRequest request, HttpServletResponse response) throws FileUploadException, IOException, ParseException, Exception {
@@ -214,7 +213,7 @@ public class ControlUsuario extends HttpServlet {
         EntityManagerFactory em = Conexion.getConexion().getBd();
         request.getSession().setAttribute("ujpa", new AdministrarUsuario().list());
         request.getSession().setAttribute("rjpa", new RolJpaController(em).findRolEntities());
-        response.sendRedirect("registroDocConf.jsp");
+        response.sendRedirect("templates/administrador/registrar-doc-conf.jsp");
     }
     
     public void liste(HttpServletRequest request, HttpServletResponse response) throws IOException{

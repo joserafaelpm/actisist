@@ -93,12 +93,12 @@ public class ControlConvenio extends HttpServlet {
         AdministrarConvenio ac = new AdministrarConvenio();
         request.getSession().setAttribute("cs", ac.list());
         request.getSession().setAttribute("tps", ac.listTypes());
-        response.sendRedirect("registroConvenio.jsp");
+        response.sendRedirect("templates/administrador/registro-convenio.jsp");
     }
     
     private void show(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.getSession().setAttribute("convenio", new AdministrarConvenio().getConvenio(Integer.parseInt(request.getParameter("n_c"))));
-        response.sendRedirect("editarConvenio.jsp");
+        response.sendRedirect("templates/administrador/editar-convenio.jsp");
     }
 
     private void registrar(HttpServletRequest request, HttpServletResponse response) throws IOException {

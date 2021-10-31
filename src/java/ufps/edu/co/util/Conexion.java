@@ -29,7 +29,6 @@ public class Conexion {
     }
 
     public EntityManagerFactory getBd() {
-        this.bd.getCache().evictAll();
         return bd;
     }
 }

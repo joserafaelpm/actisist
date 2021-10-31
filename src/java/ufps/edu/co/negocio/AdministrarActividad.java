@@ -15,6 +15,7 @@ import ufps.edu.co.dao.InvolucradosActividadJpaController;
 import ufps.edu.co.dao.TipoActividadJpaController;
 import ufps.edu.co.dao.TipoMovilidadJpaController;
 import ufps.edu.co.dao.UsuarioJpaController;
+import ufps.edu.co.dao.exceptions.IllegalOrphanException;
 import ufps.edu.co.dao.exceptions.NonexistentEntityException;
 import ufps.edu.co.dto.Actividad;
 import ufps.edu.co.dto.ConferencistaActividad;
@@ -34,6 +35,11 @@ public class AdministrarActividad {
         EntityManagerFactory em = Conexion.getConexion().getBd();
         new ActividadJpaController(em).create(act);
         this.createRel(act, em, conf, conv);
+    }
+    
+    public void delete(Integer id) throws IllegalOrphanException, NonexistentEntityException{
+        EntityManagerFactory em = Conexion.getConexion().getBd();
+        new ActividadJpaController(em).destroy(id);
     }
     
     public void editar(Actividad act, InvolucradosActividad ia, String conv, String conf) throws Exception {

@@ -7,6 +7,8 @@ package ufps.edu.co.control;
 
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.DocumentException;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -24,6 +26,8 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.IOUtils;
+import ufps.edu.co.dao.exceptions.IllegalOrphanException;
+import ufps.edu.co.dao.exceptions.NonexistentEntityException;
 import ufps.edu.co.dto.Actividad;
 import ufps.edu.co.dto.ConferencistaActividad;
 import ufps.edu.co.dto.Convenio;
@@ -62,6 +66,9 @@ public class ControlActividad extends HttpServlet {
             case "reg":
                 this.registrar(request, response);
                 break;
+            case "del":
+                this.delete(request, response);
+                break;
             case "show":
                 this.show(request, response);
                 break;
@@ -90,7 +97,7 @@ public class ControlActividad extends HttpServlet {
         AdministrarActividad a = new AdministrarActividad();
         request.getSession().setAttribute("typeAct", a.listTypeAct());
         request.getSession().setAttribute("typeMov", a.listTypeMov());
-        response.sendRedirect("registrarActividad.jsp");
+        response.sendRedirect("templates/docente/registrar-actividad.jsp");
     }
 
     private void registrar(HttpServletRequest request, HttpServletResponse response) throws FileUploadException, IOException, ParseException {
@@ -102,12 +109,12 @@ public class ControlActividad extends HttpServlet {
 
     private void show(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.getSession().setAttribute("acts", new AdministrarActividad().listAll());
-        response.sendRedirect("verActividades.jsp");
+        response.sendRedirect("templates/administrador/ver-actividades.jsp");
     }
 
     private void showFor(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.getSession().setAttribute("acts", new AdministrarActividad().listFor(((Usuario) request.getSession().getAttribute("user"))));
-        response.sendRedirect("misActividades.jsp");
+        response.sendRedirect("templates/docente/mis-actividades.jsp");
     }
 
     private void edit(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -117,7 +124,7 @@ public class ControlActividad extends HttpServlet {
         request.getSession().setAttribute("act", a);
         request.getSession().setAttribute("typeAct", admin.listTypeAct());
         request.getSession().setAttribute("typeMov", admin.listTypeMov());
-        response.sendRedirect("editarActividad.jsp");
+        response.sendRedirect("templates/docente/editar-actividad.jsp");
     }
     
     private void editFor(HttpServletRequest request, HttpServletResponse response) throws FileUploadException, IOException, ParseException, Exception {
@@ -130,19 +137,22 @@ public class ControlActividad extends HttpServlet {
 
     public void listeConf(HttpServletRequest request, HttpServletResponse response) throws IOException {
         PrintWriter pw = response.getWriter();
+        Usuario user = (Usuario)request.getSession().getAttribute("user");
         Actividad a = ((Actividad) request.getSession().getAttribute("act"));
         List<Usuario> us = new AdministrarUsuario().list();
         String rta = "";
         boolean found = false;
         for (Usuario u : us) {
-            for (ConferencistaActividad ca : a.getConferencistaActividadList()) {
-                if(u.getDni().equals(ca.getUsuarioDni().getDni())){
-                    found = true;
-                    break;
+            if(!user.getDni().equals(u.getDni())){
+                for (ConferencistaActividad ca : a.getConferencistaActividadList()) {
+                    if(u.getDni().equals(ca.getUsuarioDni().getDni())){
+                        found = true;
+                        break;
+                    }
                 }
+                rta += u.getNombre() + " " + u.getApellido() + ":" + u.getDni() +":"+found+",";
+                found = false;
             }
-            rta += u.getNombre() + " " + u.getApellido() + ":" + u.getDni() +":"+found+",";
-            found = false;
         }
         if (rta.length() != 0) {
             pw.print(rta.substring(0, rta.length() - 1));
@@ -237,8 +247,18 @@ public class ControlActividad extends HttpServlet {
             }
         }
         new InformePDF(request.getServletContext().getRealPath("/"), acts).createPDF();
-        if(u.getIdRol().getId() == 1) this.show(request, response);   
-        else this.showFor(request, response);
+        response.setContentType("application/pdf");
+        File file = new File(request.getServletContext().getRealPath("/")).getParentFile().getParentFile();
+        InputStream is = new FileInputStream(file.getAbsolutePath()+"\\temp\\InformeActividades.pdf");
+        IOUtils.copy(is, response.getOutputStream());
+        is.close();
+        response.flushBuffer();
+    }
+    
+    private void delete(HttpServletRequest request, HttpServletResponse response) throws IllegalOrphanException, NonexistentEntityException, IOException{
+        AdministrarActividad admin = new AdministrarActividad();
+        admin.delete(Integer.parseInt(request.getParameter("id")));
+        this.showFor(request, response);
     }
     
     /**
